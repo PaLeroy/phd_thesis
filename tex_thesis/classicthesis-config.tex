@@ -1,0 +1,432 @@
+% ****************************************************************************************************
+% classicthesis-config.tex
+% formerly known as loadpackages.sty, classicthesis-ldpkg.sty, and classicthesis-preamble.sty
+% Use it at the beginning of your ClassicThesis.tex, or as a LaTeX Preamble
+% in your ClassicThesis.{tex,lyx} with \input{classicthesis-config}
+% ****************************************************************************************************
+% If you like the classicthesis, then I would appreciate a postcard.
+% My address can be found in the file ClassicThesis.pdf. A collection
+% of the postcards I received so far is available online at
+% http://postcards.miede.de
+% ****************************************************************************************************
+
+% ****************************************************************************************************
+% 1. Configure classicthesis for your needs here, e.g., remove "drafting" below
+% in order to deactivate the time-stamp on the pages
+% ****************************************************************************************************
+\PassOptionsToPackage{eulerchapternumbers,listings,%drafting,%
+				 pdfspacing,%floatperchapter,%linedheaders,%subfig,
+				 parts,dottedtoc}{classicthesis}
+% ********************************************************************
+% Available options for classicthesis.sty
+% (see ClassicThesis.pdf for more information):
+% drafting
+% parts nochapters linedheaders
+% eulerchapternumbers beramono eulermath pdfspacing minionprospacing
+% tocaligned dottedtoc manychapters
+% listings floatperchapter subfig
+% ********************************************************************
+
+% ********************************************************************
+% Triggers for this config
+% ********************************************************************
+\usepackage{ifthen}
+\newboolean{enable-backrefs} % enable backrefs in the bibliography
+\setboolean{enable-backrefs}{false} % true false
+% ****************************************************************************************************
+
+
+% ****************************************************************************************************
+% 2. Personal data and user ad-hoc commands
+% ****************************************************************************************************
+\newcommand{\myTitle}{Multi-agent Reinforcement Learning\xspace}
+% \newcommand{\mySubtitle}{Deep Neural Netwoks and Hybrid Approaches}
+\newcommand{\myDegree}{Doktor-Ingenieur (Dr.-Ing.)\xspace}
+\newcommand{\myName}{Pascal Leroy\xspace}
+\newcommand{\myProf}{Put name here\xspace}
+\newcommand{\myOtherProf}{Put name here\xspace}
+\newcommand{\mySupervisor}{Damien Ernst\xspace}
+\newcommand{\myFaculty}{Faculty of Applied Sciences\xspace}
+\newcommand{\myDepartment}{Department of EE and CS\xspace}
+\newcommand{\myUni}{University of Liege\xspace}
+\newcommand{\myLocation}{Liege, Belgium\xspace}
+\newcommand{\myTime}{July 2023\xspace}
+\newcommand{\myVersion}{version 1.0\xspace}
+
+% ********************************************************************
+% Setup, finetuning, and useful commands
+% ********************************************************************
+\newcounter{dummy} % necessary for correct hyperlinks (to index, bib, etc.)
+\newlength{\abcd} % for ab..z string length calculation
+\providecommand{\mLyX}{L\kern-.1667em\lower.25em\hbox{Y}\kern-.125emX\@}
+\newcommand{\ie}{i.\,e.}
+\newcommand{\Ie}{I.\,e.}
+\newcommand{\eg}{e.\,g.}
+\newcommand{\Eg}{E.\,g.}
+% ****************************************************************************************************
+
+
+% ****************************************************************************************************
+% 3. Loading some handy packages
+% ****************************************************************************************************
+% ********************************************************************
+% Packages with options that might require adjustments
+% ********************************************************************
+\PassOptionsToPackage{latin9}{inputenc}	% latin9 (ISO-8859-9) = latin1+"Euro sign"
+ \usepackage{inputenc}
+
+\PassOptionsToPackage{american}{babel}   % change this to your language(s)
+% Spanish languages need extra options in order to work with this template
+%\PassOptionsToPackage{spanish,es-lcroman}{babel}
+ \usepackage{babel}
+
+\PassOptionsToPackage{square,authoryear}{natbib}
+ \usepackage{natbib}
+
+\PassOptionsToPackage{fleqn}{amsmath}		% math environments and more by the AMS
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+% ********************************************************************
+% General useful packages
+% ********************************************************************
+\PassOptionsToPackage{T1}{fontenc} % T2A for cyrillics
+\usepackage{fontenc}
+\usepackage{lipsum}
+\usepackage{textcomp} % fix warning with missing font shapes
+%\usepackage{scrhack} % fix warnings when using KOMA with listings package
+\usepackage{xspace} % to get the spacing after macros right
+\usepackage{mparhack} % get marginpar right
+\usepackage{fixltx2e} % fixes some LaTeX stuff
+\PassOptionsToPackage{printonlyused,smaller}{acronym}
+	\usepackage{acronym} % nice macros for handling all acronyms in the thesis
+%\renewcommand*{\acsfont}[1]{\textssc{#1}} % for MinionPro
+\renewcommand{\aclabelfont}[1]{{#1}\hfill} % fix the list of acronyms
+% ****************************************************************************************************
+
+
+% ****************************************************************************************************
+% 4. Setup floats: tables, (sub)figures, and captions
+% ****************************************************************************************************
+\usepackage{tabularx} % better tables
+	\setlength{\extrarowheight}{3pt} % increase table row height
+\newcommand{\tableheadline}[1]{\multicolumn{1}{c}{\spacedlowsmallcaps{#1}}}
+\newcommand{\myfloatalign}{\centering} % to be used with each float for alignment
+\usepackage{caption}
+%\usepackage{subfig}
+\captionsetup{format=hang,font=small}
+\usepackage{graphicx}
+% ****************************************************************************************************
+
+
+% ****************************************************************************************************
+% 5. Setup code listings
+% ****************************************************************************************************
+\usepackage{listings}
+%\lstset{emph={trueIndex,root},emphstyle=\color{BlueViolet}}%\underbar} % for special keywords
+\lstset{language=[LaTeX]Tex,%C++,
+    keywordstyle=\color{RoyalBlue},%\bfseries,
+    basicstyle=\small\ttfamily,
+    %identifierstyle=\color{NavyBlue},
+    commentstyle=\color{Green}\ttfamily,
+    stringstyle=\rmfamily,
+    numbers=none,%left,%
+    numberstyle=\scriptsize,%\tiny
+    stepnumber=5,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frameround=ftff,
+    frame=single,
+    belowcaptionskip=.75\baselineskip
+    %frame=L
+}
+% ****************************************************************************************************
+
+
+% ****************************************************************************************************
+% 6. PDFLaTeX, hyperreferences and citation backreferences
+% ****************************************************************************************************
+% ********************************************************************
+% Using PDFLaTeX
+% ********************************************************************
+\PassOptionsToPackage{pdftex,hyperfootnotes=true,pdfpagelabels}{hyperref}
+	\usepackage{hyperref}  % backref linktocpage pagebackref
+\pdfcompresslevel=9
+\pdfadjustspacing=1
+\PassOptionsToPackage{pdftex}{graphicx}
+
+% ********************************************************************
+% Setup the style of the backrefs from the bibliography
+% (translate the options to any language you use)
+% ********************************************************************
+\newcommand{\backrefnotcitedstring}{\relax}%(Not cited.)
+\newcommand{\backrefcitedsinglestring}[1]{(Cited on page~#1.)}
+\newcommand{\backrefcitedmultistring}[1]{(Cited on pages~#1.)}
+\ifthenelse{\boolean{enable-backrefs}}%
+{%
+		\PassOptionsToPackage{hyperpageref}{backref}
+		\usepackage{backref} % to be loaded after hyperref package
+		   \renewcommand{\backreftwosep}{ and~} % separate 2 pages
+		   \renewcommand{\backreflastsep}{, and~} % separate last of longer list
+		   \renewcommand*{\backref}[1]{}  % disable standard
+		   \renewcommand*{\backrefalt}[4]{% detailed backref
+		      \ifcase #1 %
+		         \backrefnotcitedstring%
+		      \or%
+		         \backrefcitedsinglestring{#2}%
+		      \else%
+		         \backrefcitedmultistring{#2}%
+		      \fi}%
+}{\relax}
+\usepackage{ragged2e}
+
+% ********************************************************************
+% Hyperreferences
+% ********************************************************************
+\hypersetup{%
+    %draft,	% = no hyperlinking at all (useful in b/w printouts)
+    colorlinks=true, linktocpage=true, pdfstartpage=3, pdfstartview=FitV,%
+    % uncomment the following line if you want to have black links (e.g., for printing)
+    %colorlinks=false, linktocpage=false, pdfborder={0 0 0}, pdfstartpage=3, pdfstartview=FitV,%
+    breaklinks=true, pdfpagemode=UseNone, pageanchor=true, pdfpagemode=UseOutlines,%
+    plainpages=false, bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,%
+    hypertexnames=true, pdfhighlight=/O,%nesting=true,%frenchlinks,%
+    urlcolor=webbrown, linkcolor=RoyalBlue, citecolor=webgreen, %pagecolor=RoyalBlue,%
+    %urlcolor=Black, linkcolor=Black, citecolor=Black, %pagecolor=Black,%
+    pdftitle={\myTitle},%
+    pdfauthor={\textcopyright\ \myName, \myUni, \myFaculty},%
+    pdfsubject={},%
+    pdfkeywords={},%
+    pdfcreator={pdfLaTeX},%
+    pdfproducer={LaTeX with hyperref and classicthesis}%
+}
+
+% ********************************************************************
+% Setup autoreferences
+% ********************************************************************
+% There are some issues regarding autorefnames
+% http://www.ureader.de/msg/136221647.aspx
+% http://www.tex.ac.uk/cgi-bin/texfaq2html?label=latexwords
+% you have to redefine the makros for the
+% language you use, e.g., american, ngerman
+% (as chosen when loading babel/AtBeginDocument)
+% ********************************************************************
+\makeatletter
+\@ifpackageloaded{babel}%
+    {%
+       \addto\extrasamerican{%
+					\renewcommand*{\figureautorefname}{Figure}%
+					\renewcommand*{\tableautorefname}{Table}%
+					\renewcommand*{\partautorefname}{Part}%
+					\renewcommand*{\chapterautorefname}{Chapter}%
+					\renewcommand*{\sectionautorefname}{Section}%
+					\renewcommand*{\subsectionautorefname}{Section}%
+					\renewcommand*{\subsubsectionautorefname}{Section}%
+				}%
+       \addto\extrasngerman{%
+					\renewcommand*{\paragraphautorefname}{Absatz}%
+					\renewcommand*{\subparagraphautorefname}{Unterabsatz}%
+					\renewcommand*{\footnoteautorefname}{Fu\"snote}%
+					\renewcommand*{\FancyVerbLineautorefname}{Zeile}%
+					\renewcommand*{\theoremautorefname}{Theorem}%
+					\renewcommand*{\appendixautorefname}{Anhang}%
+					\renewcommand*{\equationautorefname}{Gleichung}%
+					\renewcommand*{\itemautorefname}{Punkt}%
+				}%
+			% Fix to getting autorefs for subfigures right (thanks to Belinda Vogt for changing the definition)
+			\providecommand{\subfigureautorefname}{\figureautorefname}%
+    }{\relax}
+\makeatother
+
+
+% ****************************************************************************************************
+% 7. Last calls before the bar closes
+% ****************************************************************************************************
+% ********************************************************************
+% Development Stuff
+% ********************************************************************
+\listfiles
+%\PassOptionsToPackage{l2tabu,orthodox,abort}{nag}
+%	\usepackage{nag}
+%\PassOptionsToPackage{warning, all}{onlyamsmath}
+%	\usepackage{onlyamsmath}
+
+% ********************************************************************
+% Last, but not least...
+% ********************************************************************
+\usepackage{classicthesis}
+% ****************************************************************************************************
+
+
+% ****************************************************************************************************
+% 8. Further adjustments (experimental)
+% ****************************************************************************************************
+% ********************************************************************
+% Changing the text area
+% ********************************************************************
+%\linespread{1.05} % a bit more for Palatino
+%\areaset[current]{312pt}{761pt} % 686 (factor 2.2) + 33 head + 42 head \the\footskip
+%\setlength{\marginparwidth}{7em}%
+%\setlength{\marginparsep}{2em}%
+
+% ********************************************************************
+% Using different fonts
+% ********************************************************************
+%\usepackage[oldstylenums]{kpfonts} % oldstyle notextcomp
+%\usepackage[osf]{libertine}
+%\usepackage{hfoldsty} % Computer Modern with osf
+%\usepackage[light,condensed,math]{iwona}
+%\renewcommand{\sfdefault}{iwona}
+%\usepackage{lmodern} % <-- no osf support :-(
+% \usepackage[T1]{fontenc}
+% \usepackage{textcomp}
+%\usepackage[urw-garamond]{mathdesign} <-- no osf support :-(
+\usepackage{cleveref}
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\usepackage{bm}
+\renewcommand*{\mathbf}[1]{\ifmmode\bm{#1}\else\textbf{#1}\fi}
+\usepackage{array,multirow}
+\newcommand\appref{Appendix~\ref}
+%\newcommand\hypref{A\ref}
+\newcommand\secref{Section~\ref}
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+
+
+% Math new operators
+\DeclareMathOperator*{\trace}{trace}
+\DeclareMathOperator*{\tr}{tr}
+\DeclareMathOperator*{\diag}{diag}
+\DeclareMathOperator{\dt}{\, \mathrm{d}\mathit{t}}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+
+% Math braces
+\newcommand{\brac}[1]{\left({#1}\right)}
+\newcommand{\sbrac}[1]{\left[{#1}\right]}
+\newcommand{\cbrac}[1]{\left\{{#1}\right\}}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+% TikZ
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,calc,decorations.pathreplacing,arrows,backgrounds,shapes}
+\usetikzlibrary{automata,arrows}
+
+% UMNN paper
+\usepackage{xparse}
+\usepackage[nomessages]{fp}% http://ctan.org/pkg/fp
+\ExplSyntaxOn%% allow _ : as a letter
+\newcommand\UMNNParam[6]{ \fp_to_decimal:n {round(#1*(#2*#4 + #3*#4^2 + #4*30*#2+31*#6 + #5*#6^2 + #6), 0)}}
+\newcommand\BNAFParam[1]{ \fp_to_decimal:n {round(5*(80*#1^2 + 2*(40^2)*#1^2), 0)}}
+\newcommand\mean[3]{\fp_to_decimal:n {round((#1 + #2 + #3)/3, 2)}}
+\newcommand\std[3]{\fp_to_decimal:n {round(sqrt((#1^2 + #2^2 + #3^2)/3 - ((#1 + #2 + #3)/3)^2 ), 2)}}
+\ExplSyntaxOff
+\usepackage{arrayjobx}
+\newarray\UMNNData
+\readarray{UMNNData}{ \UMNNParam{5}{6}{2}{100}{4}{150} & \UMNNParam{10}{8}{2}{100}{3}{200}
+                    & \UMNNParam{5}{21}{2}{512}{4}{50} & \UMNNParam{5}{43}{1}{512}{3}{50}
+                    & \UMNNParam{5}{63}{2}{1024}{4}{150}}
+\newarray\TrueUMNNData
+\readarray{TrueUMNNData}{509465 & 814865 & 3621765 & 3455675 & 15627065}
+\newarray\BNAFData
+\readarray{BNAFData}{\BNAFParam{6} & \BNAFParam{8} & \BNAFParam{21} & \BNAFParam{43} & \BNAFParam{63}}
+\newarray\TrueBNAFData
+%\readarray{TrueBNAFData}{307264 & 544084 & 3721414 & 15566434 & 33390634}
+\readarray{TrueBNAFData}{307264 & 544084 & 3721414 & 4085434 & 8757634}
+\newarray\TrueNAFData
+\readarray{TrueNAFData}{414213 & 401741 & 9272743 & 7487321 & 36759591}
+
+\usepackage{siunitx}
+\sisetup{output-exponent-marker = e,round-mode = figures, round-precision = 3,
+  scientific-notation = true}
+\newcommand\meanstd[3]{$\mean{#1}{#2}{#3}_{\pm \std{#1}{#2}{#3}}$}
+
+\usepackage{amsthm}
+
+\newtheorem*{assumption*}{\assumptionnumber}
+\providecommand{\assumptionnumber}{}
+\makeatletter
+\newenvironment{assumption}[2]
+ {%
+  \renewcommand{\assumptionnumber}{Assumption #1-$\mathcal{#2}$}%
+  \begin{assumption*}%
+  \protected@edef\@currentlabel{#1-$\mathcal{#2}$}%
+ }
+ {%
+  \end{assumption*}
+ }
+\makeatother
+
+\newcommand{\hypref}[2]{\ref{#1}}
+
+\newcommand{\bestresult}[2]{\FPeval{\m}{round(#1, 2)}\FPeval{\s}{round(#2, 2)} \StrGobbleLeft{\s}{1}[\s]${\scriptstyle \mathbf{\m_{{\pm \s}}}}$}
+\newcommand{\result}[2]{\FPeval{\m}{round(#1, 2)}\FPeval{\s}{round(#2, 2)} \StrGobbleLeft{\s}{1}[\s]${\scriptstyle \m_{\scriptstyle \pm \s}}$}
+
+
+%%%%%%%%%%%%%%%% New Commands %%%%%%%%%%%%%%%%%
+\newcommand{\chapref}[1]{Chapter~\ref{ch:#1}}
+\newcommand{\chaprefp}[1]{\lbrack Chapter~\ref{ch:#1} \rbrack}
+
+
+\usepackage[many]{tcolorbox}
+\definecolor{mypink1}{rgb}{0.858, 0.188, 0.478}
+
+% Dark orange and Dark Red rgb
+\definecolor{title_color}{rgb}{0.858, 0.188, 0.478}
+\definecolor{chapter_outlinebordercolor}{RGB}{151, 63, 5}
+\definecolor{chapter_outlinebackgroundcolor}{RGB}{248, 241, 234}
+\definecolor{LightMaroon_dark}{HTML}{0C5D6B}
+\colorlet{LightMaroon}{White!57!LightMaroon_dark}
+\colorlet{LightBlue}{White!98!Maroon}
+\colorlet{LightBluebis}{White!100!Maroon}
+
+\newenvironment{side_note}[1]
+{\centering
+	\begin{tcolorbox}[float,width=.9\textwidth,title={\textit{#1}}
+	    ,enhanced jigsaw, pad at break*=1mm, breakable,
+	    left=3mm, right=5mm, top=1mm, bottom=1mm,
+	    colback=LightBlue, boxrule=0pt, frame hidden,
+	    borderline west={0.5mm}{0mm}{Maroon},
+	    % borderline east={0.1mm}{0mm}{Maroon},
+	    % borderline south={0.1mm}{0mm}{Maroon},
+			arc=0.mm, coltitle=Maroon, colbacktitle=LightBlue]
+	\small
+}
+{
+\end{tcolorbox}
+
+}
+
+\newenvironment{chapter_outline}[1]
+{
+\begin{tcolorbox}[breakable,width=.9\textwidth
+		,enhanced jigsaw, pad at break*=1mm, breakable,
+    left=4mm, right=4mm, top=4mm, bottom=1mm, boxrule=0pt, frame hidden,
+		% borderline south={0.5mm}{0mm}{Maroon},
+		% borderline east={0.5mm}{0mm}{Maroon},
+    borderline west={0.5mm}{0mm}{Maroon},
+		arc=.5mm,
+		title={\Large \textbf{Outline}}, coltitle=Maroon,
+		colback=LightBluebis, colbacktitle=LightBluebis
+		% colbacktitle=Maroon
+		]
+}
+{
+\end{tcolorbox}
+
+}
+
+\newcommand{\indep}{\perp}
+
+\usepackage{diagbox}
+\usepackage{geometry}% http://ctan.org/pkg/geometry
+\usepackage{pdfpages}
+\usepackage[chapter]{algorithm}
+\usepackage{algpseudocode}
+
+
+% ****************************************************************************************************
