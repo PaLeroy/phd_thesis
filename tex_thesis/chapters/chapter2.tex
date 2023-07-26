@@ -4,8 +4,11 @@
 
 In this chapter, we provide a broader overview of reinforcement learning.
 We first introduce reinforcement learning in Section \ref{sec:ch2_Introduction} and define a stochastic game, the most common multi-agent framework, in Section \ref{sec:ch2_stochastic_Game}.
-Multi-agent reinforcement learning is commonly divided into three settings described in Section \ref{sec:ch2_multi_agent_settings}.
-Finally, in Section \ref{sec:ch2_single_agent_RL}, we provide essential details on the particular case of single-agent reinforcement learning where the foundations of multi-agent approaches reside.
+Multi-agent reinforcement learning is commonly divided into three settings, based on the relative goals of agents, and described in Section \ref{sec:ch2_multi_agent_settings}.
+When there is a single agent, we are in the particular case called single-agent reinforcement learning.
+In \ref{sec:ch2_single_agent_RL}, we provide essential details on this (not so) particular case where the foundations of multi-agent approaches reside.
+Following this, a discussion on partial-observability is pursued in Section \ref{sec:ch2_partial_observability}.
+In the last Section \ref{sec:ch2_futher}, we present readings of interest to go further on the topics broadly introduced in this Chapter.
 
 \end{chapter_outline}
 
@@ -41,26 +44,26 @@ The joint action space is thereby $\mathcal{U} \equiv \bigtimes_{i \in \mathcal{
 As a consequence of the $n$ selected actions, the state of the environment $s_t$ transits to a new state $s_{t+1}$ with a probability $P(s_{t+1}, s_t, \mathbf{u_t})$ defined by the transition function $P:\mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow [0,1]$.
 
 As the state transitions, each agent receives a reward denoted $r_t^{a_i} = R(s_{t+1}, s_t, \mathbf{u_t}, i)$ and defined by the reward function $R: \mathcal{S} \times \mathcal{S} \times \mathcal{U} \times \mathcal{A} \rightarrow \mathbb{R}$.
-The goal of each agent $a_i$ is to maximise its expected sum of (discounted) rewards $\mathbb{E}_{\mathbf{\pi}}\left[ \sum_{t=0}^{T} \gamma^t r^{a_i}_t \right]$, where $T$ is the time horizon and $\gamma \in ]0, 1]$ the discount factor.
-It is worth enforcing that the reward received by an agent is thus a function of the joint policy and not only of its own policy.
-The time horizon $T$ defines the length of an episode, which is a complete sequence of actions in the environment and is considered finite in this work.
+The goal of each agent $a_i$ is to maximise its expected sum of discounted rewards $\mathbb{E}_{\mathbf{\pi}}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, where $T$ is the time horizon and $\gamma \in ]0, 1]$ the discount factor.
+It is worth enforcing that the reward received by an agent is thus a function of the joint policy and not only of its policy.
+The time horizon $T$, considered finite, defines the length of an episode, which is a complete sequence of actions in the environment.
 Finally, the discount factor $\gamma$ defines the importance of future reward.
 
-Finding, or here learning, the optimal policy that maximises this expected sum is the purpose of reinforcement learning.
-One solution is to find the Nash equilibrium.
+Finding or learning the optimal policy that maximises this expected sum is the purpose of reinforcement learning.
+One solution to stochastic game is to find a Nash equilibrium.
 TODO
 
-Several comments can be addressed in the context of the work presented in this manuscript.
+Several comments can be addressed in the context of the works presented in this manuscript.
 In the stochastic game definition, some include an initial state distribution which we keep implicit (e.g. \citep{marl-book}).
 While the state space can be composed of discrete or continuous variables, the action spaces are considered discrete.
 Agents do not always observe the entire state of the environment to select an action.
-This is further developed in Section \ref{sec:ch2_partial_observability}.
-In the literature, a stochastic game is also sometimes called a Markov game (e.g. \citep{MarkovGames}).
+This partial observability is further developed in Section \ref{sec:ch2_partial_observability}.
+In the literature, a stochastic game is sometimes called a Markov game (e.g. \citep{MarkovGames}).
 
 \section{Multi-agent settings} 
 \label{sec:ch2_multi_agent_settings}
 The stochastic game definition proposed in Section \ref{sec:ch2_stochastic_Game} provides a general framework for multi-agent systems.
-By modifying the definition, it is possible to distinguish three main types of setting hereafter briefly described: cooperation, competition and general sum game.
+By modifying the definition, it is possible to distinguish three main setting types hereafter briefly described: cooperation, competition and general sum game.
 In Section \ref{sec:ch2_single_agent_RL}, we develop details about a particular case, the single-agent setting.
 
 \subsection{Cooperation} 
@@ -75,9 +78,9 @@ TODO
 
 \subsection{Competition} 
 \label{sec:ch2_Competition}
-When agents share completely opposite goals, they compete.
+When agents share opposite goals, they compete.
 In competition, any action that benefits one agent incurs a retrofit to other ones.
-This setting is most of the referred to as a zero-sum game \citep{}.
+This setting is often called a zero-sum game \citep{}.
 The property of a zero-sum game is that all rewards sum to zero at any time.
 In a two-agent zero-sum game, commonly known as a two-player zero-sum in the game theory literature \citep{}, a possible adaptation of the stochastic game is to have a single reward function that one tries to maximise while the other tries to minimise it.
 
@@ -90,11 +93,11 @@ TODO
 \label{sec:ch2_general_sum_game}
 The third setting includes everything that is not purely cooperative or purely competitive.
 In this manuscript, we are interested in the mixed cooperative-competitive setting where two teams compete against each other.
-Part \ref{part:compet} is dedicated to these settings, with the goal of studying how competition methods work in accordance with cooperation ones.
+Part \ref{part:compet} is dedicated to these settings to study how competition methods work in accordance with cooperation ones.
 We can find several examples of such mixed cooperative-competitive settings.
 TODO
 
-Other types of general sum games exist, for example, when several agents have their own interests but share the environment with others.
+Other general sum games exist, for example, when several agents have their interests but share the environment with others.
 TODO
 traffic...
 
@@ -102,25 +105,102 @@ traffic...
 \section{Single-agent reinforcement learning} 
 \label{sec:ch2_single_agent_RL}
 As introduced, single-agent reinforcement learning (SARL) is the particular case of a multi-agent environment with a single agent.
-Presented as such is a bit of a joke since the foundation of MARL relies on a lot of works first proposed for single-agent environments.
-In this section, we will introduce the Markov decision process and how to learn an optimal policy, also referred to as the basics of reinforcement learning.
+Presented as such is a bit of a joke since the foundation of MARL relies on many works first proposed for single-agent environments.
+In this section, we introduce the Markov decision process and discuss some fundamentals of RL.
 
 \subsection{Markov decision process} \label{sec:ch2_mdp}
-By removing the agents of the stochastic game definition of Section \ref{sec:ch2_stochastic_Game}, we obtain the definition of a Markov decision process (MDP).
-We therefore define an MDP as a tuple $[\mathcal{S}, \mathcal{U}, R, P, \gamma]$ where 
-
 \begin{figure}
     \centering
     \includegraphics{tex_thesis/figures/ch2/mdp_sketch.pdf}
-    \caption{Markov decision process \citep{sutton2018reinforcement}}
+    \caption{Markov decision process \citep{sutton2018reinforcement}. TODO check on the same page as the section where it is defined.}
     \label{fig:ch2_mdp}
 \end{figure}
 
-\subsection{Model-based vs model-free} \label{sec:ch2_model_based_vs_model_free}
-% Start from Moerland discussion + planning vs RL.
+By removing the agents of the stochastic game definition of Section \ref{sec:ch2_stochastic_Game}, we obtain the definition of a Markov decision process (MDP).
+We define an MDP as a tuple $[\mathcal{S}, \mathcal{U}, R, P, \gamma]$ where a single-agent interacts with its environment as presented in Figure \ref{fig:ch2_mdp}.
+The main difference with the stochastic game is that the transition and reward functions still map two states but only a single action to a probability and a real, respectively.
+The agent of an MDP observes the state $s_t \in \mathcal{S}$ and selects an action from its action space $u_t \in \mathcal{U}$ with a probability defined by its policy $\pi(u_t|s_t)$.
+This selected action leads the agent to a new state $s_{t+1}$ with a probability given by the transition function $P:\mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow [0,1]$.
+Along the transition of the state, the agent receives a reward $r_t$ defined by the reward function $R:\mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow \mathbb{R}$.
+
+TODO: check S S U or SUS everywhere.
+
+We define the discounted return of a sequence from time step $t$ to time step $T$ as $G_t= \sum_{j=t}^{T-1} \gamma^j r_{t+j}$.
+The goal of the agent is again to maximise the expected discounted return, so the expected sum of discounted rewards, over a finite episode $\mathbb{E}_{\pi} \left[\sum_{t=0}^{T-1} \gamma^t r_t \right]$, also denoted $\mathbb{E}_{\pi}\left[ G_0 \right]$.
+Therefore, it needs to find an optimal policy $\pi^*=\argmax_\pi \mathbb{E}_{\pi}\left[ G_0 \right]$.
+To evaluate a policy, we define the state value function $V^\pi(s) = \mathbb{E}_{\pi}\left[G_t|s_t=s\right]$ and the state action value function $Q^\pi(s, u) = \mathbb{E}_{\pi}\left[G_t|s_t=s, u_t=u\right]$.
+
+TODO: The particular case of a Nash Equilibrium with a single agent.
+
+Most commonly, two families of methods are identified in RL.
+The value-based methods aim at learning a value function and derive the policy from it, while the policy-based methods directly learn a policy.
+
+\subsection{Model-based or model-free}
+\label{sec:ch2_model_based_vs_model_free}
+When it comes to finding the optimal policy in an MDP, we distinguish methods based on the knowledge of action outcomes.
+Indeed, with the model of the MDP, one can simulate the environment to evaluate policies \citep{sutton2018reinforcement}.
+\cite{moerland2023model} defines it as `a model is a form of reversible access to the MDP dynamics (known or learned)'.
+In RL, knowing the model and finding the optimal solution, or learning the model to use it to find the optimal solution, is referred to as model-based RL.
+The opposite of learning by trial and error, without a model, is named model-free RL, and in this manuscript, we focus on model-free RL.
+
+While model-based RL is not our primary focus, we hereafter discuss the notion of planning and highlight differences with model-free RL.
+We try to identify definitions of planning based on the work of \cite{moerland2023model} and \cite{sutton2018reinforcement}.
+TODO
+
+\subsection{Dynamic programming}
+Dynamic programming \citep{bellman1966dynamic} methods compute the optimal policy given a model of an MDP \citep{sutton2018reinforcement}.
+They rely on the property that the value functions $V^{\pi^*}$ and $Q^{\pi^*}$ of the optimal policy ${\pi^*}$ satisfy the Bellman equations $\forall s, u$:
+\begin{equation}
+\label{eq:ch2_bellmanV}
+    V^{\pi^*}(s) = \max_u \mathbb{E}[r_t + \gamma V^{\pi^*}(s_{t+1})| s_t=s, u_t=u]
+\end{equation}
+
+\begin{equation}
+\label{eq:ch2_bellmanQ}
+    Q^{\pi^*}(s, u) = \mathbb{E}[r_t + \gamma \max_{u'} Q^{\pi^*}(s_{t+1}, u') |s_t=s, u_t=u]
+\end{equation}
+
+Not going into the details of policy evaluation, policy improvement, policy iteration and value iteration, e.g. presented in \citep{sutton2018reinforcement}, one can find the optimal policy by iteratively evaluating and improving the policy with the value functions.
+This can be highlighted by developing the value functions for any policy $\pi$ and $\forall s, u$:
+\begin{equation}
+\label{eq:ch2_V_2}
+\begin{split}
+    V^\pi(s)= \mathbb{E}_{\pi}\left[G_t|s_t=s\right] & = \mathbb{E}_{\pi}\left[r_t + \gamma V^\pi(s_{t+1})|s_t=s\right]\\
+     & = \sum_{u} \pi(u|s) \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma V^\pi(s'))
+\end{split}
+\end{equation}
+
+\begin{equation}
+\label{eq:ch2_Q_2}
+\begin{split}
+    Q^\pi(s, u) = \mathbb{E}_{\pi}\left[G_t|s_t=s, u_t=u\right] & = \mathbb{E}_{\pi}\left[r_t + \gamma V^\pi(s_{t+1})|s_t=s, u_t=u \right] \\
+    &  = \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma V^\pi(s'))
+\end{split}
+\end{equation}
+
+In addition to requiring the model knowledge $P$ and $R$, the complexity of these methods increases with the size of the state space, often referred to as the curse of dimensionality, which may limit their usage.
+Anyway, because of our direction towards model-free RL, our interest relies here on the presentation of Equations \ref{eq:ch2_bellmanV}, \ref{eq:ch2_bellmanQ}, \ref{eq:ch2_V_2} and \ref{eq:ch2_Q_2} that may ease the understanding of the learning concepts.
+
+
 \subsection{Value-based methods} \label{sec:ch2_value_based_methods}
-\subsection{Neural network} \label{sec:ch2_neural_network}
+Value-based methods aim to learn the optimal state action-value function defined as $Q^{\pi^*}(s, u)=\max_{\pi}Q^\pi(s, u)$.
+This enables the agent to greedily select the action $\pi^*(s)=\argmax_u Q^{\pi^*}(s, u)$.
+
+Maybe one of the first methods is Q-learning \citep{watkins1992q}, where the 
+
+However, as the size of the state-action space increases, it becomes impractical to compute $Q$ for each state-action pair.
+A solution, named DQN \citep{Mnih2015}, approximates $Q$ with a neural network $\theta$ and learn $Q(s, u;\theta)$ by minimising the loss \begin{equation}
+    \mathcal{L}(\theta) = \mathbb{E}_{\langle . \rangle\sim B} \big[\big(r_{t} + \gamma \max_{u \in \mathcal{U}} Q(s_{t+1}, u; \theta')- Q(s_{t}, u_{t}; \theta)\big)^{2}\big]
+\end{equation} where $B$ is a replay buffer composed of transitions $\langle s_{t},u_{t},r_{t},s_{t+1}\rangle$and $\theta'$ is the target network, a copy of $\theta$ updated periodically.
+
 \subsection{Policy-based methods} \label{sec:ch2_policy_based_methods}
+Policy-based methods learn directly the optimal policy through a neural network $\pi(s, u;\theta)$ that maximises $J(\theta)=\mathbb{E}_{\pi_\theta}[R_0]$.
+The well-known REINFORCE method \citep{williams1992simple} ascends the gradient $\nabla_\theta J = \mathbb{E}[\sum_t R_t \nabla_\theta \pi(u_t|s_t;\theta)]$ to find $\pi^*$.
+Actor-critic methods \citep{sutton1999policy,konda1999actor} expand upon this method by incorporating a parameterised critic that estimates $Q(s_t, u_t;\phi)$, replacing $R_t$, with the actor serving as the parameterised policy.
+To reduce variance, a baseline $b(s)$ is injected into the gradient, usually $b(s) = V(s)$, and $Q(s, u;\phi)$ is replaced by $A(s,u; \phi)$ \citep{10.5555/2074022.2074088}, leading to the new gradient expression $\nabla_\theta J = \mathbb{E}[\sum_t A(s_t, u_t; \phi) \nabla_\theta \pi(s_t, u_t; \theta)]$.
+Advantage estimation is accomplished either by $A(s_t,u_t; \phi)=Q(s_t, u_t;\phi)-\sum_u \pi(u|s_t;\theta) Q(s_t,u; \phi)$ or by $A(s_t,u_t; \phi)=r_t +\gamma V(s_{t+1};\phi) - V(s_t;\phi)$.
+
+
 \section{Partial observability} \label{sec:ch2_partial_observability}
 An observation function $O:\mathcal{S} \times \{1,...,n\} \rightarrow \mathcal{Z}$.
 Agents sometimes store their history $\tau^a_t \in (\mathcal{Z} \times \mathcal{U})^t$.
