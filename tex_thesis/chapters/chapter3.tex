@@ -1,7 +1,68 @@
 \chapter{Cooperation}\label{ch:cooperation}
+\begin{chapter_outline}
+
+This chapter aims to introduce the main concepts about learning to cooperate with multi-agent reinforcement learning.
+While both chapters \ref{ch:qvmix} and \ref{ch:impmarl} present our contributions in this field, this first chapter covers the works these contributions are based on.
+After a small introduction in Section \ref{sec:ch3_intro}, we define the Dec-POMDP, an adaptation of stochastic games to the cooperative setting studied in this manuscript in Section \ref{sec:ch3_decpomdp}.
+From the definition of the Dec-POMDP, we present the environments of the literature developed to evaluate methods that solve Dec-POMDP in Section \ref{sec:ch3_env}.
+We then present the different methods from the literature that are used in contributions of the thesis, respectively value-based method in Section \ref{sec:ch3_value} and policy-based methods in Section \ref{sec:ch3_policy}.
+Finally, we conclude with a related work discussion in Section \ref{sec:ch3_rel_work} presenting methods and framework from the literature that goes beyond the content of this manuscript.
+
+\end{chapter_outline}
+
+
 \section{Introduction}
+\label{sec:ch3_intro}
+As introduced in Part \ref{part:background}, cooperation is the setting of agents sharing a common goal.
+In this manuscript, we restrict to the case of agents receiving a single reward signal common to all of them and postpone the adaptation of the stochastic game definition in Section \ref{sec:ch3_decpomdp}.
+
+When it comes to cooperation, one notion to discuss is whether the action selection and the training of agents are centralised or decentralised.
+The difference lies in the information shared or not by agents.
+This is referred to in \cite{marl-book} as the modes of execution and training.
+In this manuscript, we consider three combinations: centralised training and execution (centralised), decentralised training and execution (decentralised), and centralised training with decentralised execution (CTDE).
+
+Since all agents share a common goal, we could centrally select all actions, sharing common knowledge.
+This is the centralised mode, and agents are commonly trained with single-agent reinforcement learning methods.
+For example, controlling a robotic hand composed of several actuators can be done with a single agent controlling every of its actuator.
+However, as presented in Section \ref{sec:ch2_partial_observability}, all agents may not access the same information and may perceive only a part of the state of the environment.
+It would then be impossible, except in a simulated environment, to consider that agents can easily select actions in a centralised mode, with information not every one of them perceive.
+
+Following this, the decentralised execution mode is the one that considers that each agent has only access to a subset of the information and uses it to select its action.
+The corresponding decentralised training mode is when we train these agents independently with single-agent reinforcement learning by making the assumption that they are alone in the environment.
+This is referred to as independent learner.
+However, and it is often the case, 
+
+
 \section{Decentralised partially observable Markov decision process}
-\section{StarCraft multi-agent challenge}
-\section{Value function factorisation}
+\label{sec:ch3_decpomdp}
+The definition of the decentralised partially observable Markov decision process (Dec-POMDP) \citep{DecPomdp} can be derived from the stochastic game definition presented in Section \ref{sec:ch2_stochastic_Game}.
+It is substantially exactly the same, but the reward function maps only to a single reward common to the entire team.
+
+We hereafter define the Dec-POMDP by a tuple $[\mathcal{S}, \mathcal{Z}, \mathcal{U}, n, O, R, P, \gamma]$, where $n$ agents $a_i$ with  $i\in \mathcal{A} \equiv \{1,..,n\}$ simultaneously choose an action at every time step $t$.
+The state of the environment is $s_t \in \mathcal{S}$ where $\mathcal{S}$ is the set of states.
+The observation function $O: \mathcal{S} \times \mathcal{A} \rightarrow \mathcal{Z}$ maps the state to an observation $o_t^{a} \in \mathcal{Z}$ perceived by agent $a$ at time $t$, where $\mathcal{Z}$ is the observation space.
+Each agent $a_i$ selects an action $u_t^{a_i} \in \mathcal{U}^{a_i}$, and the joint action space is $\mathcal{U}$.
+After the joint action $\boldsymbol{u_t} \in \mathcal{U}$ is executed, the transition function determines the new state with probability $P(s_{t+1}|s_t, \boldsymbol{u_t}): \mathcal{S} \times \mathcal{S} \times\mathcal{U} \rightarrow  [0,1] $, and $r_t=R(s_{t+1}, s_t, \boldsymbol {u_t}): \mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow \mathbb{R}$ is the team reward obtained by all agents.
+An agent's policy is a function $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a}): (\mathcal{Z} \times \mathcal{U}^a)^t \rightarrow [0,1]$, which maps its history $\tau_t^{a} \in (\mathcal{Z} \times \mathcal{U}_a)^{t-1}$ and its observation $o_t^{a}$ to the probability of taking action $u_t^{a}$. 
+The joint policy is denoted by $\boldsymbol{\pi}=(\pi^1,..,\pi^n)$.
+The cumulative discounted reward obtained from time step $t$ over the next $T$ time steps is defined by $G_{t} = \sum_{k=0}^{T-1} \gamma^k r_{t+k}$ and $\gamma \in [0, 1)$ is the discount factor.
+The goal of agents is to find the optimal joint policy that maximises the expected $G_t$ during the entire episode: $\boldsymbol{\pi^{*}} =\argmax_{\boldsymbol{\pi}} \mathbb{E}[G_0|\boldsymbol{\pi}]$.
+Again, we emphasise that this expected sum is dependent on the joint policy.
+
+
+\todo{check concordance with notation of stochastic game}
+
+\section{Environments}
+\label{sec:ch3_env}
+
+\subsection{StarCraft multi-agent challenge}
+
+\section{Value-based methods}
+\label{sec:ch3_value}
+
+\section{Policy-based methods}
+\label{sec:ch3_policy}
+
 \section{Related work}
+\label{sec:ch3_rel_work}
 
