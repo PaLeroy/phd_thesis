@@ -26,28 +26,28 @@ We hereafter paraphrase several reinforcement learning definitions:
 From these definitions, we denote several keywords that guide any RL journey: environment, interaction, sequence, goal and reward.
 But one is missing: agent.
 Commonly, an agent is anything capable of acting upon information it perceives from its environment~\citep{russel2010}.
-In RL, agent refers to any agent that learns by interacting with its environment, most commonly denominated an intelligent agent or an artificial intelligent agent.
-In summary, agents interact with their environment by sequentially taking actions that will modify the environment and provide them with a reward, e.g., moving pieces at chess make the board evolve positions until one wins or draws.
+In RL, agent refers to any agent that learns by interacting with its environment, most commonly denominated as intelligent or artificial intelligent agents.
+Trying to summarise all definitions, we obtain that RL agents interact with their environment by sequentially taking actions that will modify the environment and provide them with a reward, e.g., moving pieces at chess makes the board evolve positions until one wins or draws.
 
-In addition to defining the agent, we also need to consider the number of agents interacting in the environment.
+After defining the agent, we must also consider the number of agents interacting in the environment.
 Single-agent reinforcement learning (SARL) becomes multi-agent reinforcement learning (MARL) when more than one agent learns in the same environment.
-In this Chapter, we hereafter define the general multi-agent reinforcement learning framework, followed by the three common settings: cooperation, competition and general sum.
-We then provide an in-depth overview of single-agent reinforcement learning, intending to provide enough background to the reader unfamiliar with RL.
-Additionally, we discuss partial observability, an important topic in RL because agents may not perceive their environment entirely.
+In this Chapter, we hereafter define the general multi-agent reinforcement learning framework, followed by the three standard settings: cooperation, competition and general sum.
+We then provide an in-depth overview of single-agent reinforcement learning, intending to give enough background to the reader unfamiliar with RL.
+Additionally, we discuss partial observability, an essential topic in RL because agents may not perceive their environment entirely.
 
 To conclude, this Chapter aims to provide a broader overview of reinforcement learning and its main concepts.
-We intentionally skip some details that can be of interest, such as mathematical developments, demonstrations, or definitions.
+We intentionally skip some interesting details, such as mathematical developments, demonstrations, or definitions.
 However, we always refer the reader to references to go beyond our introductions.
-We acknowledge that the background sections of this manuscript take a lot of inspiration from these cited works, especially with the help of ``Reinforcement learning: An introduction'' \citep{sutton2018reinforcement}, well established in the community and ``Multi-Agent Reinforcement Learning: Foundations and Modern Approaches'' \citep{marl-book}, a recent book on the foundation of multi-agent reinforcement learning.
-
-\todo: Note en citant russel et norvig qu'on considère que l'apprentissage mais que beaucoup de chooses existent à côté.
+We acknowledge that the background sections of this manuscript take a lot of inspiration from these cited works, especially from two of them: ``Reinforcement learning: An introduction'' \citep{sutton2018reinforcement}, well established in the community and ``Multi-Agent Reinforcement Learning: Foundations and Modern Approaches'' \citep{marl-book}, a recent book on the foundations of multi-agent reinforcement learning.
+Finally, this manuscript focuses on RL approaches when considering agents interacting in an environment, but others exist, and we refer to the book of \cite{russel2010} for many more.
 
 \section{Stochastic game}
 \label{sec:ch2_stochastic_Game}
-\todo: check state space vs set of space
 
-The stochastic game \citep{stochasticGames} is probably the most general framework in multi-agent.
-In a stochastic game, a set of agents interact with the environment by observing the state of the environment, choosing actions and receiving rewards over a sequence of time, finite or not.
+% TODO check state space vs set of space
+
+The stochastic game (SG) \citep{stochasticGames} is probably the most general framework in multi-agent.
+In an SG, a set of agents interact with the environment by observing the state of the environment, choosing actions and receiving rewards over a sequence of time, finite or not.
 In this manuscript, we define a stochastic game by a tuple $[n, \mathcal{S}, \mathcal{U}, R, P, \gamma]$.
 An agent is represented by $a$, and the set of agents is $\mathcal{A} \equiv \{1,..,n\}$.
 We thus define each agent as $a_i$ with $i \in \mathcal{A}$ and any agent by $a$.
@@ -55,7 +55,7 @@ We thus define each agent as $a_i$ with $i \in \mathcal{A}$ and any agent by $a$
 At each time step $t$, each agent $a$ selects an action $u_t^a \in \mathcal{U}^a$ based on the state of the environment $s_t \in \mathcal{S}$ with a probability given by its policy $\pi^a(u^a_t|s_t)$, where $\mathcal{S}$ is the state space, and $\mathcal{U}^a$ is the action space of agent $a$.
 These $n$ selected actions form the joint action as $\mathbf{u} \in \mathcal{U}$, where $\mathcal{U} \equiv \bigtimes_{i \in \mathcal{A}} \mathcal{U}^{a_i}$ is the joint action space.
 We also denote the joint policy by $\mathbf{\pi}$.
-As a consequence of agents taking $\mathbf{u_t}$, the state of the environment $s_t$ transits to a new state $s_{t+1}$ with a probability $P(s_{t+1}, s_t, \mathbf{u_t})$ defined by the transition function $P:\mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow [0,1]$.
+As a consequence of agents taking $\mathbf{u_t}$, the state of the environment $s_t$ transits to a new state $s_{t+1}$ with a probability $P(s_{t+1}, s_t, \mathbf{u_t})$ defined by the stochastic transition function $P:\mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow [0,1]$.
 
 As the state transitions, each agent receives a reward denoted $r_t^{a_i} = R(s_{t+1}, s_t, \mathbf{u_t}, i)$ defined by the reward function $R: \mathcal{S} \times \mathcal{S} \times \mathcal{U} \times \mathcal{A} \rightarrow \mathbb{R}$.
 The goal of each agent $a_i$ is to maximise its expected sum of discounted rewards $\mathbb{E}_{\mathbf{\pi}}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, where $T$ is the time horizon and $\gamma \in ]0, 1]$ the discount factor.
@@ -64,15 +64,15 @@ Intuitively, the discount factor $\gamma$ defines the importance of future rewar
 Finally, we insist here that the reward received by an agent depends on the joint action taken and not only on its own.
 
 Reinforcement learning is about finding or learning the policy that maximises the expected sum, which is called the optimal policy.
-One solution to a stochastic game is to find a Nash equilibrium.
-\todo: nash equilibrium
+One solution to solve a stochastic game is to find a Nash equilibrium.
+\todo{nash equilibrium (and Pareto?)}
 
 Several comments can be addressed in the context of the works presented in this manuscript.
-In the stochastic game definition, some include an initial state $s_0$ distribution, which we keep implicit (e.g. \citep{marl-book}).
+In the SG definition, some include an initial state $s_0$ distribution, which we keep implicit (e.g. in \citep{marl-book}).
 While the state space can be composed of discrete or continuous variables, the action spaces are considered discrete in this manuscript.
 Agents do not always observe the state of the environment entirely to select an action.
 This partial observability is further developed in Section \ref{sec:ch2_partial_observability}.
-In the literature, a stochastic game is sometimes called a Markov game (e.g. \citep{MarkovGames}).
+Finally, In the literature, an SG is sometimes called a Markov game (e.g. \citep{MarkovGames}).
 
 \section{Multi-agent settings} 
 \label{sec:ch2_multi_agent_settings}
@@ -143,24 +143,21 @@ We obtain the definition of a Markov decision process (MDP) by considering a sin
 We define an MDP as a tuple $[\mathcal{S}, \mathcal{U}, R, P, \gamma, p_0]$ where a single agent interacts with its environment as presented in Figure \ref{fig:ch2_mdp}.
 The agent observes the state $s_t \in \mathcal{S}$ and selects an action from its action space $u_t \in \mathcal{U}$ with a probability defined by its policy $\pi(u_t|s_t)$.
 This selected action leads the agent to a new state $s_{t+1}$ with a probability given by the transition function $P:\mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow [0,1]$.
+One must denote here the Markovian property: the next state is a function only of the current state and action.
 
 Along the transition of the state, the agent receives a reward $r_t$ defined by the reward function $R:\mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow \mathbb{R}$.
 We define the discounted return of a sequence from time step $t$ to time step $T$ as $G_t= \sum_{j=t}^{T-1} \gamma^j r_{t+j}$.
 The goal of the agent is to maximise the expected discounted return, so the expected sum of discounted rewards, over a finite episode $\mathbb{E}_{\pi} \left[\sum_{t=0}^{T-1} \gamma^t r_t \right]$, also denoted $\mathbb{E}_{\pi, p_0}\left[ G_0 \right]$ where $p_0$ is the initial distribution of $s_0$.
 
+\todo{The case of a Nash Equilibrium with a single agent.}
 Therefore, it needs to learn an optimal policy $\pi^*=\argmax_\pi \mathbb{E}_{\pi}\left[ G_0 \right]$.
 To evaluate a policy, we define the state value function $V^\pi(s) = \mathbb{E}_{\pi}\left[G_t|s_t=s\right]$ and the state action value function $Q^\pi(s, u) = \mathbb{E}_{\pi}\left[G_t|s_t=s, u_t=u\right]$.
 
-
-\todo: Markovian property.
-
-\todo: deterministic policy.
-
-\todo: The case of a Nash Equilibrium with a single agent.
-
 Most commonly, two families of methods are identified in RL.
-The value-based methods aim at learning a value function and derive the policy from it, while the policy-based methods directly learn a policy.
-But before diving into these details, we first discuss the difference whether the model is known or not.
+The value-based methods learn a value function and derive the policy from it, while the policy-based methods directly learn a policy.
+But before diving into these details, we first discuss the difference when the model is known or not.
+
+\todo{exploration exploitation}
 
 \subsection{Model-based or model-free}
 \label{sec:ch2_model_based_vs_model_free}
@@ -173,6 +170,8 @@ In opposition, learning by trial and error, without a model, is named model-free
 Model-based RL is not the primary focus, and we refer to the work of \cite{moerland2023model} that provides many keys to bridge the gap between RL and planning, between model-based and model-free.
 Nevertheless, the following Section introduces dynamic programming, techniques that require a model to compute the optimal policy.
 Dynamic programming provides the foundation of model-free methods that will afterwards be introduced.
+
+\todo{Model-based RL, learning P(st+1) is sometimes denoted as the third family of RL.}
 
 \subsection{Dynamic programming}
 Dynamic programming \citep{bellman1966dynamic} methods compute the optimal policy given a model of an MDP \citep{sutton2018reinforcement}.
@@ -285,8 +284,8 @@ The new loss provided by incorporating the critic is given in Equation \ref{eq:c
     \nabla_\theta J(\pi_\theta) = \mathbb{E}\left[\sum_{t=0}^{T-1} Q(s_t, u_t;\phi) \nabla_\theta \log \pi(u_t|s_t;\theta)\right]
 \end{equation}
 
-Moreover, a baseline $b(s)$ can be injected into the gradient to reduce variance.
-Usually, the baseline is  $b(s) = V(s)$, and $Q(s, u;\phi)$ is replaced by the advantage function $A(s,u; \phi)$ \citep{10.5555/2074022.2074088}, leading to the gradient expressions of Equation \ref{eq:ch2_baseline_actor_crit}:
+Moreover, a baseline can be injected into the gradient to reduce variance.
+Usually, the baseline is  $V(s)$, independent of the action taken, and $Q(s, u;\phi)$ is replaced by the advantage function $A(s,u; \phi)$ \citep{10.5555/2074022.2074088}, leading to the gradient expressions of Equation \ref{eq:ch2_baseline_actor_crit}:
 
 \begin{align}
 \begin{split}
@@ -306,19 +305,39 @@ We can cite trust region policy optimisation (TRPO) \citep{schulman2015trust} an
 Both of these methods rely on a controlled policy update by constraining the loss of REINFORCE defined in Equation \ref{eq:ch2_reinforce_grad}.
 
 \section{Partial observability} \label{sec:ch2_partial_observability}
-Defined in this Chapter, the Markov decision process and the stochastic game are fully observable because agents have complete access to the state environment.
-They perceive everything.
+As defined in previous Sections, the Markov decision process and the stochastic game are fully observable.
+Agents have complete access to the state environment and perceive everything without uncertainty.
 In real-world applications, it is not always possible to consider this feasible.
-There exist a lot of examples where agents only observe/perceive part of the environment:
-\todo{examples}
+Anyone can come up with ideas of a partially observable environment.
+Especially given our definition of agents ``acting upon information it perceives'': the information about the state of the environment can be uncertain.
 
-Starting with SARL, the MDP becomes a partially observable MDP (POMDP) when the agent perceives the state partially.
-The MDP definition of Section \ref{sec:ch2_mdp} is adapted easily to the one of the POMDP by adding an observation space $\mathcal{Z}$ and an observation function $O:\mathcal{S} \rightarrow \mathcal{Z}$, mapping the state of the environment to the observation of the agent.
+Starting with SARL, when the agent can only partially perceive the state, the MDP is said to be a partially observable Markov decision process (POMDP) \citep{KAELBLING199899}. 
+The MDP definition of Section \ref{sec:ch2_mdp} is adapted easily to the POMDP by adding an observation space $\mathcal{Z}$ and an observation function $O:\mathcal{S} \times \mathcal{Z} \rightarrow [0, 1]$, mapping a state and an observation to the probability of observing the latest.
+As a consequence, the agent's policy $\pi$ cannot be a function of the state anymore.
+But it could be a function of the observation.
+Doing so can be a bad idea, because the observation does not respect the Markovian property defined in Section \ref{sec:ch2_mdp}.
+This why, in POMDP, the decision is made based on the history of past observations and action s $(\mathcal{Z} \times \mathcal{U})^\tau$, denoted as $\tau$.
+We therefore denote the policy as $\pi(u_t|\tau_t,o_t): (\mathcal{Z} \times \mathcal{U})^t \rightarrow [0,1]$.
+
+In practice, history can become very large, which can be impractical.
+The agent then maintains a belief $b(s)=Pr(s|\tau,o)$, the probability of being in a given state, knowing the history of observations and spaces.
+To approximate this belief, it is possible to benefit from recurrent neural networks (RNN).
+Several types of recurrent cells exist, such as GRU \citep{Chung2014EmpiricalModeling} or LSTM \citep{Hochreiter1997LongMemory}.
+These networks maintain a hidden state, updated at each timestep, which can be considered as a memory.
+Recurrent networks have many applications, and in POMDP, their hidden state allows maintaining a belief without processing the whole history at each timestep.
+Using recurrent networks to compute policies is thus a common practice in POMDP, resulting in recurrent policies.
+Adding RNN has demonstrated convincing results, such as in recurrent policy gradients or \citep{wierstra2010recurrent} or in deep recurrent Q-network (DRQN) \citep{Hausknecht2015DeepMDPs}.
+We suggest that readers interested in details read the pedagogical paper of \cite{lambrechts2022recurrent}.
+This paper demonstrates that the correlation between the hidden state of RNNs, used to approximate policies, and the belief increases as the training progresses.
+
+When considering multi-agent, the same changes can be applied to the stochastic game definition, leading to partially observable stochastic games (POSG).
+We thus need to add a set of $n$ observation spaces $\mathcal{Z}$ and a set of $n$ observation function $O$.
+When agents are all the same, we can consider that both sets are singleton, which is sometimes a shortcut taken in the literature.
+Finally, as detailed in \citep{DecPomdp}, the belief cannot be considered similarly in multi-agent systems.
+Because in MARL, being in a given state is not only a function of one agent's history, it is a function of all agents' history.
+This manuscript does not address multi-agent belief, and we refer to \citep{DecPomdp} for more details \todo{check albrechts book}.
+In a POSG, we consider that an agent's policy is a function $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a}): (\mathcal{Z}^a \times \mathcal{U}^a)^t \rightarrow [0,1]$, which maps its history $\tau_t^{a} \in (\mathcal{Z}^a \times \mathcal{U}^a)^{t-1}$ and its current observation $o_t^{a}$ to the probability of taking action $u_t^{a}$.
+We also consider that this policy is recurrent.
 
 
-very pedagogical paper on POMDP.
-
-The same considerations can be applied to partially-observable 
-An observation function $O:\mathcal{S} \times \{1,...,n\} \rightarrow \mathcal{Z}$.
-Agents sometimes store their history $\tau^a_t \in (\mathcal{Z} \times \mathcal{U})^t$.
-
+\todo{check queue less exposant a ou subscript a sont les mêmes partout.}

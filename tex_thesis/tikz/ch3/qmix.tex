@@ -1,0 +1,35 @@
+
+\begin{tikzpicture}[node distance=.5cm]
+
+\tikzstyle{netbox} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm, draw=blue]
+\tikzstyle{mixerbox} = [rectangle, rounded corners, minimum width=4.5cm, minimum height=1.5cm, draw=blue]
+\tikzstyle{indixQbox} = [rectangle, rounded corners, minimum width=1.3cm, minimum height=2cm, draw=red]
+\tikzstyle{io} = [minimum width=0.2cm,minimum height=0.5cm]
+\tikzstyle{emptynetbox} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm]
+
+\node (output_node) [io] {$Q_{mix}(s_t, \mathbf{u_t})$};
+\node (mixerbox) [mixerbox, below=of output_node, yshift=-0cm, label={[xshift=-1.4cm, yshift=-1cm]$Mixer$}] {};
+\node (indivQbox1) [indixQbox, below=of mixerbox, xshift=-1.2cm, yshift=-.5cm, label={[xshift=-0.22cm, yshift=.2cm]$Q_{a_1}(s_t, u^1_t)$}] {$Q_{a_1}$};
+\node (indivQboxn) [indixQbox, below=of mixerbox, xshift=1.2cm, yshift=-.5cm, label={[xshift=0.22cm, yshift=.2cm]$Q_{a_n}(s_t, u^n_t)$}] {$Q_{a_n}$};
+\node (mixer_net) [netbox, below=of output_node, yshift=-0.3cm] {$h_m$};
+\node (param_net) [netbox, right=of mixer_net] {$h_p$};
+\node (param_net2) [emptynetbox, left=of mixer_net] {};
+
+
+\node (intput_node1) [io,below=of indivQbox1, yshift=-0cm, label={[xshift=1.2cm, yshift=1.2cm]. . .}] {$o^{a_1}_t, u^a_{t-1}$};
+\node (intput_noden) [io,below=of indivQboxn, yshift=-0cm] {$o^{a_n}_t, u^a_{t-1}$};
+\node (intput_nodestate) [io, right=of param_net] {$s_t$};
+\node (intput_nodestate2) [io, left=of param_net2] {};
+
+\draw [-Latex, thick] (intput_node1) -- (indivQbox1);
+\draw [-Latex, thick] (intput_noden) -- (indivQboxn);
+\draw [-Latex, thick] (indivQbox1) --  (mixer_net);
+\draw [-Latex, thick] (indivQboxn) -- (mixer_net);
+\draw [-Latex, thick] (param_net) -- (mixer_net) node[midway, yshift=0.3cm] {$|.|$};
+\draw [-Latex, thick] (intput_nodestate) -- (param_net);
+\draw [-Latex, thick] (mixer_net) -- (output_node);
+
+%\draw[thick, rounded corners, draw=blue, fill=blue!50, opacity=0.2] ($(mixerbox.north west)+(-0.5,0.5)$) rectangle ($(indivQboxn.south east)+(1,-0.5)$);
+\draw[thick, rounded corners, draw=red, fill=red!50, opacity=0.2] ($(indivQbox1.north west)$) rectangle ($(indivQbox1.south east)$);
+\draw[thick, rounded corners, draw=red, fill=red!50, opacity=0.2] ($(indivQboxn.north west)$) rectangle ($(indivQboxn.south east)$);
+\end{tikzpicture}

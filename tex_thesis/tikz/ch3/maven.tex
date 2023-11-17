@@ -1,0 +1,42 @@
+\begin{tikzpicture}[node distance=.5cm]
+
+\tikzstyle{netbox} = [rectangle, rounded corners, minimum width=1.6cm, minimum height=0.7cm,text centered, draw=red]
+\tikzstyle{netboxMaven} = [rectangle, rounded corners, minimum width=2cm, minimum height=0.7cm,text centered, draw=green]
+\tikzstyle{io} = [text centered]
+
+\node (output_node) [io] {$\{Q_a(s_t, u^a_{j}) \forall u^a_j \in \mathcal{U}_a \}$};
+\node (fctop) [netbox, below=of output_node, yshift=-0.3cm] {FC layer};
+\node (rec_net) [netbox, below=of fctop, text width=2cm] {Recurrent layer};
+\node (fcbot) [netbox, below=of rec_net] {FC layer};
+\node (intput_node) [io,below=of fcbot, yshift=-0cm] {$o^a_t, u^a_{t-1}$};
+\node (input_rec) [io,left=of rec_net, xshift=-0.1cm] {$h_{t-1}$};
+\node (output_rec) [io,right=of rec_net, xshift=+0.05cm] {$h_t$};
+
+\draw [-Latex, thick] (intput_node) -- (fcbot);
+\draw [-Latex, thick] (fcbot) -- (rec_net);
+\draw [-Latex, thick] (rec_net) -- (fctop);
+\draw [-Latex, thick] (fctop) -- (output_node);
+\draw [-Latex, thick] (input_rec) -- (rec_net);
+\draw [-Latex, thick] (rec_net) -- (output_rec);
+
+
+
+\node (param_net) [netboxMaven, right=of fctop, xshift=1cm, text width=2.45cm] {Hypernetwork};
+\node (latentvar) [io, right=of rec_net, xshift=.66cm, text width=2.5cm] {$z$};
+\node (latent_net) [netboxMaven, right=of fcbot, xshift=1cm, text width=2.5cm] {Hierarchical policy network};
+\node (intput_latent_1) [io,below=of latent_net, yshift=-0cm, xshift=-0.8cm] {$s_{t_0}$};
+\node (intput_latent_2) [io,below=of latent_net, yshift=-0cm, xshift=0.8cm] {$x \sim P(x)$};
+\draw [-Latex, thick] (param_net) -- (fctop);
+\draw [-Latex, thick] (latentvar) -- (param_net);
+\draw [-Latex, thick] (latent_net) -- (latentvar);
+\draw [-Latex, thick] (intput_latent_1) -- (latent_net);
+\draw [-Latex, thick] (intput_latent_2) -- (latent_net);
+
+
+\draw[thick, rounded corners, draw=red, fill=red!50, opacity=0.2] ($(fctop.north)+(-1.5,0.3)$) rectangle ($(fcbot.south)+(1.5,-0.3)$);
+%\draw[thick, rounded corners, draw=green, fill=green!80, opacity=0.2] ($(param_net.north)+(-1.5,0.3)$) rectangle ($(latent_net.south)+(1.5,-0.3)$);
+\draw[thick, rounded corners, draw=red] ($(fctop.north)+(-1.5,0.3)$) rectangle ($(fcbot.south)+(1.5,-0.3)$);
+\draw[thick, rounded corners, draw=green] ($(param_net.north)+(-1.5,0.3)$) rectangle ($(latent_net.south)+(1.5,-0.3)$);
+
+
+\end{tikzpicture}
