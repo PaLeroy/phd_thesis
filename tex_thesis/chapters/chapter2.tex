@@ -327,7 +327,7 @@ These networks maintain a hidden state, updated at each timestep, which can be c
 Recurrent networks have many applications, and in POMDP, their hidden state allows maintaining a belief without processing the whole history at each timestep.
 Using recurrent networks to compute policies is thus a common practice in POMDP, resulting in recurrent policies.
 Adding RNN has demonstrated convincing results, such as in recurrent policy gradients or \citep{wierstra2010recurrent} or in deep recurrent Q-network (DRQN) \citep{Hausknecht2015DeepMDPs}.
-We suggest that readers interested in details read the pedagogical paper of \cite{lambrechts2022recurrent}.
+We suggest readers interested in details read the pedagogical paper of \cite{lambrechts2022recurrent}.
 This paper demonstrates that the correlation between the hidden state of RNNs, used to approximate policies, and the belief increases as the training progresses.
 
 When considering multi-agent, the same changes can be applied to the stochastic game definition, leading to partially observable stochastic games (POSG).
