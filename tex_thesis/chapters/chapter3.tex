@@ -4,9 +4,9 @@
 This chapter introduces the main concepts of learning to cooperate with multi-agent reinforcement learning.
 While both chapters \ref{ch:qvmix} and \ref{ch:impmarl} present our contributions in this field, this chapter covers the related works in the literature.
 After a small introduction in Section \ref{sec:ch3_intro}, we define the decentralised POMDP, an adaptation of the stochastic game to the cooperative setting in Section \ref{sec:ch3_decpomdp}.
-Once defined, examples of such environments are provided in Section \ref{sec:ch3_env}.
+Once defined, we present examples of Dec-POMDP in Section \ref{sec:ch3_env}, alongside a more precise description fo the StarCraft Multi-agent challenge, an environment of importance in this manuscript.
 We then present methods designed to solve such environments, respectively value-based methods in Section \ref{sec:ch3_value} and policy-based methods in Section \ref{sec:ch3_policy}.
-Finally, we conclude with a related work discussion in Section \ref{sec:ch3_rel_work} presenting methods and framework from the literature that goes beyond the content of this manuscript.
+For both family, we detail methods used in the contributions of this manuscript and list others from the litterature.
 
 \end{chapter_outline}
 
@@ -42,6 +42,8 @@ Therefore, using the state of the environment or the actions made by other agent
 Part \ref{part:coop} of this manuscript focuses on methods that exploit the CTDE mode to solve cooperative tasks.
 This Chapter presents Dec-POMDP environments and CTDE methods issued from the literature. 
 In contrast, both next Chapters present our contributions: a new CTDE method in Chapter \ref{ch:qvmix} and a new real-world environment in Chapter \ref{ch:impmarl}.
+
+Oroojlooy and Hajinezhad \citep{oroojlooy2022review} provide a review of cooperative MARL, including a more detailed list of applications.
 
 \section{Decentralised partially observable Markov decision process}
 \label{sec:ch3_decpomdp}
@@ -162,6 +164,7 @@ If they encounter opponents in their sight range, they select one as their targe
 They will choose to attack the closest unit with the highest priority, which will remain the target until its priority drops or until it can no longer be attacked.
 A unit's priority score is based on its type and current action.
 For example, if two of the same units attack and the targeted unit stops attacking, its priority score will drop, and the built-in AI agents will select the other unit to attack.
+
 
 \section{Value-based methods}
 \label{sec:ch3_value}
@@ -313,8 +316,8 @@ This third part of the objective requires the introduction of a variational dist
 
 \section{Policy-based methods}
 \label{sec:ch3_policy}
+\subsection{MADDPG}
+\subsection{COMA}
+\subsection{FACMAC}
 
-\section{Related work}
-\label{sec:ch3_rel_work}
 
-Oroojlooy and Hajinezhad \citep{oroojlooy2022review} provide a review of cooperative MARL, including a more detailed list of applications.
