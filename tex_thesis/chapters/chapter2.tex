@@ -2,12 +2,12 @@
 
 \begin{chapter_outline}
 
-This chapter aims to provide a broader overview of reinforcement learning.
+This chapter provides a broader overview of reinforcement learning.
 We first introduce reinforcement learning in Section~\ref{sec:ch2_Introduction} and define a stochastic game, the most common multi-agent framework, in Section~\ref{sec:ch2_stochastic_Game}.
 Multi-agent reinforcement learning is commonly divided into three settings depending on the relative goals of agents as described in Section~\ref{sec:ch2_multi_agent_settings}.
 However, a fourth particular setting exists where a single-agent learns, called single-agent reinforcement learning.
 In Section~\ref{sec:ch2_single_agent_RL}, we provide essential details on this (\textbf{not so}) particular case where the foundations of multi-agent reinforcement learning approaches reside.
-Finally, Section~\ref{sec:ch2_partial_observability} concludes this Chapter with a discussion on partial-observability.
+Finally, Section~\ref{sec:ch2_partial_observability} concludes this chapter with a discussion on partial-observability.
 
 \end{chapter_outline}
 
@@ -31,11 +31,11 @@ Trying to summarise all definitions, we obtain that RL agents interact with thei
 
 After defining the agent, we must also consider the number of agents interacting in the environment.
 Single-agent reinforcement learning (SARL) becomes multi-agent reinforcement learning (MARL) when more than one agent learns in the same environment.
-In this Chapter, we hereafter define the general multi-agent reinforcement learning framework, followed by the three standard settings: cooperation, competition and general sum.
+This chapter defines the general multi-agent reinforcement learning framework, followed by the three standard settings: cooperation, competition, and general sum.
 We then provide an in-depth overview of single-agent reinforcement learning, intending to give enough background to the reader unfamiliar with RL.
 Additionally, we discuss partial observability, an essential topic in RL because agents may not perceive their environment entirely.
 
-To conclude, this Chapter aims to provide a broader overview of reinforcement learning and its main concepts.
+This chapter aims to provide a broader overview of reinforcement learning and its main concepts.
 We intentionally skip some interesting details, such as mathematical developments, demonstrations, or definitions.
 However, we always refer the reader to references to go beyond our introductions.
 We acknowledge that the background sections of this manuscript take a lot of inspiration from these cited works, especially from two of them: ``Reinforcement learning: An introduction'' \citep{sutton2018reinforcement}, well established in the community and ``Multi-Agent Reinforcement Learning: Foundations and Modern Approaches'' \citep{marl-book}, a recent book on the foundations of multi-agent reinforcement learning.
@@ -64,9 +64,9 @@ Intuitively, the discount factor $\gamma$ defines the importance of future rewar
 Finally, we insist here that the reward received by an agent depends on the joint action taken and not only on its own.
 
 Reinforcement learning is about finding or learning the policy that maximises the expected sum, which is called the optimal policy.
-One solution to solve a stochastic game is to find a Nash equilibrium \citep{nash1950equilibrium}.
-Such equilibrium is obtained when none agents have interest to change its policy, meaning that if one changes its policy, its sum of discounted reward will decrease.
-In some games, several Nash equilibrium can exist and one may provide a better sum of discounted rewards to all agents than another.
+One solution to a stochastic game is finding a Nash equilibrium \citep{nash1950equilibrium}.
+Such equilibrium is obtained when no agents are interested in changing their policy, meaning that if one changes its policy, its sum of discounted rewards will decrease.
+In some games, several Nash equilibriums can exist, and one may provide a better sum of discounted rewards to all agents than another.
 More details are provided in Chapter~\ref{ch:competition}.
 
 Several comments can be addressed in the context of the works presented in this manuscript.
@@ -93,7 +93,7 @@ However, in the next Section~\ref{sec:ch2_single_agent_RL}, we develop more deta
 \subsection{Cooperation} 
 \label{sec:ch2_Cooperation}
 When agents share the same goal, they cooperate, and it is possible to model it with a single reward function instead of a set of reward functions.
-This is called common reward games in \citep{marl-book}.
+This is called "common reward games" in \citep{marl-book}.
 Many problems can be considered as being a cooperative multi-agent setting.
 Examples include robot coordination (e.g. in \citep{papoudakis2021benchmarking}), train scheduling (e.g., in \citep{mohanty2020flatland}), traffic control (e.g. in \citep{zhang2019cityflow}) but also games (e.g., Hanabi \citep{Bard_2020}).
 \citet{oroojlooy2022review} provide a review of cooperative MARL, including a more detailed list of applications.
@@ -108,7 +108,7 @@ When agents share opposite goals, they compete.
 In competition, any action that benefits one agent incurs a retrofit to other ones.
 This setting is also called a zero-sum game \citep{marl-book} because it is modelled such that all rewards sum to zero at any time.
 In a two-agent zero-sum game, commonly known as a two-player zero-sum in the game theory literature \citep{russel2010}, a possible adaptation of the stochastic game is to have a single reward function.
-One agent aims at maximising it while the other tries to minimise it.
+One agent aims to maximise it while the other tries to minimise it.
 We also refer to this setting as fully competitive.
 A concrete example is chess with a single reward at the end of the game: $1$ if you won, $0$ if you lost or $1/2$ if you drew.
 Other examples include card games (e.g. Poker \citep{poker}), board games (e.g. chess, shogi, and Go \citep{silver2018general} or Stratego \citep{stratego}) and video games (e.g. StarCraft II \citep{vinyals2019grandmaster})
@@ -119,16 +119,16 @@ Other examples include card games (e.g. Poker \citep{poker}), board games (e.g. 
 The third setting includes everything that is not fully cooperative or fully competitive.
 It is impossible to apriori change the reward function of the general definition as agents' goals are not categorisable.
 Maybe one of the best examples of the general sum setting is autonomous driving \citep{dinneweth2022multi}.
-Another one is trading, where multiple agents sell and buy on the market and must cooperate to achieve personal goals \citep{SHAVANDI2022118124}.
+Another is trading, where multiple agents sell and buy on the market and must cooperate to achieve personal goals \citep{SHAVANDI2022118124}.
 
 In this manuscript, we are interested in the mixed cooperative-competitive setting where two teams compete against each other.
 We model it with only two reward functions, one per team.
-Part~\ref{part:compet} is dedicated to this setting and we study how methods designed for competition work in accordance with cooperation ones.
+Part~\ref{part:compet} is dedicated to this setting, and we study how methods designed for competition work alongside cooperation ones.
 We provide background in Chapter~\ref{ch:competition}, including necessary background from the competitive literature, and then detail our contribution in Chapter~\ref{ch:2teams}.
 
 \section{Single-agent reinforcement learning} 
 \label{sec:ch2_single_agent_RL}
-Single-agent reinforcement learning (SARL) is the particular case of a single agent learning in the environment.
+When there is a single agent learning in the environment, it is named Single-agent reinforcement learning (SARL).
 The most significant part of the history of RL lies in this setting, especially when compared with multi-agent RL.
 Indeed, the foundation of MARL relies on many works first proposed in the single-agent framework.
 Hence, it serves as our starting point and forms the primary content of this background chapter before diving into MARL.
@@ -157,13 +157,12 @@ The goal of the agent is to maximise the expected discounted return, so the expe
 
 Therefore, it needs to learn an optimal policy $\pi^*=\argmax_\pi \mathbb{E}_{\pi}\left[ G_0 \right]$.
 To evaluate a policy, we define the state value function $V^\pi(s) = \mathbb{E}_{\pi}\left[G_t|s_t=s\right]$ and the state action value function $Q^\pi(s, u) = \mathbb{E}_{\pi}\left[G_t|s_t=s, u_t=u\right]$.
-While it may seems meaningless for a single-agent environment, we observe that this optimal policy is a Nash equilibrium.
-Indeed, the agent does not profit from changing its policy.
+While it may seem meaningless for a single-agent environment, this optimal policy is a Nash equilibrium.
+Indeed, the agent can not profit from changing its policy.
 
-Most commonly, two families of methods are identified in RL.
+Most commonly, two families of methods are identified in RL to learn this optimal policy.
 The value-based methods learn a value function and derive the policy from it, while the policy-based methods directly learn a policy.
-But before diving into these details, we first discuss the difference when the model is known or not.
-
+But before diving into these details, we first discuss whether the model is known or not.
 
 \subsection{Model-based or model-free}
 \label{sec:ch2_model_based_vs_model_free}
