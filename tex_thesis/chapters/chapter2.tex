@@ -1,4 +1,4 @@
-\chapter{Fundations of multi-agent reinforcement learning} \label{ch:marl}
+\chapter{Foundations of multi-agent reinforcement learning} \label{ch:marl}
 
 \begin{chapter_outline}
 
@@ -52,10 +52,17 @@ In this manuscript, we define a stochastic game by a tuple $[n, \mathcal{S}, \ma
 Any agent is represented by $a$, and the set of agents is $\mathcal{A} \equiv \{1,..,n\}$.
 We thus define a specific agent as $a_i$ with $i \in \mathcal{A}$.
 
-At each time step $t$, each agent $a$ selects an action $u_t^a \in \mathcal{U}^a$ based on the state of the environment $s_t \in \mathcal{S}$ with a probability given by its policy $\pi^a(u^a_t|s_t)$, where $\mathcal{S}$ is the state space, and $\mathcal{U}^a$ is the action space of agent $a$.
+As presented in Figure \ref{fig:ch2_sg}, at each time step $t$, each agent $a$ selects an action $u_t^a \in \mathcal{U}^a$ based on the state of the environment $s_t \in \mathcal{S}$ with a probability given by its policy $\pi^a(u^a_t|s_t)$, where $\mathcal{S}$ is the state space, and $\mathcal{U}^a$ is the action space of agent $a$.
 These $n$ selected actions form the joint action as $\mathbf{u} \in \mathcal{U}$, where $\mathcal{U} \equiv \bigtimes_{i \in \mathcal{A}} \mathcal{U}^{a_i}$ is the joint action space.
 We also denote the joint policy by $\mathbf{\pi}$.
 As a consequence of agents taking $\mathbf{u_t}$, the state of the environment $s_t$ transits to a new state $s_{t+1}$ with a probability $P(s_{t+1}, s_t, \mathbf{u_t})$ defined by the stochastic transition function $P:\mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow [0,1]$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.8\textwidth]{tex_thesis/figures/ch2/SG.pdf}
+    \caption{Stochastic game.}
+    \label{fig:ch2_sg}
+\end{figure}
 
 As the state transitions, each agent receives a reward denoted $r_t^{a_i} = R(s_{t+1}, s_t, \mathbf{u_t}, i)$ defined by the reward function $R: \mathcal{S} \times \mathcal{S} \times \mathcal{U} \times \mathcal{A} \rightarrow \mathbb{R}$.
 The goal of each agent $a_i$ is to maximise its expected sum of discounted rewards $\mathbb{E}_{\mathbf{\pi}}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, where $T$ is the time horizon and $\gamma \in ]0, 1]$ the discount factor.
@@ -100,7 +107,7 @@ Examples include robot coordination (e.g. in \citep{papoudakis2021benchmarking})
 
 Part~\ref{part:coop} of this manuscript is dedicated to cooperative settings with a common reward.
 In Chapter~\ref{ch:cooperation}, we provide the adaptation of the stochastic game definition to a cooperative setting, followed by examples of environments and methods to solve them.
-Our contributions are presented in Chapter~\ref{ch:qvmix}, with a new method, and in Chapter~\ref{ch:impmarl}, with a new type of environment.
+Our contributions are presented in Chapter~\ref{ch:qvmix}, with a CTDE method, and in Chapter~\ref{ch:impmarl}, with a suite of environments.
 
 \subsection{Competition} 
 \label{sec:ch2_Competition}
@@ -128,7 +135,7 @@ We provide background in Chapter~\ref{ch:competition}, including necessary backg
 
 \section{Single-agent reinforcement learning} 
 \label{sec:ch2_single_agent_RL}
-When there is a single agent learning in the environment, it is named Single-agent reinforcement learning (SARL).
+When there is single-agent learning in the environment, it is called Single-agent reinforcement learning (SARL).
 The most significant part of the history of RL lies in this setting, especially when compared with multi-agent RL.
 Indeed, the foundation of MARL relies on many works first proposed in the single-agent framework.
 Hence, it serves as our starting point and forms the primary content of this background chapter before diving into MARL.
@@ -149,8 +156,8 @@ The goal of the agent is to maximise the expected discounted return, so the expe
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{tex_thesis/figures/ch2/mdp_sketch.pdf}
-    \caption{Markov decision process \citep{sutton2018reinforcement}. \todo check on the same page as the Section where it is defined.}
+    \includegraphics[width=.8\linewidth]{tex_thesis/figures/ch2/MDP.pdf}
+    \caption{Markov decision process \citep{sutton2018reinforcement}.}
     \label{fig:ch2_mdp}
 \end{figure}
 
@@ -308,7 +315,7 @@ This is why actor-critic methods are sometimes described as a mix between value-
 
 Nowadays, advanced policy-based methods relying on the actor-critic paradigm appear to be the most successful.
 We can cite trust region policy optimisation (TRPO) \citep{schulman2015trust} and its variant proximal policy optimisation (PPO) \citep{schulman2017ppo}.
-Both of these methods rely on a controlled policy update by constraining the loss of REINFORCE defined in Equation~\ref{eq:ch2_reinforce_grad}.
+Both methods rely on a controlled policy update by constraining the loss of REINFORCE defined in Equation~\ref{eq:ch2_reinforce_grad}.
 
 \section{Partial observability} \label{sec:ch2_partial_observability}
 As defined in previous Sections, the Markov decision process and the stochastic game are fully observable.
@@ -319,11 +326,22 @@ Especially given our definition of agents ``acting upon information it perceives
 
 Starting with SARL the Markov decision process is said to be a partially observable MDP (POMDP) \citep{KAELBLING199899} when the agent has only access to incomplete information about the state.
 The MDP definition of Section~\ref{sec:ch2_mdp} is adapted easily to the POMDP by adding an observation space $\mathcal{Z}$ and an observation function $O:\mathcal{S} \times \mathcal{Z} \rightarrow [0, 1]$, mapping a state and an observation to the probability of observing the latest.
+The corresponding execution diagram of a POMDP is presented in Figure \ref{fig:ch2_pomdp}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.8\linewidth]{tex_thesis/figures/ch2/POMDP.pdf}
+    \caption{Partially observable Markov decision process.}
+    \label{fig:ch2_pomdp}
+\end{figure}
+
+
 Consequently, the agent's policy $\pi$ cannot be a function of the state anymore.
 One solution is to define the policy as a function of the observation.
 However, it can be a bad idea because the observation does not respect the Markovian property defined in Section~\ref{sec:ch2_mdp}.
 In POMDP, the policy is commonly a function of the history of past observations and actions $(\mathcal{Z} \times \mathcal{U})^\tau$, denoted as $\tau$.
 We therefore denote the policy as $\pi(u_t|\tau_t,o_t): (\mathcal{Z} \times \mathcal{U})^t \rightarrow [0,1]$.
+The corresponding $Q$ function is denoted $Q(\tau,u)$ instead of $Q(\tau,o, u)$.
 
 In practice, history can become very large, which can be impractical.
 A solution is to maintain a belief $b(s)=Pr(s|\tau,o)$, the probability of being in a given state, knowing the history of observations and actions.
