@@ -7,16 +7,16 @@
 \tikzstyle{io} = [minimum width=0.2cm,minimum height=0.5cm]
 \tikzstyle{emptynetbox} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm]
 
-\node (output_node) [io] {$V_{mix}(s_t)$};
+\node (output_node) [io] {$V_{mix}^{tot}(s_t)$};
 \node (mixerbox) [mixerbox, below=of output_node, yshift=-0cm, label={[xshift=-1.4cm, yshift=-1cm]$Mixer$}] {};
-\node (indivQbox1) [indixQbox, below=of mixerbox, xshift=-1.2cm, yshift=-.5cm, label={[xshift=-0.22cm, yshift=.2cm]$V_{a_1}(s_t)$}] {$V_{a_1}$};
-\node (indivQboxn) [indixQbox, below=of mixerbox, xshift=1.2cm, yshift=-.5cm, label={[xshift=0.22cm, yshift=.2cm]$V_{a_n}(s_t)$}] {$V_{a_n}$};
+\node (indivQbox1) [indixQbox, below=of mixerbox, xshift=-1.2cm, yshift=-.5cm, label={[xshift=-0.22cm, yshift=.2cm]$V_{a_1}(\tau^1_t)$}] {$V_{a_1}$};
+\node (indivQboxn) [indixQbox, below=of mixerbox, xshift=1.2cm, yshift=-.5cm, label={[xshift=0.22cm, yshift=.2cm]$V_{a_n}(\tau^n_t)$}] {$V_{a_n}$};
 \node (mixer_net) [netbox, below=of output_node, yshift=-0.3cm] {$h_o$};
 \node (param_net) [netbox, right=of mixer_net] {$h_p$};
 \node (param_net2) [emptynetbox, left=of mixer_net] {};
 
-\node (intput_node1) [io,below=of indivQbox1, yshift=-0cm, label={[xshift=1.2cm, yshift=1.2cm]. . .}] {$o^{a_1}_t, u^a_{t-1}$};
-\node (intput_noden) [io,below=of indivQboxn, yshift=-0cm] {$o^{a_n}_t, u^a_{t-1}$};
+\node (intput_node1) [io,below=of indivQbox1, yshift=-0cm, label={[xshift=1.2cm, yshift=1.2cm]. . .}] {$o^{a_1}_t$};
+\node (intput_noden) [io,below=of indivQboxn, yshift=-0cm] {$o^{a_n}_t$};
 \node (intput_nodestate) [io, right=of param_net] {$s_t$};
 \node (intput_nodestate2) [io, left=of param_net2] {};
 

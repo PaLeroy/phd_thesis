@@ -60,7 +60,7 @@ As a consequence of agents taking $\mathbf{u_t}$, the state of the environment $
 \begin{figure}
     \centering
     \includegraphics[width=.8\textwidth]{tex_thesis/figures/ch2/SG.pdf}
-    \caption{Stochastic game.}
+    \caption{Representation of a Stochastic game \citep{stochasticGames}. Agents $i \in \{1,..,n\}$ have access to the state $s_t$ to select actions $u_t^i$. As a consequence, they each receive a reward $r_t^i$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch2_sg}
 \end{figure}
 
@@ -75,6 +75,8 @@ One solution to a stochastic game is finding a Nash equilibrium \citep{nash1950e
 Such equilibrium is obtained when no agents are interested in changing their policy, meaning that if one changes its policy, its sum of discounted rewards will decrease.
 In some games, several Nash equilibriums can exist, and one may provide a better sum of discounted rewards to all agents than another.
 More details are provided in Chapter~\ref{ch:competition}.
+
+\todo{Challenges}
 
 Several comments can be addressed in the context of the works presented in this manuscript.
 In the SG definition, some include an initial state $s_0$ distribution, which we keep implicit (e.g. in \citep{marl-book}).
@@ -124,7 +126,7 @@ Other examples include card games (e.g. Poker \citep{poker}), board games (e.g. 
 \subsection{General sum} 
 \label{sec:ch2_general_sum}
 The third setting includes everything that is not fully cooperative or fully competitive.
-It is impossible to apriori change the reward function of the general definition as agents' goals are not categorisable.
+It is impossible apriori to change the reward function of the general definition as agents' goals are not categorisable.
 Maybe one of the best examples of the general sum setting is autonomous driving \citep{dinneweth2022multi}.
 Another is trading, where multiple agents sell and buy on the market and must cooperate to achieve personal goals \citep{SHAVANDI2022118124}.
 
@@ -157,7 +159,7 @@ The goal of the agent is to maximise the expected discounted return, so the expe
 \begin{figure}
     \centering
     \includegraphics[width=.8\linewidth]{tex_thesis/figures/ch2/MDP.pdf}
-    \caption{Markov decision process \citep{sutton2018reinforcement}.}
+    \caption{Representation of a Markov decision process \citep{sutton2018reinforcement}. The agent has access to the state $s_t$ to select one action $u_t$. As a consequence, it receives a reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch2_mdp}
 \end{figure}
 
@@ -174,13 +176,21 @@ But before diving into these details, we first discuss whether the model is know
 \subsection{Model-based or model-free}
 \label{sec:ch2_model_based_vs_model_free}
 
-When finding the optimal policy in an MDP, we distinguish methods based on the knowledge of action outcomes.
-Indeed, with the model of the MDP, one can simulate the environment to evaluate policies \citep{sutton2018reinforcement}.
-\cite{moerland2023model} defines a model as follows: ``A model is a form of reversible access to the MDP dynamics (known or learned)''.
-Knowing the model and finding the optimal solution, or learning the model to find the optimal solution of this model, is referred to as model-based RL.
-In opposition, learning by trial and error, without a model, is named model-free RL, and in this manuscript, we focus on model-free RL.
-Model-based RL is not the primary focus, and we refer to the work of \cite{moerland2023model} that provides many keys to bridge the gap between RL and planning, between model-based and model-free.
-Nevertheless, the following Section introduces dynamic programming, techniques that require a model to compute the optimal policy.
+When solving an MDP, we distinguish methods based on the knowledge of action outcomes.
+Indeed, knowing the model of the MDP, one can simulate the environment to evaluate policies \citep{sutton2018reinforcement}.
+``A model is a form of reversible access to the MDP dynamics (known or learned)'' \citep{moerland2023model}.
+Learning by trial and error without a model is referred to as model-free RL, and this manuscript focuses on methods following this approach.
+But when the model is known, two different ways to solve an MDP are distinguished by how they represent the solution.
+The historical one is planning, where methods build a local representation of the solution, typically by evaluating solutions around a given state and discarding them after taking action.
+It typically does not involve learning anything.
+This is how DeepBlue \citep{campbell2002deep} defeated human champions without learning by evaluating many states before taking each action.
+The RL approach stores a global solution, typically a policy or a state-action-value function that is learned, whether it has access to the model or not.
+This leads to the distinction between model-based RL and planning.
+Both have access to the model, but the former uses a global solution while the latter uses local ones.
+Knowing the model or learning it is not considered in these definitions of planning and RL, and both exist: learning the model and the solution or learning the model and planning a solution based on it.
+The distinction between planning and reinforcement learning does not always agree because, in some methods, value functions are learned to compute a local representation of the solution, such as in AlphaZero \citep{silver2018general}, considered as model-based RL by some and planning by others.
+We finally refer to the work of \cite{moerland2023model} that provides many keys to bridge the gap between RL and planning, between model-based and model-free.
+Nevertheless, the following section introduces dynamic programming, a technique requiring a model to compute the optimal policy.
 Dynamic programming provides the foundation of model-free methods that will afterwards be introduced.
 
 \subsection{Dynamic programming}
@@ -223,7 +233,7 @@ Value-based methods are designed to learn value functions.
 Maybe one of the first methods in model-free RL is Q-learning \citep{watkins1992q}, where the state-action value function learned is the optimal one defined as $Q^{\pi^*}(s, u)=\max_{\pi}Q^\pi(s, u)$.
 This enables the agent to greedily select the action $\pi^*(u|s)=\argmax_u Q^{\pi^*}(s, u)$.
 
-Q-learning is classified as a tabular method because it maintains estimations of $Q(s, u)$ in a table, one for each state-action pair.
+Q-learning is a tabular method because it maintains estimations of $Q(s, u)$ in a table, one for each state-action pair.
 It updates these estimations based on themselves, also called bootstrapping and is based on temporal difference (TD) learning.
 Following the update rule of Equation~\ref{eq:ch2_QLearning}, one can repeatedly update the estimation $Q(s, u)$ by adding the temporal difference weighted by a factor $\alpha$ controlling the update size.
 
@@ -242,7 +252,7 @@ Despite being independent of the policy, this iterative process highlight the ex
 Either you only play the action that maximises your currently learned value function, and therefore you exploit, either you play a different action and you explore the possible outcomes.
 
 With Q-learning, the table size to maintain increases as the state-action space size increases.
-Therefore, it can become impractical to compute $Q(s, u)$ for each state-action pair, and it requires function approximators.
+Therefore, it can become impractical to compute $Q(s, u)$ for each state-action pair, requiring function approximators.
 There exist various function approximators, but in this manuscript, we restrict ourselves to neural networks.
 
 A neural network is a function $f: \mathcal{X} \rightarrow \mathcal{Y}$ that maps an input ($\in\mathcal{X}$) to an output ($\in\mathcal{Y}$) based on its parameters $\theta$: $y = f(x;\theta)$.
@@ -250,7 +260,7 @@ These parameters define a sequence of functions, linear or not.
 These functions are differentiable, allowing optimising their parameters by following the gradient of an objective, commonly called a loss function $\mathcal{L}(\theta)$.
 To minimise the loss, parameters can be updated by gradient descent: $\theta = \theta - \alpha \nabla \mathcal{L}(\theta)$.
 Optimising a neural network is also referred to as training it.
-There exist many loss functions to train neural networks, depending on the function to be approximated and nowadays, neural networks are very large, leading to the name of deep learning.
+Many loss functions exist to train neural networks, depending on the function to be approximated and nowadays, neural networks are very large, leading to the name of deep learning.
 See \citep{zhang2023dive} or \citep{pml1Book} for many more details.
 Finally, reinforcement learning with a neural network is called deep reinforcement learning, e.g. in \citep{introDeepRL}.
 Hereafter, we introduce how to train such networks to approximate a value function and, in Section~\ref{sec:ch2_policy_based_methods}, to approximate a policy.
@@ -267,15 +277,14 @@ In turns, the target network $\theta'$ is a copy of $\theta$ updated periodicall
 \end{equation}
 
 In both Equations~\ref{eq:ch2_QLearning} and~\ref{eq:ch2_dqnloss}, the $max$ operator can introduce some positive bias. 
-To overcome this bias, a method called Double Q-learning \citep{hasselt2010double}, and adapted to Q-learning with approximators \citep{van2016deep}, consists in selecting the action that maximises the updated $Q(., \theta)$ to compute the target state-action value.
-The loss is therefore adapted as in Equation~\ref{eq:ch2_doubleQ}.
-
+To overcome this bias, a method called Double Q-learning \citep{hasselt2010double}, and adapted to Q-learning with approximations \citep{van2016deep}, consists in selecting the action that maximises the updated $Q(., \theta)$ to compute the target state-action value.
+The loss is
 \begin{equation}
     \label{eq:ch2_doubleQ}
-    \mathcal{L}(\theta) = \mathbb{E}_{\langle . \rangle\sim B} \big[\big(r_{t} + \gamma Q(s_{t+1}, \argmax_u Q(s_{t+1}, u;\theta) ; \theta')- Q(s_{t}, u_{t}; \theta)\big)^{2}\big]
+    \mathcal{L}(\theta) = \mathbb{E}_{\langle . \rangle\sim B} \big[\big(r_{t} + \gamma Q(s_{t+1}, \argmax_u Q(s_{t+1}, u;\theta) ; \theta')- Q(s_{t}, u_{t}; \theta)\big)^{2}\big].
 \end{equation}
 
-Double Q-learning is one of the possible improvements of DQN, and we refer to the Rainbow paper \citep{hessel2018rainbow} that addresses several others.
+Double Q-learning is one of the possible improvements of DQN, also called DDQN, and we refer to the Rainbow paper \citep{hessel2018rainbow} that addresses several others.
 To cite one, the extension to distributional RL, which approximates distributions instead of expected returns, can be of interest \citep{bellemare2017distributional, THEATE2023199}. 
 
 \subsection{Policy-based methods} \label{sec:ch2_policy_based_methods}
@@ -331,7 +340,7 @@ The corresponding execution diagram of a POMDP is presented in Figure \ref{fig:c
 \begin{figure}
     \centering
     \includegraphics[width=.8\linewidth]{tex_thesis/figures/ch2/POMDP.pdf}
-    \caption{Partially observable Markov decision process.}
+    \caption{Representation of a partially observable Markov decision process\citep{KAELBLING199899}. The agent does not have access to the state $s_t$ but to an observation $o_t$ defined by the observation function $O$. Based on $o_t$, it selects one action $u_t$. As a consequence, it receives a reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch2_pomdp}
 \end{figure}
 
@@ -367,3 +376,4 @@ As in SARL, such a policy is commonly a recurrent policy approximated with RNN.
 
 
 \todo{check que les exposant a ou subscript a sont les mêmes partout.}
+\todo{check les tirets dans les state action value function.}

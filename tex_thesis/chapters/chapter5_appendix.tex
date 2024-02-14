@@ -1,0 +1,254 @@
+\chapter{Supplementary materials} \label{ch:ch5_appendix}
+\section{IMP-MARL public repository, license, data, and documentation}
+\label{sec:ch5_appendix_imp_public_repo}
+% Repository license and instructions
+IMP-MARL's suite of environments is publicly available on the GitHub repository \url{https://github.com/moratodpg/imp\_marl}, featuring an open-source Apache v2 license.  Moreover, IMP-MARL contains wrappers to facilitate its implementation on typical MARL ecosystems, i.e., Gym \citep{openaigym}, RLLib \citep{liang2018rllib}, and PyMarl \citep{samvelyan2019starcraft}, as detailed in Section \ref{sec:experiments}.
+% How to reproduce the results
+To reproduce the work reported in this paper, the following process can be executed: (i) cloning the repository, (ii) installing a virtual environment with the package requirements, and (iii) executing the script instructions of the corresponding method and IMP-MARL environments.
+In addition to the instructions for reproducing our results, we also provide tutorials to add new environments or wrappers.
+% How to directly download the results % How to download controllers
+We also provide the data files resulting from our experiments, enabling the reproduction of any reported result without re-running the experiments, as well as the corresponding implementation code, hence facilitating future cross-comparisons.
+The readily available results include Figures \ref{fig:results}, \ref{fig:learning_curves_cc_false}, and \ref{fig:learning_curves_cc_true}, along with Tables \ref{tab:koutofnresults}, \ref{tab:correlatedkoutofnresults}, \ref{tab:owfresults}.
+Configuration, execution, and results files are permanently stored at Zenodo, accessible via \url{https://zenodo.org/record/8032339}. 
+Additionally, the controller networks' weights of the best policies presented in Figure \ref{fig:results} are also stored there, thus fostering further interpretability studies of MARL-based strategies.
+The dataset is open-access and registered with the Digital Object Identifier (DOI) 10.5281/zenodo.8032339.
+More information and dedicated tutorials can be found on the repository.
+
+
+\section{Experimental details}
+\label{sec:ch5_appendix_exp_details}
+\subsection{Description of the parameters set up in the experiments}
+
+\begin{table}
+  \caption{Parameters set in our experiments.}
+  \label{tab:exp_details_common}
+  \centering
+  \begin{tabular}{llll}
+    \toprule
+    Parameter name & Parameters value & Parameter name & Parameters value \\
+    \midrule
+    $\gamma$ & 0.95 & Time max & 2,050,000 \\
+    Target update & 200  & RMS epsilon &  $10^{-5}$ \\
+    RMS alpha &  0.99  & Grad norm clip & 10 \\
+    Learning rate & 0.0005 &Obs last action & True \\
+    Agent network & [] - 64 GRU - [] &Save model interval & 20,000 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+In this section, we provide the information required to reproduce the results reported in this paper.
+Since the neural networks are trained via MARL using PyMarl's \citep{samvelyan2019starcraft} library, the parameters are here described following PyMarl's convention.
+However, their purpose can be easily deduced from the names themselves.
+The experimental parameters set up equal across all experiments are presented in Table \ref{tab:exp_details_common}, while the parameters specific to each method are hereafter detailed.
+Note that in Table \ref{tab:exp_details_common}, some parameters are not used by all methods, e.g., RMS parameters. Besides, target update intervals, buffer size, and batch size are specified based on the number of episodes.
+When the number of agents increases, we only augment the number of trainable parameters of the mixer/critic networks, while the actor networks and other parameters are not modified.
+All the parameters can be found in the configuration files available on the GitHub repository and can be used to launch any of the experiments conducted in this paper.
+
+Regarding the agent network representation for CTDE methods and IQL, it consists of one GRU layer with a hidden state that includes 64 features.
+This means that the input is fully connected to the 64 hidden states, which are then fully connected to the outputs, one per action.
+We represent it as "[] - 64 GRU - []".
+Since the number of actions, and hence the number of outputs, of the DQN network is $3^n$, a network with more representation capacity is needed.
+In that case, linear layers, whose number of output features are specified between brackets, are also included in the agent network surrounding the GRU layer.
+With $n=2$ or $n=3$ agents, the network is set as "[128] - 128 GRU - [128,64]" while for $n=4$ or $n=5$ agents, it is set as "[256] - 256 GRU - [256,256]".
+Note that the linear layers before the GRUs include a Relu activation function and the last taken action is also added to the observation of the agents as an additional input.
+
+As mentioned previously, some parameters are common to almost all methods.
+For instance, the optimiser selected is RMSProp for all methods, except for FACMAC, which is trained with ADAM.
+In nearly all methods, the buffer stores the latest $2,000$ episodes, and at each episode, $64$ episodes are sampled to update the network.
+However, since COMA is an on-policy method, the networks are updated with the episodes just played.
+Therefore, in our experiments, COMA's networks are updated every four episodes based on these last experienced ones.
+This update is performed four times to ensure a fair amount of network updates with respect to the other methods, which are, in turn, updated every episode.
+
+\begin{table}
+    \caption{Exploration parameters.}
+    \centering
+    \begin{tabular}{llll}
+    \toprule
+    & Epsilon start & Epsilon finish & Epsilon anneal time \\
+    \midrule
+    Value-base methods & 0.5  & .01 & 5000\\
+    FACMAC & 0.3 & 0.005 & 50000 \\
+    \bottomrule
+    \end{tabular}
+    \label{tab:exloration_param}
+\end{table}
+
+During training, the value-based methods rely on an epsilon-greedy policy, whose parameters are specified in Table \ref{tab:exloration_param}, while they act following a greedy policy at testing.
+Note, however, that COMA and FACMAC utilise different training policies.
+FACMAC samples discrete actions through a Gumbel softmax for its actor, whereas exploration is performed via an epsilon, whose values are specified in Table \ref{tab:exloration_param}.
+On the other hand, COMA follows a classic stochastic policy during training.
+At the testing stage, FACMAC and COMA select actions adhering to a greedy approach, selecting the action associated with the maximum probability.
+
+In the conducted experiments, the parameters set up in the environments differ with respect to the number of agents and we distinguish three cases (i) $n<=10$, (ii) $n=50$, and (iii) $n=100$.
+Starting with QMIX, the parameters are all the same when increasing $n$, except for the architecture of the mixing network, whose embedding size in the middle of the mixer is: (i) $32$, (ii) $64$, and (iii) $128$.
+QMIX relies on a double-Q feature, i.e., the loss computed to update $\theta$ differ from the original.
+While in the original loss function, the target Q value used for the update is selected with the action that maximises the target Q value parameterised by $\theta'$, in double-Q, the action is the one that maximises the Q value parameterised by $\theta$.
+Therefore, we have: $\mathcal{L}(\theta) = \mathbb{E}_{\langle . \rangle\sim B} \big[\big(r_{t} + \gamma Q(s_{t+1}, u*; \theta')- Q(s_{t}, u_{t}; \theta)\big)^{2}\big]$ where $u*=\argmax_u Q(s_{t+1}, u; \theta)$.
+This target network is updated every $200$ episodes.
+QVMix is a variant of QMIX and the parameter values are similarly specified.
+In particular, QVMix contains two networks: (i) a Q network with the same architecture as QMIX, and (ii) a V network that is a copy of the Q network, but with only one output.
+As for QPLEX, we try to be close to the parameters selected for the SMAC experiments they conduct in their paper.
+When $n$ increases, we change only the attention layer size composed of $a$ layers and $b$ heads.
+In particular, we set up (i) $1L4H$, (ii) $2L4H$, and (iii) $2L10H$.
+The mixer embedding is $64$ for all experiments.
+
+With respect to COMA, which is an actor-critic method, a few specific parameters should be additionally set up.
+The agent network, here denoted as the actor, is the same as for the other previously described.
+However, the critic varies with $n$ because the input of the critic becomes rather large, and its architecture is fully linear: (i) [128, 128], (ii) [512, 256, 128, 128], and (iii) [2048, 1024, 512, 256, 128].
+A TD-$\lambda$ used to update the critic is set to $0.8$ and the learning rate to train the critic is the same as the one of the actor, specified in Table \ref{tab:exp_details_common}.
+In terms of FACMAC, the parameters of interest are those at the critic, as its size increases with the number of agents $n$.
+FACMAC features a 2-layer-mixing network and, therefore, we specify the size for both:
+(i) 64-64, (ii) 128-64, and (iii) 128-128.
+As in COMA, the TD-$\lambda$ parameter is set to $0.8$.
+The critic has a target network, similar to those included in value-based methods, that is also updated every 200 episodes with a soft target update with $\tau=0.001$.
+Moreover, we follow the optimiser selection made in FACMAC's original paper and used ADAM, with an epsilon equal to $10^{-8}$.
+
+Regarding IQL, which is a decentralised method, the parameters are identical in all tested environments.
+IQL also has the double-Q feature activated and learns independently individual Q values via DQN's algorithm.
+For DQN, we only run experiments with less than five agents, i.e., $n<=5$.
+The main difference between tested environments is the size of their networks. 
+Since DQN features $3^n$ outputs, only $64$ GRU cells are not enough in terms of network capacity. 
+In our experiments, we increase the network size and confirm that DQN manages to achieve similar results as the other MARL methods.
+In DQN, the network architecture is the only parameter that is adjusted with the number of agents $n$.
+
+Finally, we list in Table \ref{tab:n_param_train} the number of trainable parameters of the networks.
+The input is slightly different between the tested sets of IMP-MARL environments and, therefore, we show in the table only the parameters for one of them.
+Note that there is an agent network taking actions for all agents and we purposely duplicate the agent network row to emphasise that all agent's networks are identical across experiments.
+
+\begin{table}
+    \caption{Number of trainable parameters in uncorrelated k-out-of-n systems.}
+    \centering
+    \begin{tabular}{lllllll}
+    \toprule
+    Method & Network & $n=3$ & $n=5$ & $n=10$ & $n=50$ & $n=100$ \\
+    \midrule
+    \multirow{2}{*}{QMIX} & Agent & 27,587 & 27,715 & 28,035 & 30,595 & 33,795 \\
+ & Mixer & 18,657 & 41,249 & 133,569 & 5,430,657 & 42,202,113 \\
+\multirow{2}{*}{QVMix} & Agent & 27,587 & 27,715 & 28,035 & 30,595 & 33,795 \\
+ & Mixer & 64,771 & 110,083 & 295,043 & 10,891,779 & 84,437,891 \\
+\multirow{2}{*}{QPLEX} & Agent & 27,587 & 27,715 & 28,035 & 30,595 & 33,795 \\
+ & Mixer & 58,249 & 83,289 & 155,269 & 1,830,933 & 4,901,797 \\
+\multirow{2}{*}{COMA} & Agent & 27,587 & 27,715 & 28,035 & 30,595 & 33,795 \\
+ & Critic & 35,971 & 45,955 & 70,915 & 1,195,907 & 10,840,323 \\
+\multirow{2}{*}{FACMAC} & Agent & 27,587 & 27,715 & 28,035 & 30,595 & 33,795 \\
+ & Critic & 48,002 & 72,706 & 134,466 & 1,042,370 & 3,313,218 \\
+\multirow{2}{*}{IQL} & Agent & 27,587 & 27,715 & 28,035 & 30,595 & 33,795 \\
+ & / & 0 & 0 & 0 & 0 & 0 \\
+\multirow{2}{*}{DQN} & Agent & 157,979 & 758,003 & / & / & / \\
+ & / & 0 & 0 & / & / & / \\
+    \bottomrule
+    \end{tabular}
+    \label{tab:n_param_train}
+\end{table}
+
+
+
+\subsection{Hardware and experiments duration}
+\label{app:duration}
+
+Our experiments are all run on different clusters managed by SLURM \citep{yoo2003slurm}.
+They are executed with specific hardware requirements based on the number of agents: experiments with up to $10$ agents are run on only CPUs, while we execute experiments on GPUs with $50$ and $100$ agents.
+The efficiency does not substantially improve when running experiments with less than $10$ agents on GPUs because training a GRU layer requires forwarding the whole episode sequentially.
+In contrast, the computational time can be reduced when running experiments with $50$ and $100$ agents on GPUs because we train all agents as a single network and the batch size increases with $n$. 
+We categorise the computational time required for the reported experiments according to whether (i) the experiment is (or is not) run only on CPUs, and (ii) the value reported corresponds to the training or the testing stage.
+In Table \ref{tab:slurmdetails}, we additionally provide the hardware requirements demanded during the training and testing phases.
+Note that we benefit from more resources during testing because 10 environments are running in parallel.
+Moreover, we intentionally demand more RAM to avoid problems.
+These reported RAM configurations are indicative and can be seen as requirements, yet not as exact memory usage numbers.
+
+\begin{table}
+  \caption{Hardware configurations for training and testing experiments.}
+  \label{tab:slurmdetails}
+  \centering
+  \begin{tabular}{lllll}
+    \toprule
+    Parameters & Train only on CPUs & Train on GPUs & Test only on CPUs & Test on GPUs \\ 
+    \midrule
+    Number of CPU & 4  & 2 & 8 & 5 \\ 
+    RAM           & 5 Gb & 6 Gb & 5Gb & 10 Gb \\ 
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+We represent the computational time required for the experiments during training in Figures \ref{fig:training_time_cpu} and \ref{fig:training_time_gpu} as well as during testing in Figures \ref{fig:testing_time_cpu} and \ref{fig:testing_time_gpu}.
+To avoid overloading the figures, the markers do not explicitly indicate which experiment they correspond to, yet the experiments are all vertically grouped based on the method and the environment.
+For each abscissa, $20$ experiments, with and without campaign cost, are represented.
+The first three sets of experiments represent QMIX in the uncorrelated k-out-of-n setting, followed by QMIX in the correlated k-out-of-n environment which is followed by QMIX in the offshore wind farm one.
+The methods are ordered as QMIX, QVMIX, QPLEX, COMA, FACMAC, IQL, and DQN, while the environments are ordered as k-out-of-n setting, correlated k-out-of-n, and offshore wind farm.
+It can be seen in Figures \ref{fig:training_time_cpu} and \ref{fig:testing_time_cpu} that the two plots with $n<10$ additionally represent the three additional experiments related to DQN.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/training_time_cpu.pdf}
+    \caption{Training duration for experiments with $n<=10$ performed on only CPUs.}
+    \label{fig:training_time_cpu}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/training_time_gpu.pdf}
+    \caption{Training duration for experiments with $n>=50$ performed on CPUs and GPUs.}
+    \label{fig:training_time_gpu}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/testing_time_cpu.pdf}
+    \caption{Testing duration for experiments with $n<=10$ performed on only CPUs.}
+    \label{fig:testing_time_cpu}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/testing_time_gpu.pdf}
+    \caption{Testing duration for experiments with $n>=50$ performed on CPUs and GPUs.}
+    \label{fig:testing_time_gpu}
+\end{figure}
+
+The first observation that may be addressed is the resulting high variance. 
+The variation across runs is logical because of the specific performance of the CPU/GPU models employed, but also due to the additional activity of clusters at the time of our experiments.
+With respect to the computational time required for training, testing episodes are not executed and we can see that, by running the experiments on only CPUs, we manage to train the agents in less than $10$ hours, except for some occasional outliers.
+For experiments with $50$ agents, and also relying on GPUs, the computational time is overall very similar to those previously mentioned, requiring less than $10$ hours, yet a longer time is needed for those with $100$ agents.
+The fastest training results correspond to COMA because we are running four environments in parallel, instead of one during training.
+We can see that IQL and QMIX follow closely, but QVMix, QPLEX, and FACMAC require additional computational time due to their architecture complexity.
+Naturally, the testing stage needs more time compared to training for all experiments because it executes $10,000$ test episodes per stored network.
+The correlated k-out-of-n environment slightly requires more time than the others because the correlation information is updated at every inspection step.
+
+
+\begin{figure}
+    \centering
+    \includegraphics{tex_thesis/figures/ch5/heur_cpu_time.pdf}
+    \caption{Computational time required for executing expert-based heuristic policies as a function of the number of components. The experiments are run on 2 AMD EPYC Rome 7542 CPUs @ 2.9GHz.}
+    \label{fig:heur_time_cpu}
+\end{figure}
+Furthermore, we represent in Figure \ref{fig:heur_time_cpu} the time required for the computation of expert-based heuristic policies. The experiments are plotted as a function of the number of components and coloured based on their corresponding environment. In this case, all experiments are run on CPUs. We can see that heuristic policies can be efficiently computed for environments with less than 50 components, yet the computational time significantly increases for experiments with 50 or 100 components. This result is logical since the combination of evaluated parameters includes the number of components to be inspected at each inspection interval. Besides, the overall computation time is directly influenced by the time needed to run an episode, with the k-out-of-n environments taking longer compared to the offshore wind farm ones because the episode's finite horizon spans over 10 additional time steps. 
+
+\subsection{Statistical analysis of the variance associated with the number of test episodes}
+\label{app:variance_env}
+
+\begin{figure}
+\centering
+    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/variance_analysis.pdf}
+\caption{
+Variance analysis of a given set of neural networks.
+We report the standard deviation of the sum of discounted rewards obtained during the test phase.
+Each curve represents an entire test experiment when executing 100, 1,000, or 10,000 test episodes.
+}
+\label{fig:variance_details}
+\end{figure}
+
+As previously explained, we conduct 10,000 test episodes to reduce the variance related to the expected sum of discounted rewards within a given environment.
+The choice is motivated by the direct relationship between the variance associated with $\mathbb{E}[R_{0}]$ and the number of test episodes. 
+In our experiments, we average over 10,000 policy realisations, but here, we show that the standard deviation associated with $\mathbb{E}[R_{0}]$ for each trainig time step can vary significantly if an insufficient number of test episodes is simulated.
+Figure \ref{fig:variance_details} illustrates the standard deviations observed when executing with 100, 1,000, and 10,000 test episodes.
+To produce this figure, we take the neural networks obtained with one FACMAC training run.
+These networks are trained over time in the offshore wind farm environment with 100 components.
+From this single set of networks, we execute 10 times the 100, 1,000, and 10,000 test episodes to observe how the variance evolves with this number of test episodes.
+We observe that the standard deviations of $\mathbb{E}[R_{0}]$ obtained with 100 test episodes significantly vary over the investigated test runs.
+Naturally, the variation of the standard deviation is reduced with an increasing number of test episodes, obtaining very similar standard deviations when testing with 10,000 episodes.
+
+Moreover, one can also compute the largest difference that is observed between these 10 test runs at a specific time step i.e., the absolute difference of the estimated $\mathbb{E}[R_{0}]$ at a given time step.
+When testing 100 episodes, the absolute difference is $231.89$ at a time step where the maximum of the 10 provided $\mathbb{E}[R_{0}]$ is $ -2786.1$.
+If 1000 episodes are tested, the absolute difference is $99.8$ where the maximum is $-2757.2$ at this time step, whereas by testing 10,000 episodes, the difference equals $24.8$ with a maximum of $-2622.8$.
+These numbers represent only a trained set of networks over $1920$ training runs, and thus a final conclusion cannot be claimed, yet it motivates the need of simulating 10,000 test episodes, as with only 100 test episodes, the absolute difference can reach up to 10 \%.

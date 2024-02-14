@@ -1,25 +1,203 @@
 \chapter{Introduction}\label{ch:introduction}
+\damien{Deadline: 13/02}
 
-A decision is the core of human interaction with its environment.
+We all make decisions.
+A decision is a choice among possibilities, and different kinds of decisions exist.
+For example, consider yourself driving a car and arriving at a crossroads.
+In front of you, there is a traffic sign.
+Based on your perception and knowledge, you first decide it is a stop sign.
+This decision involves reasoning, even if it may be almost instantaneous.
+But this decision has no impact on the car.
+Secondly, when you decide to stop the car, as suggested by the sign, you decide to take the action of stopping it.
+This second decision, based on the first one, impacts your environment.
+Indeed, you push on the brakes, and the car decelerates until it stops.
+This highlights one of the differences between decisions, which we differentiate as acting or reasoning.
+Their impact can often distinguish them: acting usually affects our environment while reasoning doesn't.
 
-Nice first paragraph with why taking decisions is important in our society.
+Decisions are based on what we have learned.
+You studied the traffic signs to know it was a stop one.
+You practised your driving skills to obtain your driver's license by trial and error, but hopefully also with the help of a supervisor.
+You did acquire these skills by learning.
+We learn by supervision and having examples of decisions or feedback to highlight whether some were right or wrong.
+But we also learn by interaction, testing our environment.
+"The idea that we learn by interacting with our environment is probably the first to occur to us when we think about the nature of learning" \citep{sutton2018reinforcement}.
+Everyone remembers a child throwing objects from the table and learning what gravity is.
+This highlights that you learn by yourself but also with the help of others.
+Nevertheless, this manuscript is not about how humans learn. 
+It is about how machines can make decisions.
 
-Link to multi-agents
+When a computer makes decisions, it is called artificial intelligence (AI).
+AI has a lot of definitions.
+As in our previous examples, AI approaches are distinguished by the nature of the decision, either through acting or reasoning.
+Both acting and reasoning can be further divided into two subfields: mimicking human decision-making processes or striving to achieve predefined goals. 
+This is how \cite{russel2010} classifies AI in the four approaches as either reasoning or acting in a human-like or rational manner.
+This highlights how differently it is possible to consider AI.
+This manuscript considers the acting rationally approach, where AI is deemed to take action to achieve a predefined goal.
 
-def of machine learning (page 3 deisenroth)
+These definitions of AI follow different approaches, but learning is not involved yet.
+Because, for what concerns us, it is possible to act rationally without learning.
+A computer can solve a Sudoku game by sequentially enumerating all cells' available numbers and assigning a number to the cell with a single possible number.
+This does not involve learning anything but only applying the game rules.
+Many problems can be solved without learning, but some may be challenging.
+For example, a computer can play Chess by enumerating all the possibilities from a given board situation.
+But the number of possible games of Chess is $~10^{120}$ \citep{shannon1950xxii}, enumerating all of them is intractable.
+However, creating an AI that plays Chess is possible if you enumerate only the games of interest.
+This is how DeepBlue \citep{campbell2002deep} plays Chess at the level of the best human players without learning.
+Making decisions only based on predefined rules can be limiting and lead to developing AI that can learn to make decisions.
 
-\section{Research question}
-\label{sec:ch1_researchQ}
-The research question addressed: how to train a team to cooperate alone and when it needs to compete against 
+When there is learning in AI, we call it machine learning (ML).
+"Machine learning is a subset of AI that learns to make decisions by fitting mathematical models to observed data"~\citep{prince2023understanding}.
+It is divided into different areas based on the available data and the algorithm's goal.
+For example, an AI can learn the type of a traffic sign based on its picture.
+To achieve this, a model can be built with the help of a dataset of pictures and their corresponding labels.
+Here, the model maps a type of traffic sign from a picture.
+During the learning phase, it predicts the types of the whole dataset and is updated based on the actual types provided, the latter allowing supervision.
+We say that it learns because its performance improves during the process.
+Such a solution is categorised as supervised learning (SL), a sub-area of ML.
+Another area of ML is unsupervised learning when unlabelled data is provided.
+Indeed, the lack of labels induces the absence of supervision, but the model can still learn to understand the image structure instead of predicting its label.
+Removing part of the image and training the model to predict the missing pixel is an example of unsupervised learning called inpainting.
+Back to our AI approaches, these two areas of ML tend to solve reasoning problems instead of acting ones.
 
+In this manuscript, we are particularly interested in learning to act rationally.
+When AI learns to do so, we call it reinforcement learning (RL).
+This is a third area of Machine learning problems, and most of the time, any ML problem is classified as one of the three defined.
+In RL, an agent acts and receives a reward after taking action.
+The reward is the action's outcome, a numerical feedback.
+As the goal is to act rationally, the agent is trained to find the strategy that provides the best possible reward.
+This strategy is called the optimal policy.
+The agent learns by trial and error, typically updating its policy based on the received reward after each action.
+Back to our example, when not stopping at a stop sign at a crossroad, you can cause an accident, an excellent example of a negative reward.
+But whether you break or not, your environment is evolving.
+Indeed, in addition to receiving rewards based on the actions taken by the agent, the agent's environment can also evolve.
+We then say that the state of the environment evolves based on the action.
+In RL, the environment is anything necessary to define the problem, typically what you need to code to create a simulator to let the agent play virtually.
+The agent is part of the environment but interacts with it, defining somehow inside and outside the environment.
+Nevertheless, this dynamic nature of the environment adds complexity to the learning process, as the optimal policy is then conditioned on a sum of rewards.
+An example of a state-less environment is the bandit problem, where you must select an arm of one money machine in front of multiple machines.
+
+In reinforcement learning, agents face the exploration-exploitation dilemma. 
+They must balance trying out new actions to discover potentially better strategies (exploration) and sticking to actions that have yielded high rewards in the past (exploitation).
+This is a typical challenge in the bandit problem.
+The environment can also involve delayed rewards, where the consequences of an action may not be immediate. 
+This delay makes it more challenging for agents who receive a reward and understand whether it was for a previous or last action.
+This is referred to as the credit assignment challenge.
+Finally, Sudoku and Chess can be solved without learning, but the AI needs to know the game's rules.
+In RL, this is usually not the case. 
+The agent does not know how an action will affect its state.
+It just receives the reward and learns to maximise it.
+
+Many applications of reinforcement learning exist.
+It can be applied in healthcare, typically to decide treatment dosage through time \citep{miotto2018deep}.
+Following the idea of the bandit problem, a recommender system is also an example of a reinforcement learning application \citep{mcinerney2018explore}.
+Robotics is another example where RL learns to control a robot, such as learning a robotic hand to solve Rubik's cube \citep{akkaya2019solving}.
+Finally, games have been a testbed for reinforcement learning for a long time. 
+They offer the best environment for trials and errors as they can be easily simulated.
+Some significant breakthroughs have been achieved thanks to games, such as attaining human performance in Atari games \citep{Mnih2015}.
+There are many others, but returning to our example, we did not consider one important parameter.
+When riding your car, you are not alone.
+Other people are also sharing the roads, and your decisions are also based on them, on their behaviour.
+
+When there are multiple agents in the environment, many things change.
+We need to consider how these agents influence the environment.
+There are several types of dynamics in multi-agent.
+Agents can take actions simultaneously or sequentially.
+For example, everyone makes decisions simultaneously on the road, while Chess is a turn-based game where agents' decisions are made one after the other.
+In these two examples, the number of agents is different.
+In Chess, there are only two agents, while on the road, there can be a lot.
+These two examples illustrate problems with multi-agent systems, from a game with two agents to a real-world environment with many agents.
+However, one crucial distinction that should be made in multi-agent environments is that some agents may not learn.
+
+Multi-agent reinforcement learning (MARL) extends single-agent reinforcement learning (SARL) when multiple agents learn in the environment.
+Suppose only one agent is learning in an environment composed of several ones.
+The other agents then have a stationary policy, which does not evolve through time.
+Thus, the agent can be trained with SARL because the other agents are simply part of its environment since they always act the same.
+However, when several agents learn, their policies change over time, which can induce a constantly moving target problem.
+Typically, in a rock-paper-scissor game, if one always chooses rock, one may always choose paper.
+But if the first changes to scissors, the second may finally change to rock.
+This cycle can last forever, and one needs to decide when to stop.
+This already highlights challenges in MARL.
+The first one is indeed the non-stationarity of agents.
+
+The second challenge is the number of agents.
+The environment's dynamic is often a function of every agent's action, leading to a combination of actions that scales exponentially with the number of agents.
+Designing methods to train these agents that scale is challenging because you may need to consider all these possibilities.
+
+A third challenge in MARL is to determine the optimality of policies.
+In SARL, it is straightforward: the agent must achieve a high sum of rewards, and when it finds the policy achieving the maximum sum of rewards, it stops.
+But how can this be posed in a multi-agent environment when several agents want to maximise their reward?
+A solution is to find an equilibrium, achieved when agents do not want to change their policy.
+How to define this equilibrium and whether there are several of them is a dedicated research problem in MARL.
+Moreover, finding the equilibrium providing the maximum sum of rewards can also be challenging.
+
+A fourth challenge is related to the credit assignment previously introduced.
+In addition to understanding the reward caused by past actions, a challenge in MARL is determining the actions of which agents caused the current reward.
+Back to the example, if you stop because of a stop sign but get damaged by the one following you who did not stop, the corresponding negative reward is not your fault, but the faulty one is the car's driver behind you.
+Other challenges exist, but these four highlight the additional challenges when extending to multi-agent reinforcement learning \cite{marl-book}.
+
+Multi-agent reinforcement learning has been divided into three principal settings.
+Each one is based on the goal of agents.
+The first setting, cooperation, involves agents cooperating to achieve a common goal.
+In the second setting, competition, agents compete to achieve an opposing goal, typically named the zero-sum setting.
+The third setting is named general-sum and encompasses everything else.
+Based on these settings, it is possible to frame the problem in a specific way, helping to solve it more easily.
+Many questions remain when solving MARL, but we kept one.
+
+Should we consider other learning agents from the environment when training one?
+This research question has existed in the MARL community for quite some time.
+This manuscript aims to provide some answers to this question, which can be reformulated differently.
+Why should agents learn to interact with others instead of learning alone?
+Is there any interest in training agents to interact with other learning ones instead of training the agent alone?
+Based on the challenges and settings introduced, the reader should be confident that training an agent with a single-agent reinforcement learning method might not yield the best answer to these problems.
+And this manuscript goes toward demonstrating that we need to consider other learning agents in our environment, but this has a cost and some benefits.
+This manuscript presents works in the different settings of multi-agent reinforcement learning that have been answering the challenges by considering this specific question.
+The outline is presented in the next Section, highlighting these contributions.
+
+\todo{partially observable}
 
 \section{Outline}
 \label{sec:ch1_outline}
+This manuscript is divided into four parts.
+The necessary background is presented in Part~\ref{part:background}, providing an overview of reinforcement learning.
+In Part \ref{part:coop}, we present works related to cooperation, one of the multi-agent settings, while Part \ref{part:compet} extends these topics to a specific general-sum framework where teams compete.
+Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively reviewing the contributions presented in this manuscript.
 
+\begin{enumerate}
+    \item Part~\ref{part:background} is "Background".
+    
+    It comprises a single chapter presenting the multi-agent reinforcement learning framework and details its different settings and challenges.
+    More importantly, this chapter presents the foundations of MARL issued from single-agent reinforcement learning.
+    For those unfamiliar with reinforcement learning, this chapter is mandatory, and we refer the reader to numerous additional works if more details are required.
+    In contrast, these concepts should be well known for the familiar ones, and Chapter~\ref{ch:marl} serves as a notation introduction.
+
+    \item Part~\ref{part:coop} is "Learn to cooperate".
+    
+    Its first chapter, Chapter~\ref{ch:cooperation}, provides the necessary material to understand the challenges of cooperation in multi-agent reinforcement learning.
+    It is a mix of background introduction and literature review, as this chapter introduces many concepts and methods from the literature.
+    The second chapter of Part~\ref{part:coop}, Chapter~\ref{ch:qvmix}, presents four methods based on the Deep-Quality Value family of algorithms.
+    The third and last, Chapter~\ref{ch:impmarl}, introduces real-world infrastructure management planning, an application that can be tackled in this cooperative framework.
+    
+    \item Part~\ref{part:compet} is "Cooperate against an opposing team".
+    
+    It is composed of two chapters.
+    Chapter~\ref{ch:competition} describes how competition is classically modelled and solved in multi-agent reinforcement learning.
+    The second Chapter~\ref{ch:2teams} presents a specific framework where two teams compete and how to train them.
+
+    \item Part~\ref{part:conclusion} is "Conlusion".
+    It comprises Chapter~\ref{ch:conclusion} and addresses the closing remarks.
+\end{enumerate}
 
 \section{Publications}
-\label{sec:ch1_public}
+\label{sec:ch1_publications}
 
-\section{Credits}
-\label{sec:ch1_credits}
-Works used to write the thesis
+This manuscript is built upon existing research, integrating insights from numerous cited sources.
+Notably, three central chapters represent adaptations of specific peer-reviewed publications.
+
+\begin{itemize}
+\item Chapter~\ref{ch:qvmix} is an adapted version of the publication \textit{QVMix and QVMix-Max: extending the deep quality-value family of algorithms to cooperative multi-agent reinforcement learning}, P. Leroy, D. Ernst, P. Geurts, G. Louppe, J. Pisane, and M. Sabatelli. AAAI-21 Workshop on Reinforcement Learning in Games, 2021 \citep{leroy2020qvmix}.
+
+\item Chapter~\ref{ch:impmarl} is an adapted version of the publication \textit{IMP-MARL: a suite of environments for large-scale infrastructure management planning via MARL}, P. Leroy, P. G. Morato, J. Pisane, A. Kolios, and D. Ernst. Thirty-seventh Conference on Neural Information Processing Systems Datasets and Benchmarks Track, 2023 \citep{leroy2023impmarl}.
+
+\item Chapter~\ref{ch:2teams} is an adapted version of the publication \textit{Value-based CTDE methods in symmetric two-team Markov game: from cooperation to team competition}, P. Leroy, J. Pisane, and D. Ernst. Deep Reinforcement Learning Workshop NeurIPS, 2022 \citep{leroy2022twoteam}.
+\end{itemize}
+

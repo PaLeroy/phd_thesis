@@ -7,7 +7,7 @@
 \tikzstyle{io} = [minimum width=0.2cm,minimum height=0.5cm]
 \tikzstyle{emptynetbox} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm]
 
-\node (output_node) [io] {$Q_{mix}(s_t, \mathbf{u_t})$};
+\node (output_node) [io] {$Q_{mix}^{tot}(s_t, \mathbf{u_t})$};
 \node (mixerbox) [mixerbox, below=of output_node, yshift=-0cm, label={[xshift=-1.4cm, yshift=-1cm]$Mixer$}] {};
 \node (indivQbox1) [indixQbox, below=of mixerbox, xshift=-1.2cm, yshift=-.5cm, label={[xshift=-0.22cm, yshift=.2cm]$Q_{a_1}(\tau^1_t, u^1_t)$}] {$Q_{a_1}$};
 \node (indivQboxn) [indixQbox, below=of mixerbox, xshift=1.2cm, yshift=-.5cm, label={[xshift=0.22cm, yshift=.2cm]$Q_{a_n}(\tau^n_t, u^n_t)$}] {$Q_{a_n}$};

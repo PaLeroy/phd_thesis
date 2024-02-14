@@ -13,6 +13,7 @@
 \usepackage{amssymb}
 \input{classicthesis-config}
 
+
 % Theorems and definitions
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}
@@ -35,6 +36,7 @@
 \numberwithin{figure}{chapter}
 \numberwithin{table}{chapter}
 
+
 \usepackage{tikz}
 
 % Maths
@@ -56,12 +58,14 @@
 
 % Todo
 \newcommand{\todo}[1]{\textcolor{red}{[TODO] #1}}
+\newcommand{\damien}[1]{\textbf{\textcolor{red}{[Damien] #1}}}
 
 % PS pictures
 \usepackage{pstricks,auto-pst-pdf}
 
 % Landscape tables
 \usepackage{rotating}
+
 
 % Checkmarks
 \usepackage{pifont}% http://ctan.org/pkg/pifont
@@ -70,9 +74,11 @@
 
 % Wide tables
 \usepackage{ltablex}
-
+\usepackage{colortbl} % colorcell
 \usepackage[dvipsnames]{xcolor}
 
+\usepackage{multirow}
+\usepackage{color}
 
 % -----------------------------------------------------------------------------
 
@@ -94,7 +100,7 @@
 \cleardoublepage\include{frontback/jury}
 \cleardoublepage\include{frontback/abstract}
 %\cleardoublepage\include{frontback/publications}
-%\cleardoublepage\include{frontback/acknowledgments}
+\cleardoublepage\include{frontback/acknowledgments}
 \pagestyle{scrheadings}
 \cleardoublepage\include{frontback/toc}
 
@@ -127,8 +133,8 @@
 
 % Back pages ==================================================================
 \appendix
-\cleardoublepage
 \part{Appendix}
+\include{tex_thesis/chapters/chapter5_appendix}\cleardoublepage
 
 % \cleardoublepage\include{frontback/notations}
 \cleardoublepage\include{frontback/bibliography}

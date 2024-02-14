@@ -10,7 +10,7 @@ For both families, we detail methods used in the contributions of this manuscrip
 
 \end{chapter_outline}
 
-
+\damien{13/02}
 \section{Introduction}
 \label{sec:ch3_intro}
 As introduced in Part~\ref{part:background}, cooperation is the multi-agent setting of agents sharing a common goal.
@@ -96,7 +96,7 @@ Many more examples of cooperative MARL applications exist.
 Many can be found in the book of \cite{marl-book}, in the review on cooperative MARL done by \cite{oroojlooy2022review}, such as autonomous driving, resource allocation, stock market,...
 
 
-\subsection{StarCraft multi-agent challenge}
+\subsection{StarCraft multi-agent challenge} \label{sec:ch3_smac}
 The StarCraft multi-agent challenge (SMAC) \citep{samvelyan2019starcraft} and its improved version SMACv2 \citep{ellis2023smacv2} are probably the most studied suite of environments with CTDE methods.
 SMAC is based on the StarCraft II Learning Environment \citep{vinyals2017starcraft}, an RL environment to play StarCraft II (SC2).
 StarCraft is a strategy video game where players compete by managing units, gathering resources, building an army and defeating opponents.
@@ -157,6 +157,7 @@ A stalker has $80$ hit points and $80$ shield points.
 It shoots at range, inflicting $13$ damage points to the shield, $12$ damage points to a zealot's hit points and $17$ to a stalker's hit points.
 A zealot has 100 hits points and 50 shield points.
 It attacks in melee and inflicts $16$ damage points to the shield and $14$ damage points to the hit points of a zealot or a stalker.
+All maps are presented in a video from the author\footnote{\url{https://youtu.be/VZ7zmQ_obZ0}}.
 
 Finally, it can be intriguing to see an environment where two teams compete is considered cooperative.
 This is because the built-in AI is stationary. 
@@ -169,11 +170,10 @@ A unit's priority score is based on its type and current action.
 For example, if two of the same units attack and the targeted unit stops attacking, its priority score will drop, and the built-in AI agents will select the other unit to attack.
 One of the weaknesses of this built-in AI strategy that the learning agents need to learn is to stop attacking to stay alive, with the condition that an ally should be attacking.
 So, agents need to cooperate to attack or not share the possible damage inflicted by the opponents.
-Next Sections cover the MARL methods to achieve this coordination.
+The next sections cover the MARL methods to achieve this coordination.
 
 \section{Value-based methods}
 \label{sec:ch3_value}
-
 
 As detailed in Chapter \ref{ch:marl}, value-based methods aim to learn the optimal state-action value function $Q^{\pi^*}(s, u)$, such that the optimal policy is $\pi^*(s)=\argmax_{u} Q^{\pi^*}(s, u)$.
 In SARL, one solution, called DQN, is to approximate $Q$ with a neural network $\theta$ and learn $Q(s, u;\theta)$
@@ -184,10 +184,12 @@ In the first mode, one possible centralised training and execution approach is D
 However, it is only possible if all agents can access the state $s$ during execution.
 Such a setting is also called a multi-agent Markov decision process \citep{boutilier1996planning}.
 In this setting, the centralised agent learns the state-joint-action value function $Q^{\boldsymbol{\pi}}(s,\mathbf{u}; \theta)$ by following the adapted DQN loss in Equation~\ref{eq:ch3_centralQloss}.
+
 \begin{equation}
 \label{eq:ch3_centralQloss}
     \mathcal{L}(\theta) = \mathbb{E}_{\langle . \rangle\sim B} \big[\big(r_{t} + \gamma \max_{\mathbf{u}} Q(s_{t+1}, \mathbf{u}; \theta')- Q(s_{t}, \mathbf{\mathbf{u_t}}; \theta)\big)^{2}\big]
 \end{equation}
+
 Issues are that the joint action space scales exponentially with $n$.
 Also, in practice, agents select their action based only on their history $(o, \tau)$ and not the state $s$.
 
@@ -202,7 +204,7 @@ With CTDE methods, it is possible to approximate $Q(s_t, \mathbf{u_t})$ as a fac
 To ensure this, individual $Q_a$ functions must satisfy the individual-global-max condition (IGM) \citep{Son2019QTRAN:Learning} presented in Equation~\ref{eq:ch3_igm}.
 
 \begin{equation}
-    \argmax_{\mathbf{u_t}} Q(s_t, \mathbf{u_t}) =\bigcup_{a}\argmax_{u_t^{a}} Q_{a}(\tau_t^{a}, u_t^{a})
+    \argmax_{\mathbf{u_t}} Q(s_t, \mathbf{u_t}) =(\argmax_{u_t^{1}} Q_{1}(\tau_t^{1}, u_t^{1}),...,\argmax_{u_t^{n}} Q_{n}(\tau_t^{n}, u_t^{n}))
     \label{eq:ch3_igm}
 \end{equation}
 
@@ -210,6 +212,8 @@ Satisfying the IGM property allows agents to greedily select actions that maximi
 Therefore, during training, an approximation of $Q(s_t, \mathbf{u_t})$, sometimes denoted $Q_{tot}$, is built as a factorisation of $Q_a$ and then dropped at execution.
 Agents select actions based on these $Q_a$, satisfying IGM, and we keep only these networks at execution.
 Note that these $Q_a$ are now utility functions, only used to select actions, and they do not approximate the expected sum of discounted rewards anymore.
+In this manuscript, we express $Q_{tot}$ as a function of the state $s$ and consider that the state is known.
+The following expressions can be rewritten as a function of the joint history $\mathbf{\tau}$ if the state $s$ is unknown during training.
 
 Maybe one of the first methods of value-based factorisation is called value decomposition network (VDN) \citep{sunehag2018vdn}.
 This method factories $Q_{tot}$ using the addition, an operation which satisfies IGM: $Q_{tot}^{VDN}(s_t, \mathbf{u_t}) = \sum_{i=1}^n Q_{a_i}(\tau^{a_i}_t, u^{a_i}_t)$.
@@ -218,7 +222,7 @@ Another limitation is that we need $Q_{tot}$ only during training, and in VDN, w
 In the following, we present three other methods that have been used in the experiment conducted in the presented contributions.
 Others exist, and we finish this section with a related work discussion.
 
-\subsection{QMIX} 
+\subsection{QMIX}
 QMIX \citep{Rashid2018} is a CTDE method where the approximation of $Q_{tot}$ is performed by a monotone factorisation of the individual $Q_a$ functions, also function of the state during training, as defined in Equation~\ref{eq:qmixappendix}.
 
 \begin{equation}
@@ -302,19 +306,123 @@ This third part of the objective requires the introduction of a variational dist
 For further details on the MAVEN optimisation procedure and especially on constructing the mutual information objective, we refer the reader to \cite{Mahajan2019MAVEN:Exploration}.
 
 \subsection{QPLEX}
-QPLEX \citep{wang2021qplex} extends QMIX with the dueling structure $Q = V + A$ \citep{wang2016dueling}, learning a factorisation of $V$ and $A$ with transformers \citep{vaswani2017attention}.
+QPLEX \citep{wang2021qplex} extends QMIX with the dueling structure $Q(s_t, u_t) = V(s_t) + A(s_t, u_t)$ \citep{wang2016dueling}, learning a factorisation of $V$ and $A$ with transformers \citep{vaswani2017attention}.
 The advantage function $A$ has been introduced in Section \ref{sec:ch2_policy_based_methods}.
-The duelling structure involves learning $V(s_t)$ and $A(s_t, u_t)$, typically with a single network with a common part and two different heads.
+The duelling structure involves learning $V(s_t)$ and $A(s_t, u_t)$, typically with a single network with a common part used to form two different heads.
 By separating the computation of the value of a given state and the contributions of different actions in that given state, \citet{wang2016dueling} demonstrated better results than DQN.
 
+Back to QPLEX, \citet{wang2021qplex} demonstrated that if the advantage function $A$ respects the advantage-IGM, then the state action value function $Q = V + A$ respect IGM and the state value function $V$ is not constrained.
+The individual $Q_a$ satisfy the advantage-IGM if $Q_{tot}=V_{tot}+A_{tot}$ and $V_{tot}(s)=\max_{\mathbf{u}} Q_{tot}(s, \mathbf{u})$ and $Q_a=V_a+A_a$ and $V_a(s)=\max_{u} Q_a(s, u)$ such that Equation \ref{eq:ch3_adv_igm} holds.
+This defines the duplex dueling structure of QPLEX.
+The constraint on the $Q_a$ is transferred to the advantage functions $A_i$, leading to an unconstrained approximation of the state value function $V$.
+
+\begin{equation}
+    \argmax_{\mathbf{u_t}} A_{tot}(s_t, \mathbf{u_t}) =(\argmax_{u_t^{1}} A_{1}(\tau_t^{1}, u_t^{1}),...,\argmax_{u_t^{n}} A_{n}(\tau_t^{n}, u_t^{n}))    \label{eq:ch3_adv_igm}
+\end{equation}
 
 
-\subsection{Other methods}
-\todo{check competition paper to add information}
+
 \section{Policy-based methods}
 \label{sec:ch3_policy}
-\subsection{MADDPG}
+Policy-based methods learn directly the optimal policy through a neural network $\pi(s, u;\theta)$ that maximises $J(\theta)=\mathbb{E}_{\pi_\theta}[R_0]$.
+The well-known REINFORCE method \citep{williams1992simple} ascends the gradient $\nabla_\theta J = \mathbb{E}[\sum_t R_t \nabla_\theta \log \pi(u_t|s_t;\theta)]$ to find $\pi^*$.
+Actor-critic methods \citep{sutton1999policy,konda1999actor} expand upon this method by incorporating a parameterised critic that estimates $Q(s_t, u_t;\phi)$, replacing $R_t$, with the actor serving as the parameterised policy.
+To reduce variance, a baseline $b(s)$ is injected into the gradient, usually $b(s) = V(s)$, and $Q(s, u;\phi)$ is replaced by $A(s,u; \phi)$ \citep{10.5555/2074022.2074088}, leading to the new gradient expression $\nabla_\theta J = \mathbb{E}[\sum_t A(s_t, u_t; \phi) \nabla_\theta \log \pi(s_t, u_t; \theta)]$.
+Advantage estimation is accomplished either by $A(s_t,u_t; \phi)=Q(s_t, u_t;\phi)-\sum_u \pi(u|s_t;\theta) Q(s_t,u; \phi)$ or by $A(s_t,u_t; \phi)=r_t +\gamma V(s_{t+1};\phi) - V(s_t;\phi)$.
+Extending these methods to MARL is a straightforward process and the decentralised solution is named IAC \citep{Foerster2017}. 
+This approach involves each agent learning independently an actor and a critic, based only on the tuple $(\tau, o)$.
+However, this solution does not exploit the additional information provided by the state $s$.
+During training, the critic may exploit the full state $s$, which would result in a centralised critic.
+However, this approach provides the same feedback to all agents, missing out on the crucial aspect of credit assignment \citep{chang2003all}. 
+To address this, MADDPG \citep{lowe2017multi} allows each agent to learn its own critic $Q_a(s, \boldsymbol{u};\phi)$ that is considered centralised since its use of $s$ and $\boldsymbol{u}$.
+
+
+
+
+Naive learner: Independent Actor-Critic (IAC)
+Each agent learns its actor and critic independently.
+
+Two possible critics:
+IAC-V:  $A(\tau_t, u_t; \phi) = r + \gamma V(\tau_{t+1}; \phi) - V(\tau_t; \phi)$.
+IAC-Q:  $A(\tau_t, u_t; \phi) = Q(\tau_t, u_t; \phi) - \sum_{u^a}\pi_\theta(\tau_t, u^a)Q(\tau_t, u^a; \phi)$.
+Problem: How to benefit from centralised information such as $s_t$?
+
+
+
+
 \subsection{COMA}
+
+Solutions proposed by Foerster, et. al. (2018) (COMA):
+Centralised used during training critic that computes the advantage based on $s_t$.
+
+$$
+A(s_t,u^a_t; \phi) = r_t + \gamma V(s_{t+1}; \phi) - V(s_t; \phi)
+$$
+
+
+Problems: 
+Based on global rewards $r_t$.
+The centralised critic does not solve the credit assignment problem.  
+
+Solution: use a counterfactual baseline.
+Inspired from difference reward: 
+
+$$D^a=r(s, \mathbf{u}) - r(s, (\mathbf{u}^{-a}, c^a))$$
+
+The common reward $r(s, \mathbf{u})$ is compared to a reward obtained when agent $a$ executes a default action $c^a$, actions of other agents ($\mathbf{u}^{-a}$) unchanged.
+Any action $u^a$ that maximises $r(s, \mathbf{u})$ also maximises $D^a$.
+
+Limitations:
+A simulator is required to obtain $r(s, (\mathbf{u}^{-a}, c^a))$.
+But these can be approximated.
+Decide which action is $c^a$.
+
+Use a centralised critic that computes difference rewards by learning $Q(s, \mathbf{u})$.
+
+For each agent $a$, the advantage is:
+$$ A^a(s, \mathbf{u}) = Q(s, \mathbf{u}) - \sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))  $$
+
+Problem: $(|\mathcal{U}_1|\*...\*|\mathcal{U}_n|)$ $Q$ values must be computed.
+
+In practice, a $Q$ network has one ouput for each possible action.
+Here, this leads to $|\mathcal{U}_1|\*...\*|\mathcal{U}_n|$ outputs which is impractical.
+Solution: the critic takes as input $u^{-a}$ and computes only $|\mathcal{U}_a|$ outputs.
+
+This method is only possible for discrete action spaces! 
+It is possible to evaluate $\sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))$
+Monte Carlo 
+Gaussian policies in continuous action spaces.
+
+
+
+On the other hand, COMA \citep{Foerster2017} and FACMAC \citep{peng2021facmac} propose solutions with a single centralised critic.
+COMA, inspired by difference reward \citep{wolpert2001optimal}, proposes having the centralised critic compute a counterfactual baseline for each agent.
+For an agent $a$, the difference reward is $R(s_{t+1}, s_t, \boldsymbol {u_t}) - R(s_{t+1}, s_t, (\boldsymbol{u_t}^{-a}, c_t^a))$ where $c$ is a default action.
+Computing this requires simulating the environment steps several times.
+But in COMA, the centralised critic computes the advantage $A_a(s_t,\boldsymbol{u_t}; \phi)=Q(s_t, \boldsymbol{u};\phi) - \sum_{u'^{a}} \pi({u'^{a}} |\tau_t^a;\theta) Q(s_t, (\boldsymbol{u_t}^{-a}, u'^{a}); \phi)$ for each agent, allowing it to approximate $A$ without more environment steps.
+This has the cost of requiring to increase the input space of $A$ as it additionally takes $u^{-a}$ actions as input.
+
 \subsection{FACMAC}
 
+FACMAC suggests using a central but factored critic by employing the value function factorization of QMIX.
+The joint-action $Q(s, \boldsymbol{u};\phi)$ is built as a function of $Q_a(\tau, u^a)$, without the need to satisfy IGM and without the constraints on the hypernetwork.
+
+
+\section{Related work}
+In addition to QMIX \citep{Rashid2018}, QVMix \citep{leroy2020qvmix} and QPLEX \citep{wang2021qplex}, QTRAN \citep{Son2019QTRAN:Learning} and Weighted-QMIX \citep{rashid2020weighted} factorise $Q_{tot}$ differently from QMIX, but do not always satisfy IGM \citep{Son2019QTRAN:Learning}.
+Other methods, such as LAN \citep{avalos2023local}, also extend over QMIX and learns to cooperate without factorising $Q_{tot}$.
+
+MADDPG \citep{lowe2017multi} is another well-established method, which does not learn a single centralised critic, but one per agent and is designed for continuous action spaces.
+Another method, LIIR \citep{Du2019LIIRLearning}, aims to provide credit assessment with individual intrinsic rewards, while HATPRO and HAPPO \citep{kuba2021trust} demonstrate that popular actor-critic methods like TRPO \citep{schulman2015trust} and PPO \citep{schulman2017ppo} can be extended to cooperative MARL tasks.
+HATRPO and HAPPO could have been a great addition to our study but are unfortunately not implemented within the PyMarl library.
+
+Another approach for dealing with cooperative multi-agent settings is to link the recent success of sequence models and reinforcement learning by using a multi-agent transformer (MAT) that learns to transform a sequence of observations into a sequence of actions, one per agent \citep{wen2022multiagent}.
+
+critic usefuell paper?
+
+Mean field game
+
+\todo{check state-action or state action}
+
+communication
 
