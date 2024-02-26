@@ -31,8 +31,8 @@ But AI is not only about computers making decisions.
 Nowadays, AI has a lot of definitions.
 \cite{russel2010} identify eight definitions to propose a classification of AI into four approaches.
 They suggest that AI is to make computers either think like humans, think rationally, act like humans or act rationally.
-Thinking like humans usually refers to the field of cognitive sciences where theories of the human mind are built.
-Thinking rationally refers to the field of logic based on knowledge representation inspired by the syllogisms invented by Aristotle.
+Computers thinking like humans usually refers to the field of cognitive sciences where theories of the human mind are built.
+Computers thinking rationally refers to the field of logic based on knowledge representation inspired by the syllogisms invented by Aristotle.
 This manuscript does not address these two types of AI.
 Indeed, we are interested in computers acting to solve problems.
 Acting can be defined as making decisions, and \cite{russel2010} consider acting as anything related to the behaviour.
@@ -44,13 +44,13 @@ However, many researchers did not focus on creating acting AI succeeding this te
 The following self-explanatory quote may convince many: "Aeronautics is not defined as the field of making machines that fly so exactly like pigeons that they can fool even other pigeons"\citep{russel2010}.
 This brings us to the fourth category of AI definitions, the one of interest in this manuscript: AI acting rationally.
 Rationality means mathematics and engineering here, such as in the logic approach previously described.
-Therefore these types of AI are built to take decisions to achieve a predefined goal.
+Therefore, these types of AI are built to take decisions to achieve a predefined goal.
 An agent is defined as anything taking decisions.
 A rational agent acts to achieve the best-expected outcomes of its objective.
 
 This manuscript is about AI, specifically about agents acting rationally, but it is also about learning, and learning has not yet been addressed.
 And this is because it is possible to act rationally without learning.
-It is possible to solve a Sudoku game by sequentially enumerating all cells' available numbers and assigning a number to the cell ending up with a single possible number.
+It is possible to solve a Sudoku game by sequentially enumerating all cells' available numbers and assigning a number to cells that end with only one possible number.
 This does not involve learning anything but only applying the game rules ingenuously.
 Many problems can be solved without learning, but some may be challenging.
 For example, a computer can play Chess by enumerating all the possibilities from a given board situation.
@@ -169,25 +169,26 @@ Based on these settings, it is possible to frame the problem in a specific way, 
 Many questions remain when solving MARL, but we kept one.
 
 To summarise, different AI definitions exist, and we focus on how a computer can learn to act rationally.
-Learning is not mandatory to act rationally, but it might be required when complexity increases.
+Learning is not mandatory to act rationally but might be required when complexity increases.
 Learning in AI is called machine learning and is divided into three sub-areas: supervised or unsupervised learning and reinforcement learning.
 Reinforcement learning allows agents to be trained based on a reward they obtain after making a decision.
 When several agents learn together with RL, it is multi-agent reinforcement learning.
-There are several types of MARL, cooperation, competition and general-sum, and we identified the main challenges in all three.
-Finally, enfin, this manuscript is about multi-agent reinforcement. 
+There are several types of MARL, cooperation, competition and general-sum, and we identified the main challenges irrespective of the three.
+Finally, enfin, this manuscript presents contributions to multi-agent reinforcement.
 
+This introduction may make it clear that we need to consider other learning agents when training one.
+The reader should be confident that training an agent with a single-agent reinforcement learning method might not yield the best answer to these problems.
+This research question has existed in the MARL community for quite some time, and we go beyond by providing insights into how we should consider other learning agents in an environment.
+We focus on two specific settings: training a team to cooperate and training a team to compete against an opposing one.
+In the cooperative setting, we present methods designed to train a team of agents to fulfil a cooperative task and how such methods can be applied to a real-world application.
+When training a team in an adversarial scenario, we can use the same methods but, again, by considering that there are opponents.
+This highlights the two main parts of the manuscript, each providing background to provide perspective on the novelties of the presented work.
+Before diving into the details of these two settings, we provide the necessary background and notations of reinforcement learning.
+In the following sections, we provide the context in which this work has been conducted, followed by a more detailed outline of this manuscript and finally, a disclaimer on publications at the foundations of this manuscript.
 
-Should we consider other learning agents from the environment when training one?
-This research question has existed in the MARL community for quite some time.
-This manuscript aims to provide some answers to this question, which can be reformulated differently.
-Why should agents learn to interact with others instead of learning alone?
-Is there any interest in training agents to interact with other learning ones instead of training the agent alone?
-Based on the challenges and settings introduced, the reader should be confident that training an agent with a single-agent reinforcement learning method might not yield the best answer to these problems.
-And this manuscript goes toward demonstrating that we need to consider other learning agents in our environment, but this has a cost and some benefits.
-This manuscript presents works in the different settings of multi-agent reinforcement learning that have been answering the challenges by considering this specific question.
-The outline is presented in the next Section, highlighting these contributions.
+\section{Context}
+\label{sec:ch1_context}
 
-\todo{partially observable}
 
 \section{Outline}
 \label{sec:ch1_outline}
@@ -196,30 +197,34 @@ The necessary background is presented in Part~\ref{part:background}, providing a
 In Part \ref{part:coop}, we present works related to cooperation, one of the multi-agent settings, while Part \ref{part:compet} extends these topics to a specific general-sum framework where teams compete.
 Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively reviewing the contributions presented in this manuscript.
 
-\begin{enumerate}
-    \item Part~\ref{part:background} is "Background".
+\begin{description}
+    \item [Part \ref{part:background}] Background.
     
-    It comprises a single chapter presenting the multi-agent reinforcement learning framework and details its different settings and challenges.
+    Chapter~\ref{ch:marl} is the single chapter of Part \ref{part:background} presenting the basic multi-agent reinforcement learning framework and details its different settings and challenges.
     More importantly, this chapter presents the foundations of MARL issued from single-agent reinforcement learning.
-    For those unfamiliar with reinforcement learning, this chapter is mandatory, and we refer the reader to numerous additional works if more details are required.
+    For those unfamiliar with reinforcement learning, this chapter is a must-read, and we refer the reader to numerous additional works if more details are required.
     In contrast, these concepts should be well known for the familiar ones, and Chapter~\ref{ch:marl} serves as a notation introduction.
 
-    \item Part~\ref{part:coop} is "Learn to cooperate".
+    \item [Part \ref{part:coop}] Learn to cooperate.
     
-    Its first chapter, Chapter~\ref{ch:cooperation}, provides the necessary material to understand the challenges of cooperation in multi-agent reinforcement learning.
+    Chapter~\ref{ch:cooperation} is the first of this second part and provides the necessary material to understand the challenges of cooperation in multi-agent reinforcement learning.
     It is a mix of background introduction and literature review, as this chapter introduces many concepts and methods from the literature.
-    The second chapter of Part~\ref{part:coop}, Chapter~\ref{ch:qvmix}, presents four methods based on the Deep-Quality Value family of algorithms.
-    The third and last, Chapter~\ref{ch:impmarl}, introduces real-world infrastructure management planning, an application that can be tackled in this cooperative framework.
     
-    \item Part~\ref{part:compet} is "Cooperate against an opposing team".
+    In the second chapter, Chapter~\ref{ch:qvmix}, we present four methods based on the Deep-Quality Value family of algorithms designed to train cooperating agents.
     
-    It is composed of two chapters.
-    Chapter~\ref{ch:competition} describes how competition is classically modelled and solved in multi-agent reinforcement learning.
-    The second Chapter~\ref{ch:2teams} presents a specific framework where two teams compete and how to train them.
+    Chapter~\ref{ch:impmarl} is the third and last chapter and introduces infrastructure management planning, a real-world application that can be tackled in this cooperative framework.
+    In this application, inspections, repairs, and/or retrofits should be timely planned to control the risk of potential system failures.
+    
+    \item [Part \ref{part:compet}]  Cooperate against an opposing team.
+    
+    Chapter~\ref{ch:competition} is the first one and presenting how competition is classically modelled and solved in multi-agent reinforcement learning.
+    It serves the same purpose of Chapter~\ref{ch:cooperation} and is alike, a mix between background and literature review.
+    
+    Chapter~\ref{ch:2teams} presents a particular case of the general-sum settings where two teams compete and how to train them.
 
-    \item Part~\ref{part:conclusion} is "Conlusion".
-    It comprises Chapter~\ref{ch:conclusion} and addresses the closing remarks.
-\end{enumerate}
+    \item [Part \ref{part:conclusion}] Conlusion.
+    The last chapter of this manuscript, Chapter~\ref{ch:conclusion}, addresses the closing remarks.
+\end{description}
 
 \section{Publications}
 \label{sec:ch1_publications}
@@ -234,4 +239,5 @@ Notably, three central chapters represent adaptations of specific peer-reviewed 
 
 \item Chapter~\ref{ch:2teams} is an adapted version of the publication \textit{Value-based CTDE methods in symmetric two-team Markov game: from cooperation to team competition}, P. Leroy, J. Pisane, and D. Ernst. Deep Reinforcement Learning Workshop NeurIPS, 2022 \citep{leroy2022twoteam}.
 \end{itemize}
+
 
