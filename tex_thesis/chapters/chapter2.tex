@@ -73,6 +73,7 @@ Finally, we insist here that the reward received by an agent depends on the join
 
 Several comments can be addressed in the context of the works presented in this manuscript.
 In the SG definition, some include an initial state $s_0$ distribution, which we keep implicit (e.g. in \citep{marl-book}).
+Since the transition function is stochastic, the reward function is based on the next state obtained, but we sometimes denote it irrespective of this new state for simplicity.
 While the state space and action spaces can be composed of discrete or continuous variables, action spaces are discrete in this manuscript.
 Agents do not always observe the state of the environment entirely to select an action.
 This partial observability is further developed in Section~\ref{sec:ch2_partial_observability}.
@@ -386,7 +387,7 @@ This paper demonstrates that the correlation between the hidden state of RNNs, u
 
 Adding partial observability in the definition of the stochastic game leads to the most general framework of multi-agent reinforcement learning, the partially observable stochastic game (POSG) \citep{hansen2004dynamic}.
 Its definition is obtained by adding a set of $n$ observation spaces $\mathcal{Z}$ and a set of $n$ observation functions $\mathcal{O}$ in the definition of the SG.
-When agents are the same, they observe the state likewise, and a shortcut taken in the literature is to consider that these two sets $\mathcal{Z}$ and $\mathcal{O}$ are singleton.
+A shortcut in this manuscript, and sometimes in the literature, is to consider that these two sets $\mathcal{Z}$ and $\mathcal{O}$ are singleton, the single observation function $O:\mathcal{S} \times \mathcal{A} \rightarrow \mathcal{Z}$ therefore maps an observation from the state and a given agent.
 
 An agent's belief in a POSG should be considered differently from that in a POMDP \citep{DecPomdp}.
 Being in a given state is not only a function of one agent's history but is a function of all agents' history.

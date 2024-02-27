@@ -184,11 +184,7 @@ In the cooperative setting, we present methods designed to train a team of agent
 When training a team in an adversarial scenario, we can use the same methods but, again, by considering that there are opponents.
 This highlights the two main parts of the manuscript, each providing background to provide perspective on the novelties of the presented work.
 Before diving into the details of these two settings, we provide the necessary background and notations of reinforcement learning.
-In the following sections, we provide the context in which this work has been conducted, followed by a more detailed outline of this manuscript and finally, a disclaimer on publications at the foundations of this manuscript.
-
-\section{Context}
-\label{sec:ch1_context}
-
+In the following sections, we provide a more detailed outline of this manuscript, followed by a disclaimer on the publications at the foundations of this manuscript and, finally, the context in which this work has been conducted.
 
 \section{Outline}
 \label{sec:ch1_outline}
@@ -198,14 +194,14 @@ In Part \ref{part:coop}, we present works related to cooperation, one of the mul
 Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively reviewing the contributions presented in this manuscript.
 
 \begin{description}
-    \item [Part \ref{part:background}] Background.
+    \item [Part \ref{part:background}] Background:
     
     Chapter~\ref{ch:marl} is the single chapter of Part \ref{part:background} presenting the basic multi-agent reinforcement learning framework and details its different settings and challenges.
     More importantly, this chapter presents the foundations of MARL issued from single-agent reinforcement learning.
     For those unfamiliar with reinforcement learning, this chapter is a must-read, and we refer the reader to numerous additional works if more details are required.
     In contrast, these concepts should be well known for the familiar ones, and Chapter~\ref{ch:marl} serves as a notation introduction.
 
-    \item [Part \ref{part:coop}] Learn to cooperate.
+    \item [Part \ref{part:coop}] Learn to cooperate:
     
     Chapter~\ref{ch:cooperation} is the first of this second part and provides the necessary material to understand the challenges of cooperation in multi-agent reinforcement learning.
     It is a mix of background introduction and literature review, as this chapter introduces many concepts and methods from the literature.
@@ -215,14 +211,14 @@ Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively r
     Chapter~\ref{ch:impmarl} is the third and last chapter and introduces infrastructure management planning, a real-world application that can be tackled in this cooperative framework.
     In this application, inspections, repairs, and/or retrofits should be timely planned to control the risk of potential system failures.
     
-    \item [Part \ref{part:compet}]  Cooperate against an opposing team.
+    \item [Part \ref{part:compet}]  Cooperate against an opposing team:
     
     Chapter~\ref{ch:competition} is the first one and presenting how competition is classically modelled and solved in multi-agent reinforcement learning.
     It serves the same purpose of Chapter~\ref{ch:cooperation} and is alike, a mix between background and literature review.
     
     Chapter~\ref{ch:2teams} presents a particular case of the general-sum settings where two teams compete and how to train them.
 
-    \item [Part \ref{part:conclusion}] Conlusion.
+    \item [Part \ref{part:conclusion}] Conlusion:
     The last chapter of this manuscript, Chapter~\ref{ch:conclusion}, addresses the closing remarks.
 \end{description}
 
@@ -241,3 +237,17 @@ Notably, three central chapters represent adaptations of specific peer-reviewed 
 \end{itemize}
 
 
+\section{Context}
+\label{sec:ch1_context}
+To provide a backstory, part of the work presented in this manuscript has been developed during the IRIS project with an industrial consortium of Belgian companies.
+IRIS stands for Intelligent Recognition Information System, and the partners were John Cockerill Defense, ACIC, Multitel, Belgian Royal Military Academy and the University of Li{`e}ge.
+The IRIS project aims to enhance surveillance capabilities by integrating machine learning.
+Through detection, recognition, and behaviour analysis modules, IRIS seeks to empower operators with timely, actionable information to make optimal decisions in both military and civilian contexts, impacting the safety of individuals, sensitive sites, and equipment integrity.
+Specifically, we explored multi-agent reinforcement learning to provide decision-aid to operators in the context of military missions.
+In short, the IRIS project is a use case of our studies on training a team against an opposing team to learn how military assets should cooperate against a team of the same asset.
+%We acknowledge the Walloon Region's financial support in this project's context.
+
+% The other part of the work was done in collaboration with Pablo G. Morato, where we tackled a different real-world problem: infrastructure management planning.
+% One of the challenges for this application is to scale the management when the infrastructure is composed of many parts.
+% As presented in Chapter \ref{ch:impmarl}, the problem of minimising a system's risk and maintenance cost can become complex when the number of components increases.
+% Applying multi-agent reinforcement learning allowed us to scale by decomposing the decisions.
