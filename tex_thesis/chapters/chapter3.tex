@@ -327,45 +327,42 @@ As in SARL, there are two possible ways of estimating the critic leads to two IA
 In IAC, each agent learns an actor and a critic, but this solution does not benefit from the additional information the state $s$ provides.
 Since critics are used only during training, one straightforward solution is to exploit the state $s$ to compute a single centralised critic since there is a single common reward.
 However, this approach provides the same feedback to all agents, missing out on the crucial aspect of multi-agent credit assignment \citep{chang2003all}.
-This is one of the main challenges in MARL, especially in the Dec-POMDP when a single reward signal is common to all agents.
+This is one of the main challenges in MARL, especially in the Dec-POMDP, when a single reward signal is common to all agents.
 We hereafter detail two methods that have addressed this credit-assigned problem and have been used in the following chapters.
 
 \subsection{COMA}
 COMA stands for counterfactual multi-agent policy gradient and is a solution proposed by \cite{Foerster2017coma}.
-They start by making the constatation, as introduced, that a centralised critic that computes the advantage based on $s_t$, $A_a(s_t, u^a_t) = r_t + \gamma V(s_{t+1}; \phi) - V(s_t; \phi)$, is based on the global reward $r_t$ but also do not consider how the action of an individual agent influenced it.
-Such a centralised critic does not solve the credit assignment problem. 
+They start by making the constatation that a centralised critic computing the advantage $A_a(s_t, u^a_t) = r_t + \gamma V(s_{t+1}; \phi) - V(s_t; \phi)$, is based on the common reward $r_t$ but does not consider how the action of an individual agent influences it.
+Such a centralised critic does not solve the credit assignment problem.
 
 The proposed solution in COMA is inspired by difference rewards \citep{wolpert2001optimal} and is to use a counterfactual baseline $R(s_{t+1}, s_t, \boldsymbol {u_t}) - R(s_{t+1}, s_t, (\boldsymbol{u_t}^{-a}, c_t^a))$.
 The common reward $R(s_{t+1}, s_t, \boldsymbol {u_t})$ is compared to a reward obtained when agent $a$ executes a default action $c^a$, while we preserve actions of other agents ($\mathbf{u}^{-a}$) unchanged.
 Any action $u^a$ that maximises $R(s_{t+1}, s_t, \boldsymbol {u_t})$ also maximises $D^a$.
 But there are some immediate limitations.
 First, we need to run the simulator to obtain this "default reward" $R(s_{t+1}, s_t, (\boldsymbol{u_t}^{-a}, c_t^a))$.
-But we need to do it for all agents.
-Second, say we can approximate it, but we still need to decide which action is $c^a$.
+And we need to do it for all agents.
+Second, say we can approximate it, but we still need to decide which action is $c^a$, and this would induce additional approximation error.
 
 The solution in COMA is to build a centralised critic that computes difference rewards by learning $Q(s, \mathbf{u})$.
-For each agent $a$, the advantage is therefore computed as $A_a(s_t,\boldsymbol{u_t}; \phi)=Q(s_t, \boldsymbol{u};\phi) - \sum_{u'^{a}} \pi({u'^{a}} |\tau_t^a;\theta) Q(s_t, (\boldsymbol{u_t}^{-a}, u'^{a}); \phi)$.
+For each agent $a$, the advantage is therefore computed as $A_a(s_t,\boldsymbol{u_t}; \phi)=Q(s_t, \boldsymbol{u_t};\phi) - \sum_{u'^{a}} \pi^a({u'^{a}} |\tau_t^a;\theta) Q(s_t, (\boldsymbol{u_t}^{-a}, u'^{a}); \phi)$.
+This solves the problem of simulating the difference rewards but not the amount of $Q$ values to be computed.
+Indeed, $|\mathcal{U}_1|+...+|\mathcal{U}_n|$ values must be computed to obtain the advantage of all agents.
+In practice, a $Q$ network has one output for each possible action.
+Here, this leads to $|\mathcal{U}_1|+...+|\mathcal{U}_n|$ outputs which would be impractical.
+The solution is that the critic takes as input $\boldsymbol{u}^{-a}$ and computes only $|\mathcal{U}_a|$ outputs.
+To use the same critic for all agents implies that all action spaces are the same.
 
-Problem: $(|\mathcal{U}_1|\*...\*|\mathcal{U}_n|)$ $Q$ values must be computed.
+However, a major limitation is that this method is only possible for discrete action spaces, especially considering the sum over the possible actions in the advantage.
+\cite{foerster2017learning} argue that it would be possible to apply COMA with continuous action spaces easily by evaluating $\sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))$ with Monte Carlo estimations or by using policy construction that allows to compute it anatically.
+A final observation is that the critic is considered central because using the state $s_t$, but it should be called $n$ times to update the $n$ policy networks.
 
-In practice, a $Q$ network has one ouput for each possible action.
-Here, this leads to $|\mathcal{U}_1|\*...\*|\mathcal{U}_n|$ outputs which is impractical.
-Solution: the critic takes as input $u^{-a}$ and computes only $|\mathcal{U}_a|$ outputs.
-
-This method is only possible for discrete action spaces! 
-It is possible to evaluate $\sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))$
-Monte Carlo 
-Gaussian policies in continuous action spaces.
-
-
-COMA, inspired by difference reward , proposes having the centralised critic compute a counterfactual baseline for each agent.
-
-But in COMA, the centralised critic computes the advantage $A_a(s_t,\boldsymbol{u_t}; \phi)=Q(s_t, \boldsymbol{u};\phi) - \sum_{u'^{a}} \pi({u'^{a}} |\tau_t^a;\theta) Q(s_t, (\boldsymbol{u_t}^{-a}, u'^{a}); \phi)$ for each agent, allowing it to approximate $A$ without more environment steps.
-This has the cost of requiring to increase the input space of $A$ as it additionally takes $u^{-a}$ actions as input.
+In COMA, policy networks $\theta$ usually follow the same architecture of IQL presented in Figure \ref{fig:ch3_indivQ}, where the outputs are not $Q$ values for each action but the probability of taking each action, usually given by applying a softmax to the last layer.
+The critic is commonly a typical sequence of fully connected layers that output the $|\mathcal{U}_a|$ from the state $s_t$, the actions of others $\boldsymbol{u_t}^{-a}$ and sometimes additional information, such as $o_t^a$ or the previous taken action $\boldsymbol{u_{t-1}}$.
 
 \subsection{FACMAC}
 
-FACMAC suggests using a central but factored critic by employing the value function factorization of QMIX.
+FACMAC \citep{peng2021facmac} stands for factored multi-agent centralised policy gradients.
+They propose to use a central but factored critic by employing the value function factorization of QMIX.
 The joint-action $Q(s, \boldsymbol{u};\phi)$ is built as a function of $Q_a(\tau, u^a)$, without the need to satisfy IGM and without the constraints on the hypernetwork.
 
 
