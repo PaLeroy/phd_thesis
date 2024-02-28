@@ -50,7 +50,7 @@ Beyond economic considerations, our proposed IMP-MARL framework can also be used
 
 To assess the capability of cooperative MARL methods for generating effective policies for IMP problems involving many components, we additionally benchmark here state-of-the-art cooperative MARL methods in terms of scalability and optimality. 
 Most of the benchmarked methods are centralised training with decentralised execution (CTDE) methods \citep{Oliehoek_2008,KRAEMER201682}, in which each agent acts based on only local information, while global information can be utilised during training.
-Specifically, we benchmark five CTDE methods: QMIX \citep{Rashid2018}, QVMix \citep{leroy2020qvmix}, QPLEX \citep{wang2021qplex}, COMA \citep{Foerster2017}, and FACMAC \citep{peng2021facmac}, along with a decentralised method, i.e., IQL \citep{Tan1993}, and a centralised one, i.e., DQN~\citep{Mnih2015}.
+Specifically, we benchmark five CTDE methods: QMIX \citep{Rashid2018}, QVMix \citep{leroy2020qvmix}, QPLEX \citep{wang2021qplex}, COMA \citep{foerster2017coma}, and FACMAC \citep{peng2021facmac}, along with a decentralised method, i.e., IQL \citep{Tan1993}, and a centralised one, i.e., DQN~\citep{Mnih2015}.
 All tested MARL methods are compared against expert-based heuristic policies, which can be categorised as a state-of-the-art method to deal with IMP problems in the reliability engineering community \citep{LuqueDBN2019, morato2022optimal}.
 In our study, three sets of IMP environments are investigated, including one related to offshore wind structural systems, where MARL methods are tested with up to 100 agents.
 Additionally, these environments can be set up with two distinct reward models, and one of them incorporates explicit cooperative objectives.

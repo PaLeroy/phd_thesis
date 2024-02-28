@@ -7,7 +7,7 @@
 \node (fctop) [netbox, below=of output_node, yshift=-0.3cm] {FC layer};
 \node (rec_net) [netbox, below=of fctop, text width=2cm] {Recurrent layer};
 \node (fcbot) [netbox, below=of rec_net] {FC layer};
-\node (input_node) [io,below=of fcbot, yshift=-0.3cm] {$o^a_t$}%, u^a_{t-1}$};
+\node (input_node) [io,below=of fcbot, yshift=-0.3cm] {$o^a_t$};%, u^a_{t-1}$};
 \node (input_rec) [io,left=of rec_net, xshift=-0.3cm] {$h_{t-1}$};
 \node (output_rec) [io,right=of rec_net, xshift=+0.3cm] {$h_t$};
 

@@ -319,7 +319,7 @@ Other methods, such as LAN \citep{avalos2023local}, also extend over QMIX and le
 \section{Policy-based methods}
 \label{sec:ch3_policy}
 Policy-based methods learn the optimal policy directly through a neural network $\pi(s, u;\theta)$, as introduced in Section \ref{sec:ch2_policy_based_methods}.
-Extending these methods to MARL is a straightforward process, and the decentralised solution is named IAC \citep{Foerster2017}. 
+Extending these methods to MARL is a straightforward process, and the decentralised solution is named IAC \citep{foerster2017coma}. 
 It is the corresponding independent method of IQL for policy-based methods.
 As defined in Section \ref{sec:ch3_decpomdp}, the policy learned by each actor is a function of the history and observation $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a};\theta)$.
 As in SARL, there are two possible ways of estimating the critic leads to two IAC versions: IAC-V where a state value function is learned $A_a(\tau_t, u_t; \phi) = r + \gamma V_a(\tau_{t+1}; \phi) - V_a(\tau_t; \phi)$ and IAC-Q, where a state-action value function is learned $A_a(\tau_t, u_t; \phi) = Q_a(\tau_t, u_t; \phi) - \sum_{u^a}\pi_\theta(\tau_t, u^a)Q_a(\tau_t, u^a; \phi)$.
@@ -331,7 +331,7 @@ This is one of the main challenges in MARL, especially in the Dec-POMDP, when a 
 We hereafter detail two methods that have addressed this credit-assigned problem and have been used in the following chapters.
 
 \subsection{COMA}
-COMA stands for counterfactual multi-agent policy gradient and is a solution proposed by \cite{Foerster2017coma}.
+COMA stands for counterfactual multi-agent policy gradient and is a solution proposed by \cite{foerster2017coma}.
 They start by making the constatation that a centralised critic computing the advantage $A_a(s_t, u^a_t) = r_t + \gamma V(s_{t+1}; \phi) - V(s_t; \phi)$, is based on the common reward $r_t$ but does not consider how the action of an individual agent influences it.
 Such a centralised critic does not solve the credit assignment problem.
 
@@ -353,7 +353,7 @@ The solution is that the critic takes as input $\boldsymbol{u}^{-a}$ and compute
 To use the same critic for all agents implies that all action spaces are the same.
 
 However, a major limitation is that this method is only possible for discrete action spaces, especially considering the sum over the possible actions in the advantage.
-\cite{foerster2017learning} argue that it would be possible to apply COMA with continuous action spaces easily by evaluating $\sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))$ with Monte Carlo estimations or by using policy construction that allows to compute it anatically.
+\cite{foerster2017coma} argue that it would be possible to apply COMA with continuous action spaces easily by evaluating $\sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))$ with Monte Carlo estimations or by using policy construction that allows to compute it anatically.
 A final observation is that the critic is considered central because using the state $s_t$, but it should be called $n$ times to update the $n$ policy networks.
 
 In COMA, policy networks $\theta$ usually follow the same architecture of IQL presented in Figure \ref{fig:ch3_indivQ}, where the outputs are not $Q$ values for each action but the probability of taking each action, usually given by applying a softmax to the last layer.
