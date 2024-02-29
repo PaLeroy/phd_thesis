@@ -321,16 +321,19 @@ Other methods, such as LAN \citep{avalos2023local}, also extend over QMIX and le
 Policy-based methods learn the optimal policy directly through a neural network $\pi(s, u;\theta)$, as introduced in Section \ref{sec:ch2_policy_based_methods}.
 Extending these methods to MARL is a straightforward process, and the decentralised solution is named IAC \citep{foerster2017coma}. 
 It is the corresponding independent method of IQL for policy-based methods.
-As defined in Section \ref{sec:ch3_decpomdp}, the policy learned by each actor is a function of the history and observation $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a};\theta)$.
+As defined in Section \ref{sec:ch3_decpomdp}, the policies learned by each actor is a function of the history and observation $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a};\theta)$.
+It follows the simply gradient ascenssion 
 As in SARL, there are two possible ways of estimating the critic leads to two IAC versions: IAC-V where a state value function is learned $A_a(\tau_t, u_t; \phi) = r + \gamma V_a(\tau_{t+1}; \phi) - V_a(\tau_t; \phi)$ and IAC-Q, where a state-action value function is learned $A_a(\tau_t, u_t; \phi) = Q_a(\tau_t, u_t; \phi) - \sum_{u^a}\pi_\theta(\tau_t, u^a)Q_a(\tau_t, u^a; \phi)$.
 
 In IAC, each agent learns an actor and a critic, but this solution does not benefit from the additional information the state $s$ provides.
-Since critics are used only during training, one straightforward solution is to exploit the state $s$ to compute a single centralised critic since there is a single common reward.
-However, this approach provides the same feedback to all agents, missing out on the crucial aspect of multi-agent credit assignment \citep{chang2003all}.
+Since critics are used only during training, one straightforward solution is to exploit the state $s$ to compute a centralised critic.
+However, since there is a single common reward, this approach provides the same feedback to all agents, missing out on the crucial aspect of multi-agent credit assignment \citep{chang2003all}.
 This is one of the main challenges in MARL, especially in the Dec-POMDP, when a single reward signal is common to all agents.
 We hereafter detail two methods that have addressed this credit-assigned problem and have been used in the following chapters.
 
 \subsection{COMA}
+\label{sec:ch3_coma}
+
 COMA stands for counterfactual multi-agent policy gradient and is a solution proposed by \cite{foerster2017coma}.
 They start by making the constatation that a centralised critic computing the advantage $A_a(s_t, u^a_t) = r_t + \gamma V(s_{t+1}; \phi) - V(s_t; \phi)$, is based on the common reward $r_t$ but does not consider how the action of an individual agent influences it.
 Such a centralised critic does not solve the credit assignment problem.
@@ -341,10 +344,10 @@ Any action $u^a$ that maximises $R(s_{t+1}, s_t, \boldsymbol {u_t})$ also maximi
 But there are some immediate limitations.
 First, we need to run the simulator to obtain this "default reward" $R(s_{t+1}, s_t, (\boldsymbol{u_t}^{-a}, c_t^a))$.
 And we need to do it for all agents.
-Second, say we can approximate it, but we still need to decide which action is $c^a$, and this would induce additional approximation error.
+Second, say we can approximate it, but we still need to decide which action is $c^a$, which would induce additional approximation error.
 
 The solution in COMA is to build a centralised critic that computes difference rewards by learning $Q(s, \mathbf{u})$.
-For each agent $a$, the advantage is therefore computed as $A_a(s_t,\boldsymbol{u_t}; \phi)=Q(s_t, \boldsymbol{u_t};\phi) - \sum_{u'^{a}} \pi^a({u'^{a}} |\tau_t^a;\theta) Q(s_t, (\boldsymbol{u_t}^{-a}, u'^{a}); \phi)$.
+For each agent $a$, the advantage is $A_a(s_t,\boldsymbol{u_t}; \phi)=Q(s_t, \boldsymbol{u_t};\phi) - \sum_{u'^{a}} \pi^a({u'^{a}} |\tau_t^a;\theta) Q(s_t, (\boldsymbol{u_t}^{-a}, u'^{a}); \phi)$.
 This solves the problem of simulating the difference rewards but not the amount of $Q$ values to be computed.
 Indeed, $|\mathcal{U}_1|+...+|\mathcal{U}_n|$ values must be computed to obtain the advantage of all agents.
 In practice, a $Q$ network has one output for each possible action.
@@ -355,6 +358,7 @@ To use the same critic for all agents implies that all action spaces are the sam
 However, a major limitation is that this method is only possible for discrete action spaces, especially considering the sum over the possible actions in the advantage.
 \cite{foerster2017coma} argue that it would be possible to apply COMA with continuous action spaces easily by evaluating $\sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))$ with Monte Carlo estimations or by using policy construction that allows to compute it anatically.
 A final observation is that the critic is considered central because using the state $s_t$, but it should be called $n$ times to update the $n$ policy networks.
+However, training a single critic by sharing the weights for all agents is possible.
 
 In COMA, policy networks $\theta$ usually follow the same architecture of IQL presented in Figure \ref{fig:ch3_indivQ}, where the outputs are not $Q$ values for each action but the probability of taking each action, usually given by applying a softmax to the last layer.
 The critic is commonly a typical sequence of fully connected layers that output the $|\mathcal{U}_a|$ from the state $s_t$, the actions of others $\boldsymbol{u_t}^{-a}$ and sometimes additional information, such as $o_t^a$ or the previous taken action $\boldsymbol{u_{t-1}}$.
@@ -362,17 +366,33 @@ The critic is commonly a typical sequence of fully connected layers that output 
 \subsection{FACMAC}
 
 FACMAC \citep{peng2021facmac} stands for factored multi-agent centralised policy gradients.
-They propose to use a central but factored critic by employing the value function factorization of QMIX.
+They propose to use a centralised but factored critic computing $Q_tot$ as a factorisation of individual $Q_a$, like QMIX, but the monotonicity constraint to satisfy IGM is not required for a critic.
+In COMA, the critic is centralised because it has access to the state, but all agents call it independently to update their decentralised policy.
+\cite{peng2021facmac} calls this approach a monolithic critic, and they argue that a non-monolithic factored critic is preferable to scale to many agents or actions.
+In addition, they show that estimating gradients independently for each agent can yield sub-optimal joint policies.
+This motivates again the centralised and factored critic that can compute a single gradient estimate for the joint policy, improving cooperation capabilities.
+
+Unlike COMA, FACMAC is designed for continuous action spaces and can be adapted to discrete ones.
+It is built on the foundation of another actor-critic for MARL developed to solve a stochastic game called MADDPG \citep{lowe2017multi}, a multi-agent deep deterministic policy gradient.
+It is a multi-agent version of DDPG \citep{lillicrap2015continuous}, an actor-critic method using deep neural networks to approximate a deterministic policy and a $Q$ function.
+In short, since the action space is continuous, it is difficult to obtain $\argmax_u Q(s, u)$. Still, it is possible to have a parametrised deterministic policy $\mu_\theta:\mathcal{S}\rightarrow\mathcal{U}$ updated by following the direction given by $\nabla_\theta Q^{\mu_\theta}(s, \mu_\theta(s))$ while the critic estimates this $Q(s, u)$ \citep{silver2014deterministic}.
+MADDPG uses DDPG to learn decentralised policies using centralised critics that have access to the state and actions of other agents, the latter being trained with temporal difference like in DQN.
+While MADDPG addresses stochastic games with individual rewards, it can be applied easily in Dec-POMDP, with the drawbacks mentioned earlier.
+Like COMA, MADDPG uses a centralised but monolithic approach.
+FACMAC changes this by using a factored one.
+
+
+by employing the value function factorization of QMIX.
 The joint-action $Q(s, \boldsymbol{u};\phi)$ is built as a function of $Q_a(\tau, u^a)$, without the need to satisfy IGM and without the constraints on the hypernetwork.
+This allows to provide per-agent utility functions.
 
 
 \subsection{Other methods}
 MADDPG \citep{lowe2017multi} is another well-established method, which does not learn a single centralised critic, but one per agent and is designed for continuous action spaces.
-Another method, LIIR \citep{Du2019LIIRLearning}, aims to provide credit assessment with individual intrinsic rewards, while HATPRO and HAPPO \citep{kuba2021trust} demonstrate that popular actor-critic methods like TRPO \citep{schulman2015trust} and PPO \citep{schulman2017ppo} can be extended to cooperative MARL tasks.
-HATRPO and HAPPO could have been a great addition to our study but are unfortunately not implemented within the PyMarl library.
+Another method, LIIR \citep{Du2019LIIRLearning}, aims to provide credit assignment with individual intrinsic rewards, while HATPRO and HAPPO \citep{kuba2021trust} demonstrate that popular actor-critic methods like TRPO \citep{schulman2015trust} and PPO \citep{schulman2017ppo} can be extended to cooperative MARL tasks.
 
 \section{Related work}
-
+The goal of this chapter is not to provide the best CTDE methods, while some comparative results are provided in the next chapters, we also argue that \citep{gorsane2022towards}.
 
 Another approach for dealing with cooperative multi-agent settings is to link the recent success of sequence models and reinforcement learning by using a multi-agent transformer (MAT) that learns to transform a sequence of observations into a sequence of actions, one per agent \citep{wen2022multiagent}.
 
@@ -380,7 +400,6 @@ critic usefuell paper?
 
 Mean field game
 
-\todo{check state-action or state action}
-
 communication
 
+\citep{lyu2021contrasting} vs \citep{peng2021facmac}

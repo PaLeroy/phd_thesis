@@ -2,16 +2,16 @@
 
 \begin{chapter_outline}
 
-This chapter presents IMP-MARL, an open-source suite of multi-agent reinforcement learning environments for large-scale Infrastructure Management Planning.
-In section \ref{sec:ch5_intro}, we introduce what is IMP and the contributions of this chapter, followed the history behind this application in section \ref{sec:ch5_relatedwork}.
+This chapter presents IMP-MARL, an open-source suite of multi-agent reinforcement learning environments for large-scale infrastructure management planning.
+In section \ref{sec:ch5_intro}, we introduce the problem behind infrastructure management planning and the motivations behind it.
 
-This chapter is an adapted version of the publication \citep{leroy2023impmarl} \texttt{IMP-MARL: a suite of environments for large-scale infrastructure management planning via MARL}, P. Leroy, P. G. Morato, J. Pisane, A. Kolios, and D. Ernst. Thirty-seventh Conference on Neural Information Processing Systems Datasets and Benchmarks Track, 2023.
+and the contributions of this chapter, followed the history behind this application in section \ref{sec:ch5_relatedwork}.
+
+This chapter is an adapted version of the publication \citep{leroy2023impmarl} \textit{IMP-MARL: a suite of environments for large-scale infrastructure management planning via MARL}, P. Leroy, P. G. Morato, J. Pisane, A. Kolios, and D. Ernst. Thirty-seventh Conference on Neural Information Processing Systems Datasets and Benchmarks Track, 2023.
 \end{chapter_outline}
 
-\damien{Deadline: 13/02}
-\todo{talk about planning vs rl and why planning is used: bc of the field.}
 \section{Introduction}\label{sec:ch5_intro}
-Multiple environments based on games and simulators have served as benchmark testbeds to support the advancement of cooperative MARL methods and are presented in Section \ref{sec:ch3_env}.
+Multiple suite of environments based on games and simulators have served as benchmark testbeds to support the advancement of cooperative MARL methods and are presented in Section \ref{sec:ch3_env}.
 Benchmarking environments based on games and simulators is useful for the development of MARL methods in specific collaborative/competitive tasks.
 However, additional challenges may still be encountered when deploying MARL methods in real-world applications \citep{oroojlooy2022review}.
 
@@ -41,24 +41,24 @@ When a component is not inspected nor repaired, its damage probability evolves a
 IMP-MARL was introduced to generate more efficient strategies for managing engineering systems through cooperative MARL methods.
 In IMP-MARL, each agent is responsible for managing one constituent component in a system, making decisions based on the damage probability of the component.
 Besides seeking to reduce component inspection and maintenance costs, agents should effectively cooperate to minimise the system failure risk.
-With IMP-MARL, the goal is to facilitate the definition and implementation of new customisable environments.
-By jointly minimising system failure risks and inspection/maintenance costs, more effective IMP policies contribute to a better allocation of resources from a societal perspective.
-Furthermore, additional societal impact is also made by controlling the risk of system failure events. 
+
+With IMP-MARL, an additional goal is to facilitate the definition and implementation of new customisable environments.
+Moreover, by jointly minimising system failure risks and inspection/maintenance costs, more effective IMP policies contribute to a better allocation of resources from a societal perspective.
+Additional societal impact is also made by controlling the risk of system failure events.
 For example, the failure of a wind turbine may affect the available electricity production. 
 Beyond economic considerations, our proposed IMP-MARL framework can also be used to include sustainability and societal metrics within the objective function by accounting for those directly in the reward model.
 
-
-To assess the capability of cooperative MARL methods for generating effective policies for IMP problems involving many components, we additionally benchmark here state-of-the-art cooperative MARL methods in terms of scalability and optimality. 
-Most of the benchmarked methods are centralised training with decentralised execution (CTDE) methods \citep{Oliehoek_2008,KRAEMER201682}, in which each agent acts based on only local information, while global information can be utilised during training.
-Specifically, we benchmark five CTDE methods: QMIX \citep{Rashid2018}, QVMix \citep{leroy2020qvmix}, QPLEX \citep{wang2021qplex}, COMA \citep{foerster2017coma}, and FACMAC \citep{peng2021facmac}, along with a decentralised method, i.e., IQL \citep{Tan1993}, and a centralised one, i.e., DQN~\citep{Mnih2015}.
+To assess the capability of cooperative MARL methods for generating effective policies for IMP problems involving many components, we additionally benchmark here state-of-the-art cooperative MARL methods in terms of scalability and optimality.
+The benchmarked methods are presented in Chapter \ref{part:background} and Chapter \ref{ch:cooperation}.
+Specifically, we benchmark five CTDE methods: QMIX, QVMix, QPLEX, COMA, and FACMAC, along with a decentralised method, i.e., IQL, and a centralised one, i.e., DQN.
 All tested MARL methods are compared against expert-based heuristic policies, which can be categorised as a state-of-the-art method to deal with IMP problems in the reliability engineering community \citep{LuqueDBN2019, morato2022optimal}.
 In our study, three sets of IMP environments are investigated, including one related to offshore wind structural systems, where MARL methods are tested with up to 100 agents.
 Additionally, these environments can be set up with two distinct reward models, and one of them incorporates explicit cooperative objectives.
 For the sake of enabling the reproduction of any published result, we have made our best effort to ensure that the necessary code is publicly available.
 
-Our contributions can be outlined as follows:
+Finally, the contributions of \citep{leroy2023impmarl} presented in this chapter can be outlined as follows:
 \begin{itemize}
-  \item We introduce IMP-MARL, a novel open-source suite of environments, motivating the development of scalable MARL methods as well as the creation of new IMP environments, enabling the effective management of multi-component engineering systems and, as such, leading to a positive societal impact.
+  \item IMP-MARL is an open-source suite of environments, motivating the development of scalable MARL methods as well as the creation of new IMP environments, enabling the effective management of multi-component engineering systems and, as such, leading to a positive societal impact.
   \item In an extensive benchmark campaign, we test state-of-the-art cooperative MARL methods in very high-dimensional IMP environments featuring up to 100 agents.
   The resulting management strategies are evaluated against expert-based heuristic policies.
   We publicly provide the source code for reproducing our reported results and for easing direct comparisons with future developments.
@@ -71,7 +71,7 @@ Our contributions can be outlined as follows:
 \todo{multi agent mdp}
 
 
-\section{History} \label{sec:ch5_relatedwork}
+\section{Related work} \label{sec:ch5_relatedwork}
 Recent heuristic-based inspection and maintenance (I\&M) planning methods generate IMP policies based on an optimised set of predefined decision rules \citep{LuqueDBN2019, Bismut2019OptimalDete}.
 By evaluating only a set of decision rules out of the entire policy space, the previously mentioned approaches might yield suboptimal policies \citep{morato2022optimal}.
 In the literature, one can also find POMDP-based methods applied to the I\&M planning of engineering components, in most cases, relying on efficient point-based solvers \citep{Papakonstantinou2014Part1, Papakonstantinou2014Part2, morato2022optimal}. 
@@ -89,29 +89,21 @@ The objective is the minimisation of the expected sum of discounted costs, inclu
 This can be achieved through the agents' cooperative behaviour, assigning component inspections and repairs while jointly controlling the system failure risk.
 The introduced IMP decision-making problem can be modelled as a decentralised partially observable Markov decision process (Dec-POMDP).
 
-\subsection{Preliminaries}
-\label{sec:decpomdp}
-A Dec-POMDP \citep{DecPomdp} can be defined by a tuple $[\mathcal{S}, \mathcal{Z}, \mathcal{U}, n, O, R, P, \gamma]$, where $n$ agents simultaneously choose an action at every time step $t$.
-The state of the environment is $s_t \in \mathcal{S}$ where $\mathcal{S}$ is the set of states.
-The observation function $O: \mathcal{S} \times \{1,..,n\} \rightarrow \mathcal{Z}$ maps the state to an observation $o_t^{a} \in \mathcal{Z}$ perceived by agent $a$ at time $t$, where $\mathcal{Z}$ is the observation space.
-Each agent $a \in \{1,..,n\}$ selects an action $u_t^{a} \in \mathcal{U}_a$, and the joint action space is $\mathcal{U}=\mathcal{U}_{1}\times..\times\mathcal{U}_{n}$.
-After the joint action $\boldsymbol{u_t} \in \mathcal{U}$ is executed, the transition function determines the new state with probability $P(s_{t+1}|s_t, \boldsymbol{u_t}): \mathcal{S}^2 \times \mathcal{U} \rightarrow \mathbb{R^+}$, and $r_t=R(s_{t+1}, s_t, \boldsymbol {u_t}): \mathcal{S}^2 \times \mathcal{U} \rightarrow \mathbb{R}$ is the team reward obtained by all agents.
-An agent's policy is a function $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a}): (\mathcal{Z} \times \mathcal{U}_a)^t \rightarrow \mathbb{R^+}$, which maps its history $\tau_t^{a} \in (\mathcal{Z} \times \mathcal{U}_a)^{t-1}$ and its observation $o_t^{a}$ to the probability of taking action $u_t^{a}$. 
-The joint policy is denoted by $\boldsymbol{\pi}=(\pi^1,..,\pi^n)$.
-The cumulative discounted reward obtained from time step $t$ over the next $T$ time steps is defined by $R_{t} = \sum_{k=0}^{T-1} \gamma^k r_{t+k}$ and $\gamma \in [0, 1)$ is the discount factor.
-The goal of agents is to find the optimal joint policy that maximises the expected $R_t$ during the entire episode: $\boldsymbol{\pi^{*}} =\argmax_{\boldsymbol{\pi}} \mathbb{E}[R_0|\boldsymbol{\pi}]$.
-
 \subsection{Environments formulation}
 \label{sec:env_formulation}
 \textbf{States and observations}
 As introduced, each agent in IMP perceives $o^a_t$, an observation corresponding to its respective component damage probability and the current time step.
 Each component damage probability transitions based on a deterioration model, defined according to physics-based engineering models, e.g., numerical simulators and/or analytical laws~\citep{Papakonstantinou2014Part1}.
-The damage probability is also updated based on maintenance decisions, as explained in Section \ref{sec:intro}.
+The damage probability is also updated based on maintenance decisions.
 Since the components' damage is not perfectly known, the state of the Dec-POMDP is defined as the collection of all components' damage probabilities along with the current time step: $s_t = (o_t^1, .., o_t^n, t)$.
+This is called a jointly observable Dec-POMDP that is also referred to as a decentralised MDP in \citep{DecPomdp}.
+However, this does not make the problem simpler because each agent still does not observe this state \citep{bernstein2002complexity}.
+\todo{check if we do not want to address this in chapter 3.}
+
 
 \textbf{Actions and rewards}
 Each agent controls a component and collaborates with other agents in order to minimise the system failure risk while minimising local costs associated with individual repair and/or inspection actions. 
-At each time step $t$, an agent decides $u^a_t$ between (i) do-nothing, (ii) inspect, or (iii) repair actions, as described in Section \ref{sec:intro}.
+At each time step $t$, an agent decides $u^a_t$ between (i) do-nothing, (ii) inspect, or (iii) repair actions.
 Both inspection and repair actions incur significant costs, formally included in the Dec-POMDP framework as negative rewards, $R_{ins}$ and $R_{rep}$, respectively.
 Moreover, the system failure risk is defined as $R_f= c_F \cdot p_{F_{sys}}$ where $p_{F_{sys}}$ is the system failure probability and $c_F$ is the associated consequences of a failure event, encompassing economic, environmental, and societal losses.
 In IMP, we include two reward models.
@@ -120,17 +112,45 @@ This campaign cost explicitly incentivises agents to cooperate.
 The second is a \emph{no campaign cost} model, where the campaign cost is set equal to 0 (i.e., $R_{camp}=0$), and only component inspections and repairs costs are considered. 
 Acting on finite-horizon episodes that span over $T$ time steps, all agents aim at maximising the expected sum of discounted rewards $\mathbb{E}[R_{0}] = \mathbb{E} \left[ \sum_{t=0}^{T-1} \gamma^t \left[ R_{t,f}+ \sum_{a=1}^n \left({R_{t,ins}^a} + {R_{t,rep}^a}\right)+R_{t,camp} \right] \right]$.
 
-% $\mathbb{E}[R_{0}]$, formulated in Eq. \ref{eq:totalcost}.
-% \begin{equation}
-%     \mathbb{E}[R_{0}] = \mathbb{E} \left[ \sum_{t=0}^{T-1} \gamma^t \left\{ R_{t,f}+ \left( \sum_{a=1}^n {R_{t,ins}^a} + {R_{t,rep}^a}\right)+R_{t,camp} \right\} \right]
-%     \label{eq:totalcost}
-% \end{equation}
-
 \textbf{Real-world data} While IMP policies are trained based on simulated data, they policies can then be deployed to applications where real-world streams of data are available. In that case, the damage condition of the components is updated based on collected real-world data, e.g., inspections.
  
 \subsection{IMP-MARL environments}
 \label{time stepsec:implement_env}
 
+With IMP-MARL, we provide three sets of environments to benchmark cooperative MARL methods.
+For all three, components are exposed to fatigue deterioration during a finite-horizon episode, inducing the growth of a crack over $T$ time steps.
+The first set of environments is named \textit{k-out-of-n system} and refers to systems for which a system failure occurs if (n-k+1) components fail.
+Those systems have been widely studied in the reliability engineering community~\citep{barlow1984computing}. 
+The second type of generic environment is named \textit{correlated k-out-of-n system} and is a variation of the first one for which the initial components' damage distributions are correlated.
+The last one is named \textit{offshore wind farm} and allows the definition of environments for which a group of offshore wind turbines must be maintained.
+The proposed IMP-MARL environment sets and options are graphically illustrated in Figure \ref{fig:env_categories}, and we hereafter provide details about these sets of environments.
+Additionally, the deterioration processes and implementation details are formally described in the following Section \ref{App:pomdpModels} and Section \ref{App:envir}.
+
+\textbf{k-out-of-n system}
+In this set of environments, the components' damage probability distribution, $p(d^a_t)$, is defined as a vector of 30 bins, with each bin representing a crack size interval.
+Here, the failure probability of one component is defined as the probability indicated in the last bin.
+The specificity of a k-out-of-n system is that it fails if (n-k+1) components fail, establishing a direct link between the system failure probability and the component failure probabilities.
+For this first system, the initial damage distribution is statistically independent among components and the time horizon is $T=30$ time steps.
+Since it is finite, we normalise each time step input and we define $s_t = (p(d^1_t),..., p(d^n_t), t/T)$ and $o^a_t=(p(d^a_t), t/T)$.
+The interest of this system is that, in many practical scenarios, the reliability of an engineering system can be modelled as a \textit{k-out-of-n system}.
+
+\textbf{Correlated k-out-of-n system}
+The second set of environments is the same as the first one previously defined, with the difference that the initial damage distribution is correlated among all components.
+Therefore, inspecting one component also provides information about other uninspected components, depending on the specified degree of correlation.
+This setting is particularly challenging when approached from a decentralised scheme without providing components' correlation information to individual agents.
+To further address this issue, and in addition to their 30-bin local damage probability, the agents perceive correlation information $\alpha_t$ common to all, which is updated based on inspection outcomes collected from all components.
+We thus have: $s_t = (p(d^1_t),..., p(d^n_t),\alpha_t, t/T)$ and $o^a_t=(p(d^a_t), \alpha_t, t/T)$.
+This damage correlation structure is inspired by practical engineering applications where initial defects among components are statistically correlated due to the fact that components undergo similar manufacturing processes \citep{morato2022optimal}.
+
+\textbf{Offshore wind farm}
+The third set of environments is different from the previous ones as it considers a system with a certain number of wind turbines.
+Specifically, each wind turbine contains three representative components: (i) the top component located in the atmospheric zone, (ii) the middle component in the underwater zone, and (iii) the mudline component submerged under the seabed.
+In this case, we consider that the mudline component cannot be inspected nor repaired, as it is installed under the seabed in an inaccessible region and, since only the top and middle components can be inspected or repaired, two agents are assigned for each wind turbine.
+Furthermore, the damage probability, $p(d^a_t)$, is a vector with 60 bins and transitions differently depending on the component location in the wind turbine, as corrosion-induced effects accelerate deterioration in certain areas. 
+Besides individual component damage models, inspection techniques and their associated costs also depend on the component location: it is cheaper to inspect or repair the top components than the middle one \citep{giro2022inspection}.
+Moreover, while the mudline component cannot be directly maintained, its damage probability also impacts the failure risk of a wind turbine.
+In offshore wind farm environments, a wind turbine fails if any of its three constituent components fails, and the overall system failure risk is defined as the sum of all individual wind turbine failure risks. In this case, $p(d^a_t)$ is modelled as a 60-bin vector and the time horizon is $T=20$.
+In this set of environments $s_t = (p(d^1_t),..., p(d^n_t), t/T)$ and $o^a_t=(p(d^a_t), t/T)$.
 
 \begin{figure}
 \begin{subfigure}[t]{0.53\textwidth}
@@ -169,50 +189,10 @@ In \ref{fig:env_categories_4} campaign cost environments, a global cost is incur
 \end{figure}
 
 
-With IMP-MARL, we provide three sets of environments to benchmark cooperative MARL methods.
-For all three, components are exposed to fatigue deterioration during a finite-horizon episode, inducing the growth of a crack over $T$ time steps.
-The first set of environments is named \textit{k-out-of-n system} and refers to systems for which a system failure occurs if (n-k+1) components fail.
-Those systems have been widely studied in the reliability engineering community~\citep{barlow1984computing}. 
-The second type of generic environment is named \textit{correlated k-out-of-n system} and is a variation of the first one for which the initial components' damage distributions are correlated.
-The last one is named \textit{offshore wind farm} and allows the definition of environments for which a group of offshore wind turbines must be maintained.
-The proposed IMP-MARL environment sets and options are graphically illustrated in Figure \ref{fig:env_categories}, and we hereafter provide details about these sets of environments.
-Additionally, the deterioration processes and implementation details are formally described in Appendices \ref{App:pomdpModels} and \ref{App:envir}.
-
-\textbf{k-out-of-n system}
-In this set of environments, the components' damage probability distribution, $p(d^a_t)$, is defined as a vector of 30 bins, with each bin representing a crack size interval.
-Here, the failure probability of one component is defined as the probability indicated in the last bin.
-The specificity of a k-out-of-n system is that it fails if (n-k+1) components fail, establishing a direct link between the system failure probability and the component failure probabilities.
-For this first system, the initial damage distribution is statistically independent among components and the time horizon is $T=30$ time steps.
-Since it is finite, we normalise each time step input and we define $s_t = (p(d^1_t),..., p(d^n_t), t/T)$ and $o^a_t=(p(d^a_t), t/T)$.
-The interest of this system is that, in many practical scenarios, the reliability of an engineering system can be modelled as a \textit{k-out-of-n system}.
-
-\textbf{Correlated k-out-of-n system}
-The second set of environments is the same as the first one previously defined, with the difference that the initial damage distribution is correlated among all components.
-Therefore, inspecting one component also provides information about other uninspected components, depending on the specified degree of correlation.
-This setting is particularly challenging when approached from a decentralised scheme without providing components' correlation information to individual agents.
-To further address this issue, and in addition to their 30-bin local damage probability, the agents perceive correlation information $\alpha_t$ common to all, which is updated based on inspection outcomes collected from all components.
-We thus have: $s_t = (p(d^1_t),..., p(d^n_t),\alpha_t, t/T)$ and $o^a_t=(p(d^a_t), \alpha_t, t/T)$.
-This damage correlation structure is inspired by practical engineering applications where initial defects among components are statistically correlated due to the fact that components undergo similar manufacturing processes \citep{morato2022optimal}.
-
-\textbf{Offshore wind farm}
-The third set of environments is different from the previous ones as it considers a system with a certain number of wind turbines.
-Specifically, each wind turbine contains three representative components: (i) the top component located in the atmospheric zone, (ii) the middle component in the underwater zone, and (iii) the mudline component submerged under the seabed.
-In this case, we consider that the mudline component cannot be inspected nor repaired, as it is installed under the seabed in an inaccessible region and, since only the top and middle components can be inspected or repaired, two agents are assigned for each wind turbine.
-Furthermore, the damage probability, $p(d^a_t)$, is a vector with 60 bins and transitions differently depending on the component location in the wind turbine, as corrosion-induced effects accelerate deterioration in certain areas. 
-Besides individual component damage models, inspection techniques and their associated costs also depend on the component location: it is cheaper to inspect or repair the top components than the middle one \citep{giro2022inspection}.
-Moreover, while the mudline component cannot be directly maintained, its damage probability also impacts the failure risk of a wind turbine.
-In offshore wind farm environments, a wind turbine fails if any of its three constituent components fails, and the overall system failure risk is defined as the sum of all individual wind turbine failure risks. In this case, $p(d^a_t)$ is modelled as a 60-bin vector and the time horizon is $T=20$.
-In this set of environments $s_t = (p(d^1_t),..., p(d^n_t), t/T)$ and $o^a_t=(p(d^a_t), t/T)$.
-
-\textbf{Implementation}
-All defined IMP environments are integrated with well-known MARL ecosystems, i.e., Gym \citep{openaigym}, Gymnasium \citep{towers_gymnasium_2023}, PettingZoo \citep{terry2021pettingzoo} and PyMarl \citep{samvelyan2019starcraft}, through wrappers.
-The tested MARL methods are adopted from PyMarl's library, but other libraries are also compatible with our wrappers, e.g., RLlib \citep{liang2018rllib}, CleanRL \citep{huang2022cleanrl}, MARLlib \citep{hu2022marllib}, or TorchRL \citep{bou2023torchrl}.
-All developments are available on a public GitHub repository, \url{https://github.com/moratodpg/imp\_marl}, featuring an open-source Apache v2 license.
-
 
 \section{Modelling infrastructure management in IMP-MARL}
 \label{App:pomdpModels}
-In this appendix, we thoroughly describe the deterioration, inspection, and transition models implemented in this work. 
+In this section, we thoroughly describe the deterioration, inspection, and transition models implemented in this work. 
 These models drive the dynamics of the IMP-MARL environments provided in this paper.
 Based on this information, one can easily learn how to create new environments.
 
@@ -327,119 +307,19 @@ The damage transitions, in this case, are formulated as:
 \begin{equation} \label{eq:ex_pod4}
     p(d_{t+1}|\alpha) =  \sum_{\tau_{t+1}} \sum_{d_t} p(d_{t+1}|d_t,\tau_{t+1}) p(d_{t}|\alpha) p(\tau_{t+1}) \, .
 \end{equation}
-
 Once an inspection outcome is available, the common correlation factor is also updated based on the new information, thus influencing all components. The likelihood of collecting one inspection indication given $\alpha$ can be computed as:
 \begin{equation}\label{Eq:margHyp}
 p(i_{d_{t+1}}|\alpha)=\sum_{d_{t+1}} \Big[p(d_{t+1}|\alpha)\,p(i_{d_{t+1}}|d_{t+1})\Big] \, ,
 \end{equation}
-
 and the correlation factor can then be updated:
 \begin{equation}\label{Eq:infHyp}
 p(\alpha|i_{d_{t+1}}) \propto p(\alpha)p(i_{d_{t+1}}|\alpha) .
 \end{equation}
-
 Finally, the marginal damage probabilities are computed as:
 \begin{equation}\label{Eq:margBel}
 p(d_{t+1}) = \sum_{\alpha} \Big[p(d_{t+1}|\alpha)\, p({\alpha}) \Big] \, .
 \end{equation}
-
-\section{Options available in IMP-MARL and reward model} 
-\label{App:envir}
-In IMP-MARL, the environments can be easily set up with specific options, from the definition of the number of agents to the observation information perceived by the agents and the state information received by mixers/critics. This can be straightforwardly specified through the configuration files provided on IMP-MARL's GitHub repository.
-These options are in fact parameters included in IMP-MARL's classes.
-In particular, Table \ref{tab:optionsEnv} lists the main options available.
-
-\begin{table}
-\centering
-\caption{Main options available in IMP-MARL.}
-\label{tab:optionsEnv}
-\begin{tabular}{llll}
-\toprule
-Option name & Environment & Dict key & Type   \\
-\midrule
-Number of components & struct & \texttt{n\_comp} & int   \\ 
-k components & struct & \texttt{k\_comp} & int     \\
-Correlation & struct & \texttt{env\_correlation} & bool    \\ 
-Campaign cost & struct & \texttt{campaign\_cost} & bool     \\
-\hline 
-Number of wind turbines & owf & \texttt{n\_comp} & int   \\ 
-Number of components per wind turbine & owf & \texttt{lev} & int    \\
-Campaign cost & owf & \texttt{campaign\_cost} & bool \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-In addition to the main options previously mentioned, it is also possible to tailor the information encoded in the observations and states.
-One can choose which local information, $o^a_t$, the agents will receive, as well as the global information, $s_t$, available during training. 
-Tables \ref{tab:obs_desc} and \ref{tab:states_desc} list all possible options.
-Since these options are coded as booleans, the selected configuration can be easily defined by assigning a $True$ value.
-Additional details can be found in the code.
-
-In the experiments conducted in this work, the selected parameters are listed in Table \ref{tab:ouroptionvlaues}. Through the code provided in IMP-MARL, future works may investigate alternative observation and state information options.
-
-\begin{table}
-\centering
-\caption{Observations options available in IMP-MARL.}
-\label{tab:obs_desc}
-\begin{tabular}{lllll}
-\toprule
-Option name & Env. & Dict key & Type &  Dimensionality  \\
-\midrule
-Component damage probability & struct & *by default & float & 30   \\ 
-Component deterioration rate & struct & \texttt{obs\_d\_rate} & float & 1    \\
-All components damage probability & struct & \texttt{obs\_multiple} & float & \texttt{n\_comp} $\cdot$ 30   \\ 
-All components deterioration rate & struct & \texttt{obs\_all\_d\_rate} & float &  \texttt{n\_comp}    \\
-Correlation condition & struct & \texttt{obs\_alphas} & float & 80    \\
-\hline
-Component damage condition & owf & *by default & float & 60   \\ 
-Component deterioration rate & owf & \texttt{obs\_d\_rate} & float & 1    \\
-All components damage condition & owf & \texttt{obs\_multiple} & float &  \texttt{n\_comp} $\cdot$ 60  \\ 
-All components deterioration rate & owf & \texttt{obs\_all\_d\_rate} & float & \texttt{n\_comp}    \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}
-\centering
-\caption{States options available in IMP-MARL.}
-\label{tab:states_desc}
-\begin{tabular}{lllll}
-\toprule
-Option name & Environment & Dict key & Type & Dimensionality  \\
-\midrule
-All component damage condition & struct & \texttt{state\_obs} & float & \texttt{n\_comp} $\cdot$ 30   \\ 
-All components deterioration rate & struct &  \texttt{state\_d\_rate} & float & \texttt{n\_comp}    \\
-Correlation condition & struct &  \texttt{state\_alphas} & float & 80    \\
-\hline
-All component damage condition & owf & \texttt{state\_obs} & float & \texttt{n\_comp} $\cdot$ 60   \\ 
-All components deterioration rate & owf & \texttt{state\_d\_rate} & float & \texttt{n\_comp}    \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}
-\centering
-\caption{Options set up in our experiments.}
-\label{tab:ouroptionvlaues}
-\begin{tabular}{llll}
-\toprule
-Option name & struct\_uc & struct\_c & owf \\
-\midrule
-% \texttt
-\texttt{state\_obs} & True & True & True \\
-\texttt{state\_d\_rate} & True & True & False \\
-\texttt{state\_alphas} & False & True & False \\
-\texttt{obs\_d\_rate} & False & False & False \\
-\texttt{obs\_multiple} & False & False & False \\
-\texttt{obs\_all\_d\_rate} & False & False & False \\
-\texttt{obs\_alphas} & False & True & False \\
-\texttt{env\_correlation} & False & True & False \\
-\texttt{campaign\_cost} & True \& False & True \& False & True \& False \\
-\bottomrule
-\end{tabular}
-\end{table}
-
+ 
 \subsection{Reward model}
 The goal of the agents is to maximise the expected sum of discounted rewards, $\mathbb{E}[R_{0}] = \mathbb{E} \left[ \sum_{t=0}^{T-1} \gamma^t \left[ R_{t,f}+ \sum_{a=1}^n \left({R_{t,ins}^a} + {R_{t,rep}^a}\right)+R_{t,camp} \right] \right]$, as stated in Section \ref{sec:env_formulation}.
 The rewards collected at each time step may include inspection $R_{ins}$ and repair $R_{rep}$ costs for all considered components, along with the system failure risk, which is defined as the system failure probability $p_{f_{sys}}$ multiplied by the associated consequences of a failure event $c_f$, formulated as $R_f = p_{f_{sys}} \cdot c_f$. Additionally, a campaign cost $R_{camp}$ may also be included if that option is active.
@@ -464,20 +344,20 @@ Component & Campaign cost & $R_{ins}$ & $R_{rep}$ &  $c_f$ & $R_{camp}$ \\
 \end{tabular}
 \end{table}
 
+\subsection{Implementation}
 
-\section{Experiments}\label{sec:ch5_experiments}
-%\section{Benchmark campaign of MARL methods}
+All defined IMP environments are integrated with well-known MARL ecosystems, i.e., Gym \citep{openaigym}, Gymnasium \citep{towers_gymnasium_2023}, PettingZoo \citep{terry2021pettingzoo} and PyMarl \citep{samvelyan2019starcraft}, through wrappers.
+The tested MARL methods are adopted from PyMarl's library, but other libraries are also compatible with our wrappers, e.g., RLlib \citep{liang2018rllib}, CleanRL \citep{huang2022cleanrl}, MARLlib \citep{hu2022marllib}, or TorchRL \citep{bou2023torchrl}.
+All developments are available on a public GitHub repository, \url{https://github.com/moratodpg/imp\_marl}, featuring an open-source Apache v2 license.
+If you want to reproduce these, the options are given in Appendix 
+\section{Experiments}\label{sec:ch5_appendix_imp_public_repo}
 
 \subsection{Tested methods}
 \label{sec:tested_method}
-In an extensive benchmark campaign, we test seven RL methods: one fully centralised, one fully decentralised, and five CTDE approaches.
-The centralised controller, which has an action space that scales exponentially with the number of agents, is trained with the fully centralised method DQN \citep{Mnih2015} and is the only method taking $s_t$ as input.
-Furthermore, the fully decentralised method we test is IQL \citep{Tan1993}, in which all agents are independently trained.
-Regarding the five CTDE methods, we investigate three value-based methods: QMIX \citep{Rashid2018}, QVMix \citep{leroy2020qvmix}, and QPLEX \citep{wang2021qplex}.
-They factorise the value function during training, allowing agents to independently select actions during execution after a centralised value function is jointly learnt during training.
-The last two are the CTDE actor-critic methods COMA \citep{Foerster2017} and FACMAC \citep{peng2021facmac}.
-They train independent policy networks and rely on a single centralised critic during training.
-Appendix \ref{app:marl_algo} provides a detailed description of each method as well as a discussion of other methods of interest that are not included in the benchmark.
+In an extensive benchmark campaign, we test seven RL methods.
+The centralised controller, which has an action space that scales exponentially with the number of agents, is trained with the fully centralised method DQN and is the only method taking $s_t$ as input.
+Furthermore, the fully decentralised method we test is IQL, in which all agents are independently trained.
+Regarding the five CTDE methods, we investigate the three value-based methods: QMIX, QVMix, and QPLEX and two actor-critic methods: COMA and FACMAC.
 We selected these methods for our benchmark study because they are well established and their implementations are open-sourced and available within the PyMarl framework \citep{samvelyan2019starcraft}.
 
 All investigated MARL methods are compared against a representative baseline in the reliability engineering community \citep{LuqueDBN2019,morato2022syst}.
@@ -601,144 +481,7 @@ However, FACMAC effectively scales up with the number of agents and environment 
 The results also suggest that COMA is the least scalable MARL method in our benchmark.
 This can be attributed to the fact that the computation of the critic's counterfactual becomes challenging with an increasing number of agents.
 
-\section{Additional benchmark results}
-% All figures and detailed tables 
-\label{app:add_results}
-In this section, we present additional results and remarks beyond those reported in the main text.
-In the first place, we provide the values of the expected sum of discounted rewards achieved by the best runs over all experiments.
-We list the best policy for each conducted experiment in Tables \ref{tab:koutofnresults}, \ref{tab:correlatedkoutofnresults}, and \ref{tab:owfresults}.
-Note that the maximum values represented with markers at the right of each box in Figure \ref{fig:results} can be retrieved from these values by applying the normalisation (x-H)/H, with H being the value achieved by the heuristic policies.
-In Figure \ref{fig:explain_fig}, we also visually illustrate the normalisation process that results in the boxplots presented in Figure \ref{fig:results}.
-
-Additionally, we represent in Figures \ref{fig:learning_curves_cc_false} and \ref{fig:learning_curves_cc_true} the learning curves corresponding to all our experiments.
-The learning curves showcase the evolution of the expected sum of discounted rewards every 20,000 training time steps, computed at the testing stage with 10,000 test episodes.
-Since the training is conducted with 10 different seeds for each environment and method, we also plot the corresponding 25th-75th percentiles around the median.
-These results confirm the variance observed between the best results and presented in Figure \ref{fig:results}.
-
-Based on Tables \ref{tab:koutofnresults} and \ref{tab:correlatedkoutofnresults}, one may additionally infer that correlated environments result in lower costs with respect to those uncorrelated.
-This is especially true for environments with n>=10 agents, specified without campaign costs, and in all environments set up with campaign costs.
-While MARL methods profit from the additionally provided correlation information, this is not always the case for the heuristic policies.
-
-One final remark is that the discrepancy between the expert-based heuristic policy and MARL methods is more pronounced in offshore wind farm environments. 
-This could be attributed to the shorter decision horizon or the higher cost per inspection in this particular case (see Table \ref{tab:owfresults}).
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/plot_explain_plot_gaussian.pdf}
-    \caption{Visual description of the iterative process followed to generate the boxplots showcased in Figure \ref{fig:results}.
-[Left] Learning curves corresponding to 10 QMIX training seeds in a k-out-of-n system with 50 agents. 
-The markers highlight the policies that result in the highest expected sum of discounted rewards during evaluation, i.e., one policy per seed.
-[Right] The 10 selected policies are displayed at the top as a function of the expected sum of discounted rewards, along with the heuristic score obtained in this environment.
-In the middle plot, we calculate and represent the 10 selected policies as a function of normalised relative rewards, i.e., (x - h) / h.
-Finally, a boxplot is constructed at the bottom based on the previously calculated ten normalised relative rewards, each representing a different seed.
-}
-\label{fig:explain_fig}
-\end{figure}
-
-\newpage
-\begin{table}
-\centering
-\caption{k-out-of-n system best policies (* = campaign cost).}
-\label{tab:koutofnresults}
-\begin{tabular}{c|ccccccc|c}
-\toprule
-n & QMIX & QVMix & QPLEX & COMA & FACMAC & IQL & DQN & Heuristics \\
-\midrule
-3 & -9.7 & -9.8 & -9.7 & -10.6 & -10.4 & -35.3 & -9.9 & -12.5 \\
-5 & -20.4 & -20.7 & -20.4 & -21.8 & -22.1 & -108.7 & -24.0 & -25.2 \\
-10 & -51.0 & -51.5 & -51.0 & -54.3 & -61.3 & -404.5 & / & -63.7 \\
-50 & -229.7 & -236.0 & -212.8 & -1190.6 & -249.0 & -1991.1 & / & -268.1 \\
-100 & -222.6 & -230.7 & -220.6 & -1770.1 & -225.7 & -1770.1 & / & -262.4 \\
-\midrule
-*3 & -14.6 & -14.7 & -14.7 & -15.0 & -17.0 & -35.3 & -13.5 & -15.1 \\
-*5 & -27.4 & -27.7 & -27.4 & -28.9 & -33.0 & -27.8 & -26.6 & -28.6 \\
-*10 & -58.9 & -63.0 & -60.7 & -70.0 & -61.9 & -404.5 & / & -64.5 \\
-*50 & -169.5 & -173.9 & -168.4 & -241.4 & -160.7 & -623.3 & / & -232.7 \\
-*100 & -167.2 & -175.8 & -160.2 & -1770.1 & -144.8 & -1770.1 & / & -231.5 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-
-\begin{table}
-\centering
-\caption{Correlated k-out-of-n system best policies (* = campaign cost).}
-\label{tab:correlatedkoutofnresults}
-\begin{tabular}{c|ccccccc|c}
-\toprule
-n & QMIX & QVMix & QPLEX & COMA & FACMAC & IQL & DQN & Heuristics \\
-\midrule
-3 & -9.7 & -9.7 & -9.6 & -11.0 & -10.6 & -10.0 & -10.0 & -13.0 \\
-5 & -20.4 & -20.6 & -18.4 & -21.2 & -21.6 & -20.2 & -23.4 & -28.1 \\
-10 & -47.6 & -51.0 & -45.2 & -49.7 & -46.1 & -374.5 & / & -67.7 \\
-50 & -214.3 & -233.0 & -212.3 & -419.3 & -143.4 & -1339.9 & / & -240.0 \\
-100 & -250.3 & -289.0 & -276.8 & -486.9 & -118.3 & -1744.0 & / & -218.1 \\
-\midrule
-*3 & -13.1 & -12.9 & -12.9 & -14.8 & -18.0 & -34.7 & -12.6 & -15.2 \\
-*5 & -23.5 & -24.7 & -23.5 & -28.2 & -29.2 & -23.9 & -26.8 & -30.5 \\
-*10 & -56.2 & -53.4 & -50.1 & -52.8 & -49.2 & -56.0 & / & -68.5 \\
-*50 & -132.6 & -157.1 & -121.2 & -159.3 & -106.6 & -814.9 & / & -211.0 \\
-*100 & -147.7 & -147.5 & -121.0 & -339.1 & -71.3 & -723.8 & / & -194.0 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-
-\begin{table}
-\centering
-\caption{Offshore wind farm best policies (* = campaign cost).}
-\label{tab:owfresults}
-\begin{tabular}{c|ccccccc|c}
-\toprule
-n & QMIX & QVMix & QPLEX & COMA & FACMAC & IQL & DQN & Heuristics \\
-\midrule
-2 & -23.3 & -23.3 & -23.2 & -23.7 & -40.5 & -23.7 & -23.2 & -58.3 \\
-4 & -47.1 & -47.4 & -47.1 & -47.9 & -122.4 & -47.4 & -47.7 & -116.9 \\
-10 & -118.4 & -119.4 & -118.5 & -122.2 & -235.2 & -120.8 & / & -292.3 \\
-50 & -604.4 & -613.9 & -604.6 & -2805.8 & -627.3 & -2892.5 & / & -1463.8 \\
-100 & -1224.1 & -1238.8 & -1213.2 & -5785.1 & -1625.2 & -5785.1 & / & -2925.0 \\
-\midrule
-*2 & -51.8 & -52.0 & -51.9 & -60.1 & -60.3 & -52.0 & -48.9 & -62.2 \\
-*4 & -80.5 & -80.7 & -80.7 & -122.2 & -118.6 & -85.6 & -76.0 & -115.2 \\
-*10 & -129.3 & -133.3 & -130.0 & -314.5 & -196.4 & -132.0 & / & -267.2 \\
-*50 & -432.9 & -436.9 & -434.5 & -2892.5 & -502.8 & -1709.7 & / & -1248.2 \\
-*100 & -808.1 & -829.0 & -852.3 & -5785.1 & -1280.5 & -5785.1 & / & -2436.3 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-\begin{figure*}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_3_cc_False.pdf}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_5_cc_False.pdf}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_10_cc_False.pdf}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_50_cc_False.pdf}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_100_cc_False.pdf}
-\caption{
-Learning curves in all environments with no campaign cost. 
-Curves represent the sum of discounted rewards obtained during test time.
-The bold line is the median while the error bands are delimited by the 25th and 75th percentiles.
-Colours represent the different methods and the parameters of each environment can be inferred from the title above its corresponding graph.
-}
-    \label{fig:learning_curves_cc_false}
-\end{figure*}
-
-\begin{figure*}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_3_cc_True.pdf}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_5_cc_True.pdf}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_10_cc_True.pdf}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_50_cc_True.pdf}
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch5/all_100_cc_True.pdf}
-\caption{
-Learning curves in all environments with campaign cost. 
-Curves represent the sum of discounted rewards obtained during test time.
-The bold line is the median while the error bands are delimited by the 25th and 75th percentiles.
-Colours represent the different methods and the parameters of each environment can be inferred from the title above its corresponding graph.
-}
-\label{fig:learning_curves_cc_true}
-\end{figure*}
+Additional results are presented in Appendix ... where many tables and figures allow a deeper analysis.  
 
 \section{Discussion and future work}\label{sec:ch5_discusconclu}
 %\section{Conclusions} \label{sec:conclusions}
@@ -751,3 +494,5 @@ Moreover, specific improvements are still required in environments where a globa
 Besides, more stable training is still needed in environments where local information perceived by one agent can influence the damage condition probabilities of others, as in the correlated IMP environments.
 In the future, more realistic and challenging environments for cooperative MARL methods could be investigated.
 One example would be assigning campaign costs to specific groups of components, instead of specifying only one global campaign cost.
+
+Restrospective:
