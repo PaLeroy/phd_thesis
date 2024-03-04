@@ -92,7 +92,7 @@ Multi-Agent Tracking Environment (MATE) \citep{NEURIPS2022_b2a1c152} is a target
 A mixed cooperative-competitive game can be made by controlling the targets.
 Many more examples of cooperative MARL applications exist.
 Many can be found in the book of \cite{marl-book}, in the review on cooperative MARL done by \cite{oroojlooy2022review}, such as autonomous driving, resource allocation, stock market,...
-
+\todo{mosaic avec les environnements}
 
 \subsection{StarCraft multi-agent challenge} \label{sec:ch3_smac}
 The StarCraft multi-agent challenge (SMAC) \citep{samvelyan2019starcraft} and its improved version SMACv2 \citep{ellis2023smacv2} are probably the most studied suite of environments with CTDE methods.
@@ -173,7 +173,7 @@ The next sections cover the MARL methods to achieve this coordination.
 \section{Value-based methods}
 \label{sec:ch3_value}
 
-As detailed in Chapter \ref{ch:marl}, value-based methods aim to learn the optimal state-action value function $Q^{\pi^*}(s, u)$, such that the optimal policy is $\pi^*(s)=\argmax_{u} Q^{\pi^*}(s, u)$.
+As detailed in Chapter \ref{ch:background}, value-based methods aim to learn the optimal state-action value function $Q^{\pi^*}(s, u)$, such that the optimal policy is $\pi^*(s)=\argmax_{u} Q^{\pi^*}(s, u)$.
 In SARL, one solution, called DQN, is to approximate $Q$ with a neural network $\theta$ and learn $Q(s, u;\theta)$
 by minimising the loss defined in Equation~\ref{eq:ch2_dqnloss}.
 
@@ -190,7 +190,7 @@ Issues are that the joint action space scales exponentially with $n$.
 Also, in practice, agents select their action based only on their history $(o, \tau)$ and not the state $s$.
 
 For the second mode, the decentralised training and execution, each agent can learn its own Q-value independently $Q_a=Q^{\pi^a}(\tau^a, u^a)$, agnostically of the existence of other agents.
-IQL \citep{Tan1993} is the extension of Q-Learning (see Chapter~\ref{ch:marl}) to this mode. 
+IQL \citep{Tan1993} is the extension of Q-Learning (see Chapter~\ref{ch:background}) to this mode. 
 The equivalent extension has been performed with DQN \citep{TampuuDqnIQL}, also called IQL.
 Typically, in a Dec-POMDP, a recurrent network approximates the independent Q-value, as explained in Section \ref{sec:ch2_partial_observability}.
 One problem with IQL is that agents must select actions which maximise $Q(s_t, \mathbf{u_t})$ while ignoring, at any time, actions taken by other agents.
@@ -254,7 +254,6 @@ The optimisation procedure follows the same principles of the DQN algorithm, and
 \end{equation}
 During training, actions are selected with an epsilon greedy policy from $Q_a$ and at testing, with a greedy policy.
 Individual $Q_a$ networks and the mixer are all copied to produce target networks represented by $\theta'$.
-
 \begin{figure}
     \centering
 \input{tex_thesis/tikz/ch3/indivQ}
@@ -318,18 +317,25 @@ Other methods, such as LAN \citep{avalos2023local}, also extend over QMIX and le
 
 \section{Policy-based methods}
 \label{sec:ch3_policy}
-Policy-based methods learn the optimal policy directly through a neural network $\pi(s, u;\theta)$, as introduced in Section \ref{sec:ch2_policy_based_methods}.
-Extending these methods to MARL is a straightforward process, and the decentralised solution is named IAC \citep{foerster2017coma}. 
-It is the corresponding independent method of IQL for policy-based methods.
-As defined in Section \ref{sec:ch3_decpomdp}, the policies learned by each actor is a function of the history and observation $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a};\theta)$.
-It follows the simply gradient ascenssion 
+Policy-based methods learn the optimal policy directly through a neural network, as introduced in Chapter \ref{ch:background}.
+Extending these methods to Dec-POMDP is a straightforward process, and a decentralised solution is named IAC \citep{foerster2017coma}. 
+It is theindependent method corresponding to IQL for policy-based methods.
+As defined in Section \ref{sec:ch3_decpomdp}, the policies learned by each actor is $\pi^{a}(u_t^{a}|\tau_t^{a}, o^a_t;\theta)$.
+The policy parameters are updated by ascending the gradient
+\begin{equation}
+\label{eq:ch3_policy_grad}
+    \nabla_\theta J(\pi^a_\theta) = \mathbb{E}_B\left[A_a(\tau^{a}_t, o_t^a, u_t^{a}; \phi) \nabla_{\theta} \log \pi^{a}(u_t^{a}|\tau_t^{a},  o_t^a;\theta)\right].
+\end{equation}
 As in SARL, there are two possible ways of estimating the critic leads to two IAC versions: IAC-V where a state value function is learned $A_a(\tau_t, u_t; \phi) = r + \gamma V_a(\tau_{t+1}; \phi) - V_a(\tau_t; \phi)$ and IAC-Q, where a state-action value function is learned $A_a(\tau_t, u_t; \phi) = Q_a(\tau_t, u_t; \phi) - \sum_{u^a}\pi_\theta(\tau_t, u^a)Q_a(\tau_t, u^a; \phi)$.
+The parameters are denoted $\theta$ or $\phi$ and not $\theta_a$ or $\phi_a$ to improve readability, but also because it is possible to share these parameters to train a single network.
 
 In IAC, each agent learns an actor and a critic, but this solution does not benefit from the additional information the state $s$ provides.
 Since critics are used only during training, one straightforward solution is to exploit the state $s$ to compute a centralised critic.
 However, since there is a single common reward, this approach provides the same feedback to all agents, missing out on the crucial aspect of multi-agent credit assignment \citep{chang2003all}.
 This is one of the main challenges in MARL, especially in the Dec-POMDP, when a single reward signal is common to all agents.
 We hereafter detail two methods that have addressed this credit-assigned problem and have been used in the following chapters.
+
+\todo{Disclaimer $\theta$ = $\theta_a$}
 
 \subsection{COMA}
 \label{sec:ch3_coma}
@@ -338,7 +344,7 @@ COMA stands for counterfactual multi-agent policy gradient and is a solution pro
 They start by making the constatation that a centralised critic computing the advantage $A_a(s_t, u^a_t) = r_t + \gamma V(s_{t+1}; \phi) - V(s_t; \phi)$, is based on the common reward $r_t$ but does not consider how the action of an individual agent influences it.
 Such a centralised critic does not solve the credit assignment problem.
 
-The proposed solution in COMA is inspired by difference rewards \citep{wolpert2001optimal} and is to use a counterfactual baseline $R(s_{t+1}, s_t, \boldsymbol {u_t}) - R(s_{t+1}, s_t, (\boldsymbol{u_t}^{-a}, c_t^a))$.
+The proposed solution in COMA is inspired by difference rewards \citep{wolpert2001optimal} and is to use a counterfactual baseline $D^a=R(s_{t+1}, s_t, \boldsymbol {u_t}) - R(s_{t+1}, s_t, (\boldsymbol{u_t}^{-a}, c_t^a))$.
 The common reward $R(s_{t+1}, s_t, \boldsymbol {u_t})$ is compared to a reward obtained when agent $a$ executes a default action $c^a$, while we preserve actions of other agents ($\mathbf{u}^{-a}$) unchanged.
 Any action $u^a$ that maximises $R(s_{t+1}, s_t, \boldsymbol {u_t})$ also maximises $D^a$.
 But there are some immediate limitations.
@@ -347,7 +353,11 @@ And we need to do it for all agents.
 Second, say we can approximate it, but we still need to decide which action is $c^a$, which would induce additional approximation error.
 
 The solution in COMA is to build a centralised critic that computes difference rewards by learning $Q(s, \mathbf{u})$.
-For each agent $a$, the advantage is $A_a(s_t,\boldsymbol{u_t}; \phi)=Q(s_t, \boldsymbol{u_t};\phi) - \sum_{u'^{a}} \pi^a({u'^{a}} |\tau_t^a;\theta) Q(s_t, (\boldsymbol{u_t}^{-a}, u'^{a}); \phi)$.
+For each agent $a$, the advantage updating agents networks in Equation \ref{eq:ch3_policy_grad} is 
+\begin{equation}
+\label{eq:ch3_coma_adv}
+A_a(s_t,\boldsymbol{u_t}; \phi)=Q(s_t, \boldsymbol{u_t};\phi) - \sum_{u'^{a}} \pi^a({u'^{a}} |\tau_t^a, o_t^a;\theta) Q(s_t, (\boldsymbol{u_t}^{-a}, u'^{a}); \phi).
+\end{equation}
 This solves the problem of simulating the difference rewards but not the amount of $Q$ values to be computed.
 Indeed, $|\mathcal{U}_1|+...+|\mathcal{U}_n|$ values must be computed to obtain the advantage of all agents.
 In practice, a $Q$ network has one output for each possible action.
@@ -373,10 +383,16 @@ In addition, they show that estimating gradients independently for each agent ca
 This motivates again the centralised and factored critic that can compute a single gradient estimate for the joint policy, improving cooperation capabilities.
 
 Unlike COMA, FACMAC is designed for continuous action spaces and can be adapted to discrete ones.
-It is built on the foundation of another actor-critic for MARL developed to solve a stochastic game called MADDPG \citep{lowe2017multi}, a multi-agent deep deterministic policy gradient.
+It is built on the foundation of another actor-critic method for MARL developed to solve a stochastic game called MADDPG \citep{lowe2017multi} for multi-agent deep deterministic policy gradient.
 It is a multi-agent version of DDPG \citep{lillicrap2015continuous}, an actor-critic method using deep neural networks to approximate a deterministic policy and a $Q$ function.
-In short, since the action space is continuous, it is difficult to obtain $\argmax_u Q(s, u)$. Still, it is possible to have a parametrised deterministic policy $\mu_\theta:\mathcal{S}\rightarrow\mathcal{U}$ updated by following the direction given by $\nabla_\theta Q^{\mu_\theta}(s, \mu_\theta(s))$ while the critic estimates this $Q(s, u)$ \citep{silver2014deterministic}.
+In short, since the action space is continuous, it is difficult to obtain $\argmax_u Q(s, u)$.
+Still, it is possible to have a parametrised deterministic policy $\mu_\theta:\mathcal{S}\rightarrow\mathcal{U}$ updated by the gradient $\nabla_\theta Q^{\mu_\theta}(s, \mu_\theta(s))$ while the critic estimates this $Q(s, u)$ \citep{silver2014deterministic}.
 MADDPG uses DDPG to learn decentralised policies using centralised critics that have access to the state and actions of other agents, the latter being trained with temporal difference like in DQN.
+The gradient to update each decentralised actor $\mu_a$ is different from the REINFORCE one given in Equation \ref{eq:ch3_policy_grad} and is
+\begin{equation}
+\label{eq:ch3_maddpg_grad}
+    \nabla_\theta J(\mu^a) = \mathbb{E}_B\left[\nabla_{\theta} \log \pi^{a}(u_t^{a}|\tau_t^{a},  o_t^a;\theta)\right].
+\end{equation}
 While MADDPG addresses stochastic games with individual rewards, it can be applied easily in Dec-POMDP, with the drawbacks mentioned earlier.
 Like COMA, MADDPG uses a centralised but monolithic approach.
 FACMAC changes this by using a factored one.
