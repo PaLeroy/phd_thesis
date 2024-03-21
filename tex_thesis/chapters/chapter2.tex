@@ -96,10 +96,16 @@ A third challenge is called credit assignment.
 As highlighted in the SG definition, all agents' rewards are based on all agents' actions.
 Therefore, each agent must learn whether their action produces a good or bad reward.
 This is also a challenge in the single-agent framework, e.g. the agent has to learn to credit actions executed in the past.
-Finally, undertaking these three challenges might sound easy with two agents, but it is not.
-Moreover, the complexity also scales exponentially with the number of agents.
-This is typically the case for the size of joint action space, $|\mathcal{U}|$, and anything that will be a function of it.
+Undertaking these three challenges might sound easy with two agents, but it is not.
+Even more, the complexity often scales exponentially with the number of agents.
+This is typically the case for the size of joint action space, $|\mathcal{U}|$.
+\todo{the number of possible states can also increase, and the non-stationarity become challenger when multiple agents}
+, and anything that will be a function of it
 These four challenges represent the main challenges in MARL, as presented in \citep{marl-book}.
+
+\todo{Normal form game as a particular case}
+
+\todo{Challenges from marlbook perspective}
 
 \section{Multi-agent settings} 
 \label{sec:ch2_multi_agent_settings}
@@ -396,3 +402,4 @@ However, this manuscript does not address multi-agent belief, and we refer to \c
 In a POSG, we consider that an agent's policy is a function $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a}): (\mathcal{Z}^a \times \mathcal{U}^a)^t \rightarrow [0,1]$, which maps its history $\tau_t^{a} \in (\mathcal{Z}^a \times \mathcal{U}^a)^{t-1}$ and its current observation $o_t^{a}$ to the probability of taking action $u_t^{a}$.
 As in SARL, such a policy is commonly a recurrent policy approximated with RNN.
 
+\todo{timestep vs time step}

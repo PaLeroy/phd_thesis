@@ -1,11 +1,16 @@
-\chapter{Supplementary materials} \label{ch:ch5_appendix}
-\section{IMP-MARL public repository, license, data, and documentation}
+\chapter{IMP-MARL supplementary materials} \label{ch:ch5_appendix}
+\section{Repository, license, data, and documentation}
 \label{sec:ch5_appendix_imp_public_repo}
+
 % Repository license and instructions
-IMP-MARL's suite of environments is publicly available on the GitHub repository \url{https://github.com/moratodpg/imp\_marl}, featuring an open-source Apache v2 license.  Moreover, IMP-MARL contains wrappers to facilitate its implementation on typical MARL ecosystems, i.e., Gym \citep{openaigym}, RLLib \citep{liang2018rllib}, and PyMarl \citep{samvelyan2019starcraft}, as detailed in Section \ref{sec:experiments}.
+All defined IMP environments are integrated with well-known MARL ecosystems, i.e., Gym \citep{openaigym}, Gymnasium \citep{towers_gymnasium_2023}, PettingZoo \citep{terry2021pettingzoo} and PyMarl \citep{samvelyan2019starcraft}, through wrappers.
+The tested MARL methods are adopted from PyMarl's library, but other libraries are also compatible with our wrappers, e.g., RLlib \citep{liang2018rllib}, CleanRL \citep{huang2022cleanrl}, MARLlib \citep{hu2022marllib}, or TorchRL \citep{bou2023torchrl}.
+All developments are available on a public GitHub repository, \url{https://github.com/moratodpg/imp\_marl}, featuring an open-source Apache v2 license.
+
 % How to reproduce the results
 To reproduce the work reported in this paper, the following process can be executed: (i) cloning the repository, (ii) installing a virtual environment with the package requirements, and (iii) executing the script instructions of the corresponding method and IMP-MARL environments.
 In addition to the instructions for reproducing our results, we also provide tutorials to add new environments or wrappers.
+
 % How to directly download the results % How to download controllers
 We also provide the data files resulting from our experiments, enabling the reproduction of any reported result without re-running the experiments, as well as the corresponding implementation code, hence facilitating future cross-comparisons.
 The readily available results include Figures \ref{fig:results}, \ref{fig:learning_curves_cc_false}, and \ref{fig:learning_curves_cc_true}, along with Tables \ref{tab:koutofnresults}, \ref{tab:correlatedkoutofnresults}, \ref{tab:owfresults}.
@@ -14,16 +19,25 @@ Additionally, the controller networks' weights of the best policies presented in
 The dataset is open-access and registered with the Digital Object Identifier (DOI) 10.5281/zenodo.8032339.
 More information and dedicated tutorials can be found on the repository.
 
-\section{Options}
-\label{sec:ch5_options}
+\section{Implemented options}
+\label{sec:ch5_appendix_options}
 In IMP-MARL, the environments can be easily set up with specific options, from the definition of the number of agents to the observation information perceived by the agents and the state information received by mixers/critics. This can be straightforwardly specified through the configuration files provided on IMP-MARL's GitHub repository.
 These options are in fact parameters included in IMP-MARL's classes.
 In particular, Table \ref{tab:optionsEnv} lists the main options available.
+
+In addition to the main options previously mentioned, it is also possible to tailor the information encoded in the observations and states.
+One can choose which local information, $o^a_t$, the agents will receive, as well as the global information, $s_t$, available during training. 
+Tables \ref{tab:obs_desc} and \ref{tab:states_desc} list all possible options.
+Since these options are coded as booleans, the selected configuration can be easily defined by assigning a $True$ value.
+Additional details can be found in the code.
+
+In the experiments conducted in this work, the selected parameters are listed in Table \ref{tab:ouroptionvlaues}. Through the code provided in IMP-MARL, future works may investigate alternative observation and state information options.
 
 \begin{table}
 \centering
 \caption{Main options available in IMP-MARL.}
 \label{tab:optionsEnv}
+\setlength\tabcolsep{4.5pt}
 \begin{tabular}{llll}
 \toprule
 Option name & Environment & Dict key & Type   \\
@@ -40,33 +54,25 @@ Campaign cost & owf & \texttt{campaign\_cost} & bool \\
 \end{tabular}
 \end{table}
 
-
-In addition to the main options previously mentioned, it is also possible to tailor the information encoded in the observations and states.
-One can choose which local information, $o^a_t$, the agents will receive, as well as the global information, $s_t$, available during training. 
-Tables \ref{tab:obs_desc} and \ref{tab:states_desc} list all possible options.
-Since these options are coded as booleans, the selected configuration can be easily defined by assigning a $True$ value.
-Additional details can be found in the code.
-
-In the experiments conducted in this work, the selected parameters are listed in Table \ref{tab:ouroptionvlaues}. Through the code provided in IMP-MARL, future works may investigate alternative observation and state information options.
-
 \begin{table}
 \centering
 \caption{Observations options available in IMP-MARL.}
 \label{tab:obs_desc}
+\setlength\tabcolsep{4.5pt}
 \begin{tabular}{lllll}
 \toprule
 Option name & Env. & Dict key & Type &  Dimensionality  \\
 \midrule
 Component damage probability & struct & *by default & float & 30   \\ 
 Component deterioration rate & struct & \texttt{obs\_d\_rate} & float & 1    \\
-All components damage probability & struct & \texttt{obs\_multiple} & float & \texttt{n\_comp} $\cdot$ 30   \\ 
-All components deterioration rate & struct & \texttt{obs\_all\_d\_rate} & float &  \texttt{n\_comp}    \\
+All damage probability & struct & \texttt{obs\_multiple} & float & \texttt{n\_comp} $\cdot$ 30   \\ 
+All deterioration rate & struct & \texttt{obs\_all\_d\_rate} & float &  \texttt{n\_comp}    \\
 Correlation condition & struct & \texttt{obs\_alphas} & float & 80    \\
 \hline
 Component damage condition & owf & *by default & float & 60   \\ 
 Component deterioration rate & owf & \texttt{obs\_d\_rate} & float & 1    \\
-All components damage condition & owf & \texttt{obs\_multiple} & float &  \texttt{n\_comp} $\cdot$ 60  \\ 
-All components deterioration rate & owf & \texttt{obs\_all\_d\_rate} & float & \texttt{n\_comp}    \\
+All damage condition & owf & \texttt{obs\_multiple} & float &  \texttt{n\_comp} $\cdot$ 60  \\ 
+All deterioration rate & owf & \texttt{obs\_all\_d\_rate} & float & \texttt{n\_comp}    \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -75,16 +81,17 @@ All components deterioration rate & owf & \texttt{obs\_all\_d\_rate} & float & \
 \centering
 \caption{States options available in IMP-MARL.}
 \label{tab:states_desc}
+\setlength\tabcolsep{4.5pt}
 \begin{tabular}{lllll}
 \toprule
 Option name & Environment & Dict key & Type & Dimensionality  \\
 \midrule
-All component damage condition & struct & \texttt{state\_obs} & float & \texttt{n\_comp} $\cdot$ 30   \\ 
-All components deterioration rate & struct &  \texttt{state\_d\_rate} & float & \texttt{n\_comp}    \\
+All damage condition & struct & \texttt{state\_obs} & float & \texttt{n\_comp} $\cdot$ 30   \\ 
+All deterioration rate & struct &  \texttt{state\_d\_rate} & float & \texttt{n\_comp}    \\
 Correlation condition & struct &  \texttt{state\_alphas} & float & 80    \\
 \hline
-All component damage condition & owf & \texttt{state\_obs} & float & \texttt{n\_comp} $\cdot$ 60   \\ 
-All components deterioration rate & owf & \texttt{state\_d\_rate} & float & \texttt{n\_comp}    \\
+All damage condition & owf & \texttt{state\_obs} & float & \texttt{n\_comp} $\cdot$ 60   \\ 
+All deterioration rate & owf & \texttt{state\_d\_rate} & float & \texttt{n\_comp}    \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -93,6 +100,7 @@ All components deterioration rate & owf & \texttt{state\_d\_rate} & float & \tex
 \centering
 \caption{Options set up in our experiments.}
 \label{tab:ouroptionvlaues}
+\setlength\tabcolsep{4.5pt}
 \begin{tabular}{llll}
 \toprule
 Option name & struct\_uc & struct\_c & owf \\
@@ -111,15 +119,16 @@ Option name & struct\_uc & struct\_c & owf \\
 \end{tabular}
 \end{table}
 
-
+\newpage
 \section{Experimental details}
 \label{sec:ch5_appendix_exp_details}
 \subsection{Description of the parameters set up in the experiments}
-
+\label{sec:ch5_appendix_param}
 \begin{table}
   \caption{Parameters set in our experiments.}
   \label{tab:exp_details_common}
   \centering
+  \setlength\tabcolsep{4.5pt}
   \begin{tabular}{llll}
     \toprule
     Parameter name & Parameters value & Parameter name & Parameters value \\
@@ -160,6 +169,7 @@ This update is performed four times to ensure a fair amount of network updates w
 \begin{table}
     \caption{Exploration parameters.}
     \centering
+    \setlength\tabcolsep{4.5pt}
     \begin{tabular}{llll}
     \toprule
     & Epsilon start & Epsilon finish & Epsilon anneal time \\
@@ -190,32 +200,11 @@ When $n$ increases, we change only the attention layer size composed of $a$ laye
 In particular, we set up (i) $1L4H$, (ii) $2L4H$, and (iii) $2L10H$.
 The mixer embedding is $64$ for all experiments.
 
-With respect to COMA, which is an actor-critic method, a few specific parameters should be additionally set up.
-The agent network, here denoted as the actor, is the same as for the other previously described.
-However, the critic varies with $n$ because the input of the critic becomes rather large, and its architecture is fully linear: (i) [128, 128], (ii) [512, 256, 128, 128], and (iii) [2048, 1024, 512, 256, 128].
-A TD-$\lambda$ used to update the critic is set to $0.8$ and the learning rate to train the critic is the same as the one of the actor, specified in Table \ref{tab:exp_details_common}.
-In terms of FACMAC, the parameters of interest are those at the critic, as its size increases with the number of agents $n$.
-FACMAC features a 2-layer-mixing network and, therefore, we specify the size for both:
-(i) 64-64, (ii) 128-64, and (iii) 128-128.
-As in COMA, the TD-$\lambda$ parameter is set to $0.8$.
-The critic has a target network, similar to those included in value-based methods, that is also updated every 200 episodes with a soft target update with $\tau=0.001$.
-Moreover, we follow the optimiser selection made in FACMAC's original paper and used ADAM, with an epsilon equal to $10^{-8}$.
-
-Regarding IQL, which is a decentralised method, the parameters are identical in all tested environments.
-IQL also has the double-Q feature activated and learns independently individual Q values via DQN's algorithm.
-For DQN, we only run experiments with less than five agents, i.e., $n<=5$.
-The main difference between tested environments is the size of their networks. 
-Since DQN features $3^n$ outputs, only $64$ GRU cells are not enough in terms of network capacity. 
-In our experiments, we increase the network size and confirm that DQN manages to achieve similar results as the other MARL methods.
-In DQN, the network architecture is the only parameter that is adjusted with the number of agents $n$.
-
-Finally, we list in Table \ref{tab:n_param_train} the number of trainable parameters of the networks.
-The input is slightly different between the tested sets of IMP-MARL environments and, therefore, we show in the table only the parameters for one of them.
-Note that there is an agent network taking actions for all agents and we purposely duplicate the agent network row to emphasise that all agent's networks are identical across experiments.
 
 \begin{table}
     \caption{Number of trainable parameters in uncorrelated k-out-of-n systems.}
     \centering
+    \setlength\tabcolsep{4.5pt}
     \begin{tabular}{lllllll}
     \toprule
     Method & Network & $n=3$ & $n=5$ & $n=10$ & $n=50$ & $n=100$ \\
@@ -239,10 +228,65 @@ Note that there is an agent network taking actions for all agents and we purpose
     \label{tab:n_param_train}
 \end{table}
 
+With respect to COMA, which is an actor-critic method, a few specific parameters should be additionally set up.
+The agent network, here denoted as the actor, is the same as for the other previously described.
+However, the critic varies with $n$ because the input of the critic becomes rather large, and its architecture is fully linear: (i) [128, 128], (ii) [512, 256, 128, 128], and (iii) [2048, 1024, 512, 256, 128].
+A TD-$\lambda$ used to update the critic is set to $0.8$ and the learning rate to train the critic is the same as the one of the actor, specified in Table \ref{tab:exp_details_common}.
+In terms of FACMAC, the parameters of interest are those at the critic, as its size increases with the number of agents $n$.
+FACMAC features a 2-layer-mixing network and, therefore, we specify the size for both:
+(i) 64-64, (ii) 128-64, and (iii) 128-128.
+As in COMA, the TD-$\lambda$ parameter is set to $0.8$.
+The critic has a target network, similar to those included in value-based methods, that is also updated every 200 episodes with a soft target update with $\tau=0.001$.
+Moreover, we follow the optimiser selection made in FACMAC's original paper and used ADAM, with an epsilon equal to $10^{-8}$.
+
+Regarding IQL, which is a decentralised method, the parameters are identical in all tested environments.
+IQL also has the double-Q feature activated and learns independently individual Q values via DQN's algorithm.
+For DQN, we only run experiments with less than five agents, i.e., $n<=5$.
+The main difference between tested environments is the size of their networks. 
+Since DQN features $3^n$ outputs, only $64$ GRU cells are not enough in terms of network capacity. 
+In our experiments, we increase the network size and confirm that DQN manages to achieve similar results as the other MARL methods.
+In DQN, the network architecture is the only parameter that is adjusted with the number of agents $n$.
+
+Finally, we list in Table \ref{tab:n_param_train} the number of trainable parameters of the networks.
+The input is slightly different between the tested sets of IMP-MARL environments and, therefore, we show in the table only the parameters for one of them.
+Note that there is an agent network taking actions for all agents and we purposely duplicate the agent network row to emphasise that all agent's networks are identical across experiments.
+
+
+
+
+
+\subsection{Statistical analysis of the variance associated with the number of test episodes}
+\label{sec:ch5_appendix_variance}
+
+\begin{figure}
+\centering
+    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/variance_analysis.pdf}
+\caption{
+Variance analysis of a given set of neural networks.
+We report the standard deviation of the sum of discounted rewards obtained during the test phase.
+Each curve represents an entire test experiment when executing 100, 1,000, or 10,000 test episodes.
+}
+\label{fig:variance_details}
+\end{figure}
+
+As previously explained, we conduct 10,000 test episodes to reduce the variance related to the expected sum of discounted rewards within a given environment.
+The choice is motivated by the direct relationship between the variance associated with $\mathbb{E}[R_{0}]$ and the number of test episodes. 
+In our experiments, we average over 10,000 policy realisations, but here, we show that the standard deviation associated with $\mathbb{E}[R_{0}]$ for each trainig time step can vary significantly if an insufficient number of test episodes is simulated.
+Figure \ref{fig:variance_details} illustrates the standard deviations observed when executing with 100, 1,000, and 10,000 test episodes.
+To produce this figure, we take the neural networks obtained with one FACMAC training run.
+These networks are trained over time in the offshore wind farm environment with 100 components.
+From this single set of networks, we execute 10 times the 100, 1,000, and 10,000 test episodes to observe how the variance evolves with this number of test episodes.
+We observe that the standard deviations of $\mathbb{E}[R_{0}]$ obtained with 100 test episodes significantly vary over the investigated test runs.
+Naturally, the variation of the standard deviation is reduced with an increasing number of test episodes, obtaining very similar standard deviations when testing with 10,000 episodes.
+
+Moreover, one can also compute the largest difference that is observed between these 10 test runs at a specific time step i.e., the absolute difference of the estimated $\mathbb{E}[R_{0}]$ at a given time step.
+When testing 100 episodes, the absolute difference is $231.89$ at a time step where the maximum of the 10 provided $\mathbb{E}[R_{0}]$ is $ -2786.1$.
+If 1000 episodes are tested, the absolute difference is $99.8$ where the maximum is $-2757.2$ at this time step, whereas by testing 10,000 episodes, the difference equals $24.8$ with a maximum of $-2622.8$.
+These numbers represent only a trained set of networks over $1920$ training runs, and thus a final conclusion cannot be claimed, yet it motivates the need of simulating 10,000 test episodes, as with only 100 test episodes, the absolute difference can reach up to 10 \%.
 
 
 \subsection{Hardware and experiments duration}
-\label{app:duration}
+\label{sec:ch5_appendix_duration}
 
 Our experiments are all run on different clusters managed by SLURM \citep{yoo2003slurm}.
 They are executed with specific hardware requirements based on the number of agents: experiments with up to $10$ agents are run on only CPUs, while we execute experiments on GPUs with $50$ and $100$ agents.
@@ -258,9 +302,11 @@ These reported RAM configurations are indicative and can be seen as requirements
   \caption{Hardware configurations for training and testing experiments.}
   \label{tab:slurmdetails}
   \centering
+  \setlength\tabcolsep{4.5pt}
   \begin{tabular}{lllll}
     \toprule
-    Parameters & Train only on CPUs & Train on GPUs & Test only on CPUs & Test on GPUs \\ 
+    \multirow{2}{*}{Parameters} & Train only & Train on & Test only  & Test\\ 
+     & on CPUs & GPUs & on CPUs &  on GPUs \\  
     \midrule
     Number of CPU & 4  & 2 & 8 & 5 \\ 
     RAM           & 5 Gb & 6 Gb & 5Gb & 10 Gb \\ 
@@ -315,49 +361,20 @@ The correlated k-out-of-n environment slightly requires more time than the other
 
 \begin{figure}
     \centering
-    \includegraphics{tex_thesis/figures/ch5/heur_cpu_time.pdf}
+    \includegraphics[width=.6\textwidth]{tex_thesis/figures/ch5/heur_cpu_time.pdf}
     \caption{Computational time required for executing expert-based heuristic policies as a function of the number of components. The experiments are run on 2 AMD EPYC Rome 7542 CPUs @ 2.9GHz.}
     \label{fig:heur_time_cpu}
 \end{figure}
 Furthermore, we represent in Figure \ref{fig:heur_time_cpu} the time required for the computation of expert-based heuristic policies. The experiments are plotted as a function of the number of components and coloured based on their corresponding environment. In this case, all experiments are run on CPUs. We can see that heuristic policies can be efficiently computed for environments with less than 50 components, yet the computational time significantly increases for experiments with 50 or 100 components. This result is logical since the combination of evaluated parameters includes the number of components to be inspected at each inspection interval. Besides, the overall computation time is directly influenced by the time needed to run an episode, with the k-out-of-n environments taking longer compared to the offshore wind farm ones because the episode's finite horizon spans over 10 additional time steps. 
 
-\subsection{Statistical analysis of the variance associated with the number of test episodes}
-\label{app:variance_env}
-
-\begin{figure}
-\centering
-    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/variance_analysis.pdf}
-\caption{
-Variance analysis of a given set of neural networks.
-We report the standard deviation of the sum of discounted rewards obtained during the test phase.
-Each curve represents an entire test experiment when executing 100, 1,000, or 10,000 test episodes.
-}
-\label{fig:variance_details}
-\end{figure}
-
-As previously explained, we conduct 10,000 test episodes to reduce the variance related to the expected sum of discounted rewards within a given environment.
-The choice is motivated by the direct relationship between the variance associated with $\mathbb{E}[R_{0}]$ and the number of test episodes. 
-In our experiments, we average over 10,000 policy realisations, but here, we show that the standard deviation associated with $\mathbb{E}[R_{0}]$ for each trainig time step can vary significantly if an insufficient number of test episodes is simulated.
-Figure \ref{fig:variance_details} illustrates the standard deviations observed when executing with 100, 1,000, and 10,000 test episodes.
-To produce this figure, we take the neural networks obtained with one FACMAC training run.
-These networks are trained over time in the offshore wind farm environment with 100 components.
-From this single set of networks, we execute 10 times the 100, 1,000, and 10,000 test episodes to observe how the variance evolves with this number of test episodes.
-We observe that the standard deviations of $\mathbb{E}[R_{0}]$ obtained with 100 test episodes significantly vary over the investigated test runs.
-Naturally, the variation of the standard deviation is reduced with an increasing number of test episodes, obtaining very similar standard deviations when testing with 10,000 episodes.
-
-Moreover, one can also compute the largest difference that is observed between these 10 test runs at a specific time step i.e., the absolute difference of the estimated $\mathbb{E}[R_{0}]$ at a given time step.
-When testing 100 episodes, the absolute difference is $231.89$ at a time step where the maximum of the 10 provided $\mathbb{E}[R_{0}]$ is $ -2786.1$.
-If 1000 episodes are tested, the absolute difference is $99.8$ where the maximum is $-2757.2$ at this time step, whereas by testing 10,000 episodes, the difference equals $24.8$ with a maximum of $-2622.8$.
-These numbers represent only a trained set of networks over $1920$ training runs, and thus a final conclusion cannot be claimed, yet it motivates the need of simulating 10,000 test episodes, as with only 100 test episodes, the absolute difference can reach up to 10 \%.
 
 \section{Additional benchmark results}
 % All figures and detailed tables 
-\label{app:add_results}
+\label{sec:ch5_appendix_add_results}
 In this section, we present additional results and remarks beyond those reported in the main text.
 In the first place, we provide the values of the expected sum of discounted rewards achieved by the best runs over all experiments.
 We list the best policy for each conducted experiment in Tables \ref{tab:koutofnresults}, \ref{tab:correlatedkoutofnresults}, and \ref{tab:owfresults}.
 Note that the maximum values represented with markers at the right of each box in Figure \ref{fig:results} can be retrieved from these values by applying the normalisation (x-H)/H, with H being the value achieved by the heuristic policies.
-In Figure \ref{fig:explain_fig}, we also visually illustrate the normalisation process that results in the boxplots presented in Figure \ref{fig:results}.
 
 Additionally, we represent in Figures \ref{fig:learning_curves_cc_false} and \ref{fig:learning_curves_cc_true} the learning curves corresponding to all our experiments.
 The learning curves showcase the evolution of the expected sum of discounted rewards every 20,000 training time steps, computed at the testing stage with 10,000 test episodes.
@@ -371,24 +388,12 @@ While MARL methods profit from the additionally provided correlation information
 One final remark is that the discrepancy between the expert-based heuristic policy and MARL methods is more pronounced in offshore wind farm environments. 
 This could be attributed to the shorter decision horizon or the higher cost per inspection in this particular case (see Table \ref{tab:owfresults}).
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/plot_explain_plot_gaussian.pdf}
-    \caption{Visual description of the iterative process followed to generate the boxplots showcased in Figure \ref{fig:results}.
-[Left] Learning curves corresponding to 10 QMIX training seeds in a k-out-of-n system with 50 agents. 
-The markers highlight the policies that result in the highest expected sum of discounted rewards during evaluation, i.e., one policy per seed.
-[Right] The 10 selected policies are displayed at the top as a function of the expected sum of discounted rewards, along with the heuristic score obtained in this environment.
-In the middle plot, we calculate and represent the 10 selected policies as a function of normalised relative rewards, i.e., (x - h) / h.
-Finally, a boxplot is constructed at the bottom based on the previously calculated ten normalised relative rewards, each representing a different seed.
-}
-\label{fig:explain_fig}
-\end{figure}
-
 \newpage
 \begin{table}
 \centering
 \caption{k-out-of-n system best policies (* = campaign cost).}
 \label{tab:koutofnresults}
+\setlength\tabcolsep{4.5pt}
 \begin{tabular}{c|ccccccc|c}
 \toprule
 n & QMIX & QVMix & QPLEX & COMA & FACMAC & IQL & DQN & Heuristics \\
@@ -414,6 +419,7 @@ n & QMIX & QVMix & QPLEX & COMA & FACMAC & IQL & DQN & Heuristics \\
 \centering
 \caption{Correlated k-out-of-n system best policies (* = campaign cost).}
 \label{tab:correlatedkoutofnresults}
+\setlength\tabcolsep{4.5pt}
 \begin{tabular}{c|ccccccc|c}
 \toprule
 n & QMIX & QVMix & QPLEX & COMA & FACMAC & IQL & DQN & Heuristics \\
@@ -439,6 +445,7 @@ n & QMIX & QVMix & QPLEX & COMA & FACMAC & IQL & DQN & Heuristics \\
 \centering
 \caption{Offshore wind farm best policies (* = campaign cost).}
 \label{tab:owfresults}
+\setlength\tabcolsep{4.5pt}
 \begin{tabular}{c|ccccccc|c}
 \toprule
 n & QMIX & QVMix & QPLEX & COMA & FACMAC & IQL & DQN & Heuristics \\

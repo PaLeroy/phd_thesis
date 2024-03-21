@@ -1,12 +1,138 @@
 \chapter{Competition}\label{ch:competition}
 \begin{chapter_outline}
-Outline
+
+This chapter introduces the main concepts when considering agents learning in a non-cooperative environment.
+This is the third background chapter of this manuscript.
+We present here basic concepts and literature stories of competitive and general-sum settings in multi-agent reinforcement learning.
+We start by introducing the content of this third part of the manuscript and wrapping up these two settings introduced earlier in Section \ref{sec:ch6_intro}.
+The straightforward solution of each agent maximising its own reward may not be the best and we present different types of solutions in Section \ref{sec:ch6_solutions}.
+In Section \ref{sec:ch6_history}, we present some history behind these settings, from game theory and adversarial search to MARL.
+We conclude this chapter in Section \ref{sec:ch6_algo} by describing methods to solve competition and general-sum settings.
+
 \end{chapter_outline}
 
-\damien{Deadline: 20/02}
-\section{Introduction}
+\section{Introduction}\label{sec:ch6_intro}
+In Part \ref{part:background} of this manuscript, we present a general framework for multi-agent reinforcement learning, the stochastic game, and the different settings of MARL.
+In Part \ref{part:coop}, we focused on the cooperative setting, where all agents receive the same reward.
+In this third part of the manuscript, we focus on a different setting where two teams of agents compete against each other.
+This chapter first provides an overview of MARL in the competition and general-sum setting.
+The next chapter then presents the two-team competition setting and conducted experiments to highlight how we trained teams by combining the methods defined in Part \ref{part:coop} and the methods to train agents to compete presented in this chapter.
 
-nash vs pareto
+In MARL, a typical problem is agents may never stop adapting their policies to the new policies of other agents who are also adapting.
+This never-ending adaptation cycle led many researchers to define equilibrium, achieved when agents do not want to change their policy.
+As introduced in previous chapters, finding and selecting equilibrium are some of the main challenges of MARL.
+When agents receive a common reward, like in the cooperative setting, deciding which of two joint policies is the best is straightforward.
+However, this becomes less obvious when agents receive different rewards, like in competitive and general-sum settings.
+Section \ref{sec:ch6_solutions} discusses different types of solutions in MARL to achieve equilibrium and rank agents' policies.
 
-\section{1 vs 1 competition}
-\section{General sum game}
+Once these solutions are defined, Section \ref{sec:ch6_history} presents an overview of the history of multi-agent systems.
+As it will be shown, the solution concepts definition is not 
+Before the reinforcement learning methods, we cover some game theory foundations and adversarial search methods.
+We then cover RL methods, from dynamic programming to policy-based methods.
+Finally, MARL and deep RL have joined the party to solve complex games.
+In Section \ref{sec:ch6_algo}, we discuss self-play and population-based training, two training scenarios allowing RL agents to perform well in complex games.
+
+\todo{Normal form game + R-P-S example?}
+
+\section{Solutions}\label{sec:ch6_solutions}
+The solution to a Markov decision process is to find the policy that maximises the agent's expected sum of rewards, sometimes discounted.
+Different policies may achieve this optimal return, and while finding it may be challenging, this definition of a solution to an MDP tends to be simple.
+In a stochastic game, the return of each agent is $G_0^{a_i} = \mathbb{E}_{\mathbf{\pi}}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, also denoted $G^i(\mathbf{\pi})$.
+Maximising each agent's return may lead to never-ending learning, where each agent adapts to the others.
+This section provides different solution concepts, characterising how to evaluate whether the joint policy is the solution to an environment.
+Determining the solution is as straightforward in a Dec-POMDP as in SARL because agents all receive the same reward.
+Therefore, the solution is to find the optimal joint policy that maximises the expected return.
+However, when agents receive different rewards, it becomes difficult to determine which joint policy is the optimal one.
+Indeed,
+We need to define what is optimality in such settings.
+\cite{marl-book} defines multi-agent reinforcement learning as a pair composed of an environment and a solution concept.
+This section aims to define different solutions for multi-agent systems, and a thorough list can be found in \citep{marl-book}.
+
+The best response, one of the straightforward solutions, is defined as a policy of an agent $a_i$ by considering that the policies of all other agents are fixed, denoted by $\mathbf{\pi^{-i}}$, such that the best response policy is in the set of $\argmax_{\pi^{i}} G^i (\pi^{i}, \mathbf{\pi^{-i}})$.
+The best response policy may not be unique.
+It can be used to build a solution for all agents by computing the best response policy of one agent after the others iteratively.
+
+Another well-known solution is the minimax solution for a two-player zero-sum game.
+In such a game, the agent's reward can be modelled as the negative of the other's, so $r_t^{a_i} = -r_t^{a_{-i}}$ and $G^i(\mathbf{\pi}) = - G^{-i}(\mathbf{\pi})$.
+A joint policy $\mathbf{\pi} = (\pi^i, \pi^{-i})$ is a minimax solution if $G^i(\mathbf{\pi})=\max_{\pi^i} \min_{\pi^j} G^i(\pi^i, \pi^j)$.
+Again, several minimax solutions can exist, but their corresponding returns are identical, called the game's minimax value.
+In other words, the minimax value can be achieved from a given state, typically the initial one, given that both players play optimally \citep{russel2010}.
+Regarding best responses defined previously, one can interpret the minimax policy as the best response of one agent to the best response policy of the other \citep{marl-book}.
+
+Extending this concept of mutual best responses to general-sum games with two or more agents can be the definition of the Nash equilibrium \citep{marl-book}.
+This equilibrium is achieved when no agents benefit from changing their current policy.
+A joint policy $\mathbf{\pi}$ is a Nash equilibrium if for all agents $a_i$, any $\pi'_i$ is such that $G^i(\pi'_i , \mathbf{\pi^{-i}}) \le G^i(\mathbf{\pi})$ \citep{nash1950equilibrium}.
+For the rock-paper-scissor game, one Nash equilibrium is to take each action with a uniform probability.
+It is also a minimax solution.
+While no Nash equilibrium is composed of deterministic policy in the rock-paper-scissor game, a Nash equilibrium is not probabilistic.
+Moreover, a Nash equilibrium is not necessarily unique and has different expected return values for each agent.
+This motivates the challenge of selecting which equilibria is the optimal solution.
+Finally, the existence of these three solutions in a stochastic game has been demonstrated, and we refer the reader to the explanation provided in \citep{marl-book}.
+
+Variants and extensions of the Nash equilibrium exist.
+The $\epsilon$-Nash equilbirum allows a surrounding region to improve flexibility and reduce the strict Nash equibilirum.
+Another variant is the correlated equilibrium, also called coarse equilibrium.
+Until now, we have silently considered that agents take actions independently.
+However, this is not always the case, and agents may have correlated policies.
+This correlated equilibrium generalises Nash equilibrium to correlated policies.
+Both are fully covered by \cite{marl-book}, who also conclude the definitions of equilibrium by highlighting their three main limitations: the possible sub-optimality, the non-uniqueness, and the incompletness of these equilibrium solutions.
+
+An other type of solution is a Pareto optimal joint policy.
+A joint-policy $\mathbf{\pi}$ Pareto dominates an other one $\mathbf{\pi'}$ if $G^i(\mathbf{\pi}) \ge G^i(\mathbf{\pi'})\forall i$ but for one agent $a_i$, $G^i(\mathbf{\pi}) > G^i(\mathbf{\pi'})$.
+In other word, at least one agent can achieve a better returns without making the return of others to be reduced.
+A Pareto optimal joint policy is easily defined as a joint policy not Pareto dominated by any other one.
+The difference between Nash equilibrium is that here, no agents can be better without making others worse.
+While the Nash is any agent can change without being worse.
+This Pareto optimality allows to improve the solution, and specifically reduce the number of considered equilibrium because it seems obvious that an equilibrium being Parto optimal is better than a not Parto one.
+Again, there are often not a unique joint-policy that is Pareto optimal.
+Additionnaly, a joint-policy can be Pareto optimal without being an equilibrium one.
+
+
+
+\todo{add citations everywhere}
+
+\section{History}\label{sec:ch6_history}
+Game theory is at the foundation of multi-agent reinforcement learning.
+
+
+
+Section \ref{sec:ch2_model_based_vs_model_free} discusses model-based RL and planning.
+We defined planning as computing a local solution for a given state using the environment model.
+Planning has a long history in multi-agent systems, especially in fully observable two-player zero-sum games with turn taking actions.
+Famous examples of such games include Chess and Go for the complex one, or the classical tic tac toe which is easier.
+In such board games, each agent takes action in turn, modying the state of the board observable by both.
+Both obtains a zero reward except at the end of the game if one won, it obtains a reward equals to 1.
+If both drew, they both receive a reward equals 1/2.
+In such games, the family of methods from planning are called adversarial search \citep{russel2010}.
+
+It is an extension of classical tree search problem, where a tree is built by considering all possible successive actions of the agent.
+A path from the root to a leaf represents successive actions taken to reach a terminal state, determined by the leaf, when starting from the state given by the root.
+Enumerating all possibilities allows to find the best one.
+Classical tree search is performed once to solve the problem but 
+
+
+
+
+Half page:
+Search
+MCTS
+MCTS with RL
+
+Half page:
+Dynamic programming, joint action learning, minimax Q and Nash Q learning.
+Fictitous play and agent modelling
+
+Recap chap 6 marl book
+
+
+\section{Types of algos}\label{sec:ch6_algo}
+self play vs population based training
+
+As introduced, self-play or population based training for competitive settings have already been explored in many works \citep{jaderberg2019human, vinyals2019grandmaster, baker2019emergent}.
+More advanced techniques have been widely studied in the literature such as fictitious play \cite{brown1951iterative} or best response dynamic \citep{baudin2022fictitious}.
+In short, it consists in choosing the policy which is the best response against the average strategy of an opponent.
+In self-play, we mention fictitious play to play Poker \citep{pmlr-v37-heinrich15} and Deep Nash to play Stratego \citep{DM_stratego}.
+In population based training, we mention policy-space response oracles (PSRO) \citep{NIPS2017_3323fe11, Muller2020A}.
+These methods are referred to as opponent modelling.
+Extensions of these works consider to additionally learn how the opponent will update its strategy \citep{he2016opponent, foerster2017learning}.
+Recently, Tian et. al. \citep{tian2022multi} introduced a time dynamical opponent model to encode opponent policies in a CTDE framework for mixed cooperative-competitive environment.
