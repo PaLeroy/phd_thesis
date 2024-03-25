@@ -95,20 +95,27 @@ Additionnaly, a joint-policy can be Pareto optimal without being an equilibrium 
 Game theory is at the foundation of multi-agent reinforcement learning.
 
 
-
 Section \ref{sec:ch2_model_based_vs_model_free} discusses model-based RL and planning.
-We defined planning as computing a local solution for a given state using the environment model.
-Planning has a long history in multi-agent systems, especially in fully observable two-player zero-sum games with turn taking actions.
-Famous examples of such games include Chess and Go for the complex one, or the classical tic tac toe which is easier.
-In such board games, each agent takes action in turn, modying the state of the board observable by both.
-Both obtains a zero reward except at the end of the game if one won, it obtains a reward equals to 1.
-If both drew, they both receive a reward equals 1/2.
+We defined planning as computing a local solution by using the environment model.
+Planning has a long history in multi-agent systems, especially in fully observable two-player zero-sum games with turn-taking actions.
+Famous examples of such games include Chess and Go.
+In such board games, agents take action one after the other, modifying the state of the board observable by both.
+Both obtain zero rewards except at the end of the game. 
+If one wins, one obtains a reward equal to 1, and if it is a draw, both receive a reward equal to 1/2.
 In such games, the family of methods from planning are called adversarial search \citep{russel2010}.
 
-It is an extension of classical tree search problem, where a tree is built by considering all possible successive actions of the agent.
-A path from the root to a leaf represents successive actions taken to reach a terminal state, determined by the leaf, when starting from the state given by the root.
-Enumerating all possibilities allows to find the best one.
-Classical tree search is performed once to solve the problem but 
+It is an extension of classical tree search, where a tree representing all possible games is built by considering all possible successive actions of the agent.
+In such a tree, a path from the root to a leaf represents one possible game.
+It represents successive actions taken to reach a terminal state, each node representing a state.
+The best solution is, therefore, the path toward the leaf providing the best outcomes.
+Growing such a tree can become intractable when the number of possible games is large.
+This leads to methods that build only a subpart rather than the entire tree using information during the search.
+A well-known method is called A*.
+
+Back to adversarial search, growing the tree of all possibilities is also possible.
+However, one needs to consider the presence of adversarial agents.
+Minimax search is such algorithm.
+
 
 
 
