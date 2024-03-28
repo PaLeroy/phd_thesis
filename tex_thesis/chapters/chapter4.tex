@@ -55,7 +55,7 @@ while the $Q$ function is learned by minimizing the second loss
 DQV-Max learns the $Q$ function with the same loss defined in Equation \eqref{eq:ch4_dqv_q_update} but learns the $V$ function by minimising
 \begin{equation}
         \mathcal{L}(\phi) = \mathbb{E}_{\langle s_{t}, u_{t},r_{t},s_{t+1}\rangle\sim B} \bigg[\big(r_{t} + \gamma \: \underset{u\in \mathcal{U}}{\max}\: Q(s_{t+1}, u; \theta') - V(s_{t}; \phi)\big)^{2}\bigg].
-        \label{eq:ch4_dqv_max_v}.
+        \label{eq:ch4_dqv_max_v}
 \end{equation}
 
 As in DQN, the replay buffer $B$ stores transitions $\langle s_{t},u_{t},r_{t},s_{t+1}\rangle$ from which batches of transitions are sampled to update the networks.
