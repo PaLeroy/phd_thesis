@@ -62,14 +62,14 @@ The cumulative discounted reward obtained from time step $t$ over the next $T$ t
 The goal of agents is to find the optimal joint policy that maximises the expected $G_t$ during the entire episode: $\boldsymbol{\pi^{*}} =\argmax_{\boldsymbol{\pi}} \mathbb{E}[G_0|\boldsymbol{\pi}]$.
 Again, we emphasise that this expected sum depends on the joint policy.
 
-\todo{From the introduction, the mode of executions and training, based on the special case of oliehook, MMDP, MPOMDP, observability, central model, factored model}
+\todo{From the introduction, the mode of executions and training, based on the special case of oliehook, MMDP, MPOMDP, observability, central model, factored model, show how we can have the centralised paradigm}.
 \todo{Challenges in Dec-POMDP,  + solved for what already? cf decpomdp book}
 
 This is called a jointly observable Dec-POMDP that is also referred to as a decentralised MDP in \citep{DecPomdp}.
 However, this does not make the problem simpler because each agent still does not observe this state \citep{bernstein2002complexity}.
 \todo{check if we do not want to address this in chapter 3.}
 
-\todo{Convergence ? Solutions? Nash etc?}
+\todo{Convergence ? Solutions? Nash etc? + intérêt d'avoir une seule reward, cf oliehoek}.
 
 \section{Environments}
 \label{sec:ch3_env}
@@ -439,3 +439,5 @@ Relative overgeneralization (cited in facmac)
 \citep{lyu2021contrasting} vs \citep{peng2021facmac}
 
 adversarial agent in the decpompd? how to handle?
+
+eugene cars?

@@ -1,6 +1,51 @@
 \chapter{Conclusion}\label{ch:conclusion}
-\begin{chapter_outline}
-Outline
-\end{chapter_outline}
 
-\damien{Deadline: 27/02}
+This thesis demonstrates the usefulness of considering other learning agents when training one with reinforcement learning in a multi-agent environment.
+We provide the necessary background before presenting three specific contributions.
+The first contribution extends the DQV single-agent algorithms to cooperative multi-agent ones, outperforming the methods compared against.
+The second contribution demonstrates the interest of these cooperative methods in the context of a real-world application: the infrastructure management problem.
+The third contribution analyses how to train a team in a mixed cooperative-competitive setting where two teams compete.
+We hereafter summarise the three parts of this chapter and discuss the scientific findings before finally discussing the potential societal impact of multi-agent reinforcement learning.
+
+Part \ref{part:background} provides the required background to understand the successive parts.
+Specifically, Chapter \ref{ch:background} presents the stochastic game, a general framework for multi-agent reinforcement learning and how it can be adapted when considering specific settings.
+Multi-agent reinforcement learning takes its foundation in single-agent reinforcement learning, and we offer a succinct introduction to its basics.
+Specifically, we discuss model-based, dynamic programming and focus on value-based and policy-based methods for model-free RL.
+This first background chapter is concluded by addressing the partial observability of agents in reinforcement learning.
+
+Part \ref{part:coop} tackles the problem of training agents to learn to cooperate.
+When agents cooperate, the setting can be framed as a decentralised partially observable Markov decision process where agents share the same reward.
+This part comprises three chapters.
+One is an additional background chapter, and the other highlights two specific contributions.
+
+Chapter \ref{ch:cooperation} defines the cooperative framework along with examples of applications that can be framed as such a problem.
+Several cooperative MARL methods to solve Dec-POMDP are described following its definition.
+We emphasise how algorithms have been designed to allow centralised training with decentralised execution.
+While we postpone comparing the performance of these methods to later chapters, this third chapter concludes with a literature discussion, highlighting works that are not considered in this manuscript but are of interest to go further.
+
+Chapter \ref{ch:qvmix} presents QVMix and other value-based methods for Dec-POMDP.
+It highlights that learning the state value function along the state-action value function as it is done in SARL by the DQV family of algorithms can be extended to cooperative CTDE methods in MARL.
+Moreover, it allows to outperform the methods compared against and to not overestimate the state-action value function unlike these compared value-based methods relying on the classical Q-learning update.
+
+Chapter \ref{ch:impmarl} concludes Part \ref{part:coop} by presenting infrastructure management planning, a real-world application that can be framed as a Dec-POMDP.
+Managing infrastructure by timely inspecting or repairing components of a system to minimise its failure risk and the cost of maintenance become challenging with an increasing size of the system.
+Decentralising the decision for each component, using CTDE methods so that they cooperate to reduce cost and risk, allows to scale to large systems while achieving better performance then rule-based considered as the state-of-the-art to solve these problems.
+
+Part \ref{part:compet} tackles training agents to learn to cooperate when competing against another team.
+This mixed cooperative-competitive setting requires to benefit from the methods used to train agents from one team to cooperate along with the training scenarios required to train an agent in a competitive environment.
+This part is divided into two chapters. 
+The former provides background on the competition setting, while the latter presents specific contributions where we trained teams to compete against each other.
+
+Chapter \ref{ch:competition} addresses challenges when agents do not purely cooperate.
+This is the case not only in competitive settings but also in general-sum ones.
+This chapter presents different types of solutions that game theory provides because Nash equilibrium is not the single one.
+Following this, we discuss historical methods for computing these solutions, from dynamic programming to planning methods.
+The chapter concludes with the presentation of self-play and population training, two popular training scenarios for training agents in competitive or general-sum environments.
+
+Chapter \ref{ch:2teams} presents a study to train one team of agents to compete against another.
+This setting is a symmetric two-team Markov game where two teams composed of the same agents compete.
+
+
+
+is the third background chapter focusing on the competition scenario.
+The different types of solution in multi-agent system provided by game theory are reviewed.
