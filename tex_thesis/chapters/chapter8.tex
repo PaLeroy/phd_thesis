@@ -1,50 +1,85 @@
 \chapter{Conclusion}\label{ch:conclusion}
 
-This thesis demonstrates through three contributions the usefulness of considering other learning agents when training one with reinforcement learning in a multi-agent environment.
-We provide the necessary background before presenting three specific contributions.
-The first contribution extends the DQV single-agent algorithms to cooperative multi-agent ones, outperforming the methods compared against.
-The second contribution demonstrates the interest of these cooperative methods in the context of a real-world application: the infrastructure management problem.
+This thesis demonstrates the usefulness of considering other learning agents when training one with reinforcement learning in a multi-agent environment through three specific contributions.
+The first contribution extends the DQV single-agent family of algorithms to the cooperative multi-agent setting, outperforming the methods compared against.
+The second contribution demonstrates the interest of these cooperative methods in the context of a real-world application: the infrastructure management planning problem.
 The third contribution analyses how to train a team in a mixed cooperative-competitive setting where two teams compete.
-We hereafter summarise the three parts of this chapter and discuss the scientific findings before finally discussing the potential societal impact of multi-agent reinforcement learning.
+We hereafter summarise the manuscript's content, divided into three parts, and discuss the scientific findings before finally discussing the potential societal impact of multi-agent reinforcement learning.
 
-Part \ref{part:background} provides the required background to understand the successive parts.
-Specifically, Chapter \ref{ch:background} presents the stochastic game, a general framework for multi-agent reinforcement learning and how it can be adapted when considering specific settings.
-Multi-agent reinforcement learning takes its foundation in single-agent reinforcement learning, and we offer a succinct introduction to its basics.
-Specifically, we discuss model-based and dynamic programming, focus on value-based and policy-based methods for model-free RL and conclude by addressing the partial observability of agents.
+Part \ref{part:background} provides the required background.
+Specifically, Chapter \ref{ch:background} presents the stochastic game, a general framework for multi-agent reinforcement learning. 
+This framework can be adapted to specific settings distinguished by the agent's objectives: cooperation, competition, or general sum.
+In addition, multi-agent reinforcement learning has its foundation in single-agent reinforcement learning, and we offer a succinct introduction to its basics.
+Specifically, we discuss model-based and dynamic programming.
+We detail value-based and policy-based methods for model-free RL.
+We conclude by addressing the partial observability of agents.
 
-Part \ref{part:coop} tackles the problem of training agents to learn to cooperate.
-When agents cooperate, the setting can be framed as a decentralised partially observable Markov decision process where agents share the same reward.
+Part \ref{part:coop} tackles the cooperative setting.
+When agents cooperate, it can be framed as a decentralised partially observable Markov decision process where agents share the same reward.
 This part comprises three chapters.
-One is a background chapter, and the others highlight two specific contributions.
+One is a background chapter, and the others address two contributions.
 
-Chapter \ref{ch:cooperation} defines the cooperative framework and applications that can be framed as such a problem.
+Chapter \ref{ch:cooperation} defines the cooperative framework and details some applications.
 Several cooperative MARL methods to solve Dec-POMDP are defined following its definition, emphasising how algorithms have been designed to allow centralised training with decentralised execution.
-While we postpone comparing the performance of these methods to later chapters, this third chapter concludes with a literature discussion, highlighting works that are not considered in this manuscript but are of interest.
+While the performance of these methods is compared in later chapters, this third chapter concludes with a literature discussion, highlighting works not considered in this manuscript but still of interest.
 
 Chapter \ref{ch:qvmix} presents QVMix and other value-based methods for Dec-POMDP.
-It highlights that learning the state value function along the state-action value function as it is done in SARL by the DQV family of algorithms can be extended to cooperative CTDE methods in MARL.
-Moreover, it allows to outperform the methods compared against and to not overestimate the state-action value function unlike these compared value-based methods relying on the classical Q-learning update.
+It highlights that learning the state value function along the state-action value function as it is done in SARL by the DQV algorithms can be extended to cooperative CTDE methods in MARL.
+Moreover, some of these methods outperform the ones compared against but also do not overestimate the state-action value function, unlike these compared value-based methods relying on the classical Q-learning update.
 
-Chapter \ref{ch:impmarl} concludes Part \ref{part:coop} by presenting infrastructure management planning, a real-world application that can be framed as a Dec-POMDP.
-Managing infrastructure by timely inspecting or repairing system components to minimise failure risk and maintenance cost becomes challenging as the system grows in size.
+Chapter \ref{ch:impmarl} presents infrastructure management planning, a real-world application that can be framed as a Dec-POMDP.
+Managing infrastructure by timely inspecting or repairing system components to minimise failure risk and maintenance cost becomes challenging as the system grows.
 Decentralising the decision, making each component an independent agent, and training them with CTDE methods allows for scaling to large systems.
-Framing it as a multi-agent problem allows it to scale and to outperform rule-based approaches, considered the state-of-the-art for solving these problems.
+Framing it as a multi-agent problem allows it to scale and outperform rule-based approaches, considered the state-of-the-art for solving these problems.
+However, this work also highlights potential limitations when the number of agents increases, especially regarding the variance each method provides.
 
-Part \ref{part:compet} tackles training agents to learn to cooperate when competing against another team.
-This mixed cooperative-competitive setting requires to benefit from the methods used to train agents from one team to cooperate along with the training scenarios required to train an agent in a competitive environment.
-This part is divided into two chapters. 
-The former provides background on the competition setting, while the latter presents specific contributions where we trained teams to compete against each other.
+Part \ref{part:compet} tackles a setting where two teams compete.
+This mixed cooperative-competitive setting benefits from the cooperative methods and the training scenarios required to train an agent in a competitive environment.
+This part is divided into two chapters.
+The former provides background on the competition setting, while the latter presents a specific contribution.
 
 Chapter \ref{ch:competition} addresses challenges when agents do not purely cooperate.
 This is the case not only in competitive settings but also in general-sum ones.
-This chapter presents different types of solutions that game theory provides because Nash equilibrium is not the single one.
-Following this, we discuss historical methods for computing these solutions, from dynamic programming to planning methods.
+This chapter presents different types of solutions that game theory provides.
+Following this, we discuss historical methods for computing some of these solutions, from dynamic programming to planning methods.
 The chapter concludes with the presentation of self-play and population training, two popular training scenarios for training agents in competitive or general-sum environments.
 
 Chapter \ref{ch:2teams} presents a study to train one team of agents to compete against another.
-This setting is a symmetric two-team Markov game where two teams composed of the same agents compete.
+This setting is a symmetric two-team Markov game where two teams of the same agents compete.
+We compared three learning scenarios in this setting.
+We trained teams against a stationary policy, in self-play or within a population of learning teams.
+The performance of these learning scenarios is evaluated with the Elo score computed on different subsets of trained teams.
+This leads to the conclusion that the population-based scenario might be the best in this setting.
 
+Multi-agent reinforcement learning is still a young field although it resides on strong and long-established foundations from game theory and reinforcement learning.
+The impact of neural networks on the field can be debated, as they have only recently begun to produce groundbreaking works.
+For the cooperative setting, it is difficult to keep one, but VDN \citep{sunehag2018vdn}, MADDPG \cite{lowe2017multi} and COMA \citep{foerster2017coma} can be considered as such works, along with SMAC \citep{samvelyan2019starcraft} that is the starting point of many experiments.
+There is also AlphaGo Zero \citep{silver2017mastering}, one of the popular breakthroughs in the competitive setting, despite being considered as planning more than RL by some.
 
+However, despite these advancements, many challenges remain, particularly regarding the application of MARL in real-world scenarios.
+We observe the community is bridging the gap with environments closer to reality.
+One notable example of bridging this gap IMP-MARL.
+However, convincing applications of MARL that entirely replace classical planning approaches have yet to emerge.
+While the classical problems of deploying RL in real life, such as safety, robustness, or explainability of the trained agents, explain this, some efforts are still being made to bring MARL into real life by demonstrating their potential.
 
-is the third background chapter focusing on the competition scenario.
-The different types of solution in multi-agent system provided by game theory are reviewed.
+In the future, in addition to getting closer to real-world applications, the number of agents studied in the literature is often very limited, and increasing this number should be considered.
+Mean-field games, which aim to study systems with a large number of agents, often serve this purpose.
+Lastly, it's worth noting that the general-sum setting, which is the most challenging, is underrepresented in this manuscript.
+Despite existing work in this area, such as that presented in Chapter \ref{ch:competition}, real-life general-sum settings, such as autonomous driving, remain particularly challenging due to the complex interactions between agents.
+We believe the reader can now understand why.
+
+Finally, multi-agent reinforcement learning (MARL) has the potential to significantly impact society in various ways.
+Let's explore some perspectives on the implications of using MARL outcomes.
+Decision-making is a fundamental aspect of human cognition, and throughout history, scientific advancements have played a crucial role in aiding humans making decisions.
+
+In this manuscript, we discuss numerous applications of reinforcement learning and MARL. 
+Consider, for instance, the profound impact of improving our infrastructure management planning strategies.
+In anticipation of environmental changes stemming from climate change, it is not merely about saving costs in monetary terms but also minimizing environmental damage, thereby highlighting the broader implications of decision-making.
+
+Moreover, the challenges that autonomous driving represent also highlight the complexities that MARL can address.
+From navigating crowded streets to ensuring passenger safety, MARL will maybe offer solutions in this domain, allowing to participate to the changes in travel capabilities.
+Note that traffic management, controlling traffic lights, is also a well studied MARL approach.
+
+Additionally, some contributions leading to the development of this manuscript originated from a project involving defense use cases.
+While remaining neutral on value judgments, it's evident that the future of defense systems is likely to incorporate autonomous decision-making processes, facilitated by MARL techniques. 
+However, a disclaimer regarding any potential ethical concerns or unintended consequences associated with these advancements is essential.

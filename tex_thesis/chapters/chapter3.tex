@@ -71,6 +71,8 @@ However, this does not make the problem simpler because each agent still does no
 
 \todo{Convergence ? Solutions? Nash etc? + intérêt d'avoir une seule reward, cf oliehoek}.
 
+\todo{Oliehoek shown how to solve dec-pomdp with RL as one of the furhter topic}
+
 \section{Environments}
 \label{sec:ch3_env}
 Before diving into the details of CTDE methods, we provide an overview of the existing suites\footnotemark  of environments from the literature.
@@ -422,22 +424,32 @@ MADDPG \citep{lowe2017multi} is another well-established method, which does not 
 Another method, LIIR \citep{Du2019LIIRLearning}, aims to provide credit assignment with individual intrinsic rewards, while HATPRO and HAPPO \citep{kuba2021trust} demonstrate that popular actor-critic methods like TRPO \citep{schulman2015trust} and PPO \citep{schulman2017ppo} can be extended to cooperative MARL tasks.
 
 \section{Related work}
-The goal of this chapter is not to provide the best CTDE methods, while some comparative results are provided in the next chapters, we also argue that \citep{gorsane2022towards}.
-
-Another approach for dealing with cooperative multi-agent settings is to link the recent success of sequence models and reinforcement learning by using a multi-agent transformer (MAT) that learns to transform a sequence of observations into a sequence of actions, one per agent \citep{wen2022multiagent}.
-
+This chapter aims to define the CTDE methods compared to later defined ones.
+While we have already provided other existing methods, we will discuss different topics of MARL, mainly related to the cooperative setting.
 
 critic usefuell paper?
-
-Mean field game
-
-communication
-
 Relative overgeneralization (cited in facmac)
-
-
 \citep{lyu2021contrasting} vs \citep{peng2021facmac}
+
+
+Mean-field game is a different way of modelling the framework \citep{lauriere2022learning}.
+It allows the consideration of many agents, while the CTDE methods considered in this manuscript have difficulty scaling up the number of agents, as shown later in Chapter\ref{ch:impmarl}.
+By construction, mean-field games can consider an infinite number of agents because the reward is computed by considering the mean of the distribution of agents' strategies or states rather than individual agents.
+This approach significantly reduces the computational complexity compared to traditional methods, making it suitable for analyzing systems with a large population of interacting agents.
+
+Another approach for dealing with cooperative multi-agent settings is to link the recent success of sequence models and reinforcement learning by using a multi-agent transformer (MAT) that learns to transform a sequence of observations into a sequence of actions, one per agent \citep{wen2022multiagent}.
+Such approaches have become increasingly popular with the rise of foundation and large language models.
+
+Finally, we do not address communication in the environment.
+Communication is also a further topic mentioned by \citep{DecPomdp}.
+Allowing agents to send messages can be modelled in different ways.
+\cite{foerster2016learning} propose that messages are the parallel of actions.
+An agent decides on a message and an action based on its observation of the environment and messages sent by other agents.
+Messages have no impact on the state transition or the reward.
+This is maybe one of the first works addressing communication in MARL, specifically in the cooperative setting.
+In its master thesis, \cite{fombellida2020master} studied how communication can affect performance in SMAC and also presented a survey of communication methods.
+The challenges include adapting to various numbers of agents, targeted communication, and limiting the number of messages.
+
 
 adversarial agent in the decpompd? how to handle?
 
-eugene cars?
