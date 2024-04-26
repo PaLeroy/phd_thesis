@@ -1,154 +1,146 @@
 \chapter{Introduction}\label{ch:introduction}
 
-We all make decisions.
-A decision is a choice among possibilities.
-Consider yourself driving a car and arriving at a crossroads as an example.
+We make decisions every day.
+Let us build some intuition about this decision-making process through the following example.
+Consider yourself driving a car and arriving at a crossroads.
 In front of you, there is a traffic sign.
 You predict it is a stop sign based on your perception and knowledge.
-This decision involves reasoning, even if it is instantaneous.
-But this decision has no impact on the car.
-As suggested by the traffic sign, you then decide to take the action of stopping it.
-This second decision, based on the first one, involves again reasoning but now impacts your environment.
+This prediction involves reasoning and has no impact on your environment.
+As suggested by the traffic sign, you then take the action to stop the car.
+This also involves reasoning but impacts your environment.
 Indeed, you push on the brakes, and the car decelerates until it stops.
-This highlights one difference between decisions, which we differentiate as predicting or acting.
-Their impact can often distinguish them: predicting doesn't affect our environment, while acting usually does.
 
-Decisions are based on what we learned.
-You studied the traffic signs to know it was a stop one.
+These decisions are based on what we learned, even if some can be made without knowledge.
+Indeed, you probably studied the traffic signs to know it was a stop one.
 You practised your driving skills to obtain your driver's license by trial and error, but hopefully also with the help of a supervisor.
 You did acquire these skills by learning.
 We learn by supervision, having examples of decisions and feedback to highlight whether some were right or wrong.
-But we also learn by interaction, testing our environment.
-Anyone remembers a child throwing objects from the table and learning what gravity is.
-"The idea that we learn by interacting with our environment is probably the first to occur to us when we think about the nature of learning" \citep{sutton2018reinforcement}.
-This highlights that you learn by yourself but also with the help of others.
-Nevertheless, this manuscript is not about how humans make decisions. 
+However, we also learn by interacting with and testing our environment.
+Many may recall a child tossing objects from a table, discovering gravity in action, possibly motivating the quote from \cite{sutton2018reinforcement} ``The idea that we learn by interacting with our environment is probably the first to occur to us when we think about nature of learning''.
+In summary, you learn by yourself and with the help of others.
+Nevertheless, this manuscript is not about how humans learn to make decisions.
 It is about how computers can learn to make decisions.
-When we say computer makes decisions, we are talking about programs built to process some inputs to provide outputs.
 
 When a computer makes decisions, it is called artificial intelligence (AI).
-But AI is not only about computers making decisions.
-Nowadays, AI has a lot of definitions.
-\cite{russel2010} identify eight definitions to propose a classification of AI into four approaches.
-They suggest that AI is to make computers either think like humans, think rationally, act like humans or act rationally.
-Computers thinking like humans usually refers to the field of cognitive sciences where theories of the human mind are built.
-Computers thinking rationally refers to the field of logic based on knowledge representation inspired by the syllogisms invented by Aristotle.
+However, AI is not only about computers making decisions.
+Nowadays, AI has many definitions, and we will provide some before focusing on the one of interest.
+In their book, \cite{russel2010} rely on several definitions to propose a classification of AI into four categories.
+They classify the definitions of AI as making computers either think like humans or think rationally or act like humans or act rationally.
+Computers thinking like humans is the field of cognitive sciences where theories of the human mind are built, and computers thinking rationally is the field of logic, based on knowledge representation and inspired by the syllogisms invented by Aristotle.
 This manuscript does not address these two types of AI.
-Indeed, we are interested in computers acting to solve problems.
-Acting can be defined as making decisions, and \cite{russel2010} consider acting as anything related to the behaviour.
+It also does not address acting humanly, which we justify hereafter, but focuses on AI acting rationally.
+Rationality means that it maximises the measure of the performance of the decision.
+Therefore, these types of AI are built to make decisions to achieve a predefined goal.
+We commonly define anything making decisions as an agent.
 
 When considering AI acting like humans, a well-known idea coming up is the Turing test.
-An AI succeeds the Turing test if, during a written conversation with it, the human cannot tell whether its interlocutor is an AI.
-This test has been extended to include video signals or physical interaction to test more complex AI.
-However, many researchers did not focus on creating acting AI succeeding this test.
-The following self-explanatory quote may convince many: "Aeronautics is not defined as the field of making machines that fly so exactly like pigeons that they can fool even other pigeons"\citep{russel2010}.
-This brings us to the fourth category of AI definitions, the one of interest in this manuscript: AI acting rationally.
-Rationality means mathematics and engineering here, such as in the logic approach previously described.
-Therefore, these types of AI are built to take decisions to achieve a predefined goal.
-An agent is defined as anything taking decisions.
-A rational agent acts to achieve the best-expected outcomes of its objective.
+An agent succeeds in the Turing test if, during a written conversation with it, the human cannot tell whether its interlocutor is an AI.
+This test has been extended to include video signals or physical interaction to test more complex problems.
+However, many researchers did not focus on creating acting AI succeeding in this test.
+The following self-explanatory quote from \cite{russel2010} may convince many: ``Aeronautics is not defined as the field of making machines that fly so exactly like pigeons that they can fool even other pigeons''.
 
-This manuscript is about AI, specifically about agents acting rationally, but it is also about learning, and learning has not yet been addressed.
-And this is because it is possible to act rationally without learning.
-It is possible to solve a Sudoku game by sequentially enumerating all cells' available numbers and assigning a number to cells that end with only one possible number.
-This does not involve learning anything but only applying the game rules ingenuously.
+This manuscript concerns agents acting rationally but also concerns learning.
+We still defer the definition of learning, and hereafter, we present that acting rationally can be achieved without learning.
+Indeed, creating an agent to solve Sudoku games is possible by exploiting the game rules.
+It will sequentially enumerate all cells' available numbers and assign a number to cells that end with only one possible number.
 Many problems can be solved without learning, but some may be challenging.
-For example, a computer can play Chess by enumerating all the possibilities from a given board situation.
-But the number of possible games of Chess is $~10^{120}$ \citep{shannon1950xxii}, and enumerating all of them is intractable.
-However, creating an AI that plays Chess is possible if you enumerate only the games of interest, and do it in parallel to make it fast.
-This is how DeepBlue \citep{campbell2002deep} plays Chess at the level of the best human players without learning.
-Even though AI can solve very complex problems by ingeniously exploiting predefined rules, the complexity of some problems leads to the development of AI that can learn to make decisions.
+For example, an agent can play chess by enumerating all the possibilities from a given board situation to choose the best move.
+But the number of possible chess games is $10^{120}$ \citep{shannon1950}, and enumerating all of them is intractable.
+However, creating an agent that plays chess is possible if it enumerates only the games of interest and does it in parallel to make it fast.
+This is how DeepBlue \citep{campbell2002deep} plays chess at the level of the best human players without learning.
+Even though it is possible to solve complex problems by ingeniously exploiting game rules, the complexity of some others leads to the development of agents learning to make decisions.
 
-When there is learning in AI, we call it machine learning (ML): "Machine learning is a subset of AI that learns to make decisions by fitting mathematical models to observed data"~\citep{prince2023understanding}.
-ML is divided into different areas based on the available data and the algorithm's goal.
-For example, an AI can learn to predict the type of a traffic sign based on its picture.
+When there is learning in AI, we call it machine learning (ML): ``Machine learning is a subset of AI that learns to make decisions by fitting mathematical models to observed data''~\citep{prince2023understanding}.
+ML is divided into different areas based on available data and goals.
+For example, an agent can learn to predict the type of a traffic sign based on its picture.
 To achieve this, a model can be built with the help of a dataset of pictures and their corresponding labels.
-The model is a mathematical function that maps a picture, a collection of pixel values, to a type of traffic sign.
-The model is initially bad and improves while training. 
+In this case, the model is a mathematical function that maps a picture, a collection of pixel values, to a type of traffic sign.
+The model performance is initially poor and improves while training. 
 It learns!
 During the training phase, the system predicts the types of images from the dataset.
 By using actual and predicted types of traffic signs, the model is refined to improve it.
-Such a solution is categorised as supervised learning (SL) because the labels supervise the learning.
+Such a solution is called supervised learning (SL) because the labels supervise the learning.
 Another area of ML is unsupervised learning when labels are not provided with the data.
-Indeed, the lack of labels induces the absence of supervision, but the model can still learn to understand the image structure instead of learning to predict its label.
+Indeed, the lack of labels induces the absence of supervision, but the model can still learn patterns in the image structure instead of learning to predict its label.
 Removing part of the image and training the model to predict the missing pixel is an example of unsupervised learning called inpainting.
-Unsupervised learning is used to pre-train the model by figuring out the data before providing some labels to learn a given task with SL.
+Unsupervised learning serves many purposes.
+For example, it is common to pre-train a model with unlabeled data, typically found in abundance, to establish a foundation of knowledge before introducing labels, which are often more challenging to acquire, to train the model on a specific task using supervised learning.
 
-Going back in time, at the beginning of this introduction, we first dissociated decisions by their impact on the environment.
-Learning to predict something via supervised learning allows one to make decisions that impact or not the environment.
+At the beginning of this introduction, we presented the decision-making process by highlighting parts based on their impact.
+Learning to predict something via supervised learning allows one to make decisions that impact the environment.
 Indeed, it is possible to train a model that predicts the strength to apply to your car pedals based on a camera in the car.
-We also considered Chess.
-With a collection of chess games, it would also be possible to predict the best move based on the ones seen in the dataset.
-Aside from the complexity of acquiring such datasets, these approaches do not allow AI to learn to make decisions but only to imitate them.
+We also considered chess.
+A collection of chess games would also allow an agent to learn to predict the best move based on the ones seen in the dataset.
+Aside from the complexity of acquiring such a dataset, these approaches do not allow AI to learn to make decisions but to learn to replicate the decisions, called imitation learning.
 Doesn't this remind you of the acting humanly approach of AI defined previously?
-If the dataset comprises purely rational decisions, we can consider the approach as learning to act rationally.
-Nevertheless, instead of learning to imitate decisions, we need a systematic approach to train an agent to make rational decisions.
-This can be done by providing a numerical signal after each decision, evaluating how good the decision is given a defined goal.
+Moreover, one crucial aspect left aside until now is the sequential aspect of this rational decision-making because decisions might impact the future.
+Most of the time, as in chess, a sequence of decisions is required to achieve a goal.
+We need a systematic approach to train an agent to make sequences of rational decisions.
 Such an approach exists and is called reinforcement learning (RL).
 This is a third area of machine learning, and most of the time, any ML problem is classified as one of the three approaches presented: supervised, unsupervised or reinforcement learning.
 
-Let us now describe reinforcement learning.
-In RL, an agent acts and receives a reward after taking action.
+In reinforcement learning, an agent acts and receives a reward after taking action.
 The reward is the action's outcome, a numerical feedback.
-As the goal is to act rationally, the agent is trained to find the strategy that provides the best possible reward.
-This strategy is called the optimal policy.
-The agent learns it by trial and error, typically updating its policy based on the received reward after each action.
-Back to our example, when not stopping at a stop sign at a crossroad, you can cause an accident, an excellent example of a negative reward.
-But whether you break or not, your environment is evolving.
-Indeed, in addition to receiving rewards based on the actions taken by the agent, the agent's environment can also evolve.
+The agent aims to perform actions that provide the maximum possible accumulated reward.
+It learns it by trial and error, typically updating its policy based on the received reward after each action.
+Back to our example, when not stopping at a stop sign at a crossroad, you can cause an accident, an excellent example of a situation that would provide a negative reward.
+But whether you decide to break or to do nothing, your environment is evolving.
+Indeed, in addition to receiving rewards, the agent's environment can evolve due to its action.
 We then say that the state of the environment evolves based on the action.
 The agent is part of the environment but interacts with it, somehow defined inside and outside of it.
 Nevertheless, this dynamic nature of the environment adds a new dimension to the learning process because the agent needs to learn to make a sequence of optimal decisions.
-Note that it is possible to design an RL problem without evolution.
+Note that it is possible to design an RL problem without environment evolution.
 
-Sudoku and Chess can be solved without learning, but the AI needs to know the game's rules.
-In RL, this is usually not the case.
+Sudoku and chess can be solved without learning, but the agent needs to know the game's rules.
+In RL, this is not usually the case.
 The agent does not know how an action will affect its state nor the reward it will receive.
 It just receives the reward after taking an action and learns to maximise it.
 One of the challenges of RL is that agents face the exploration-exploitation dilemma.
-They must balance trying out new actions to discover potentially better strategies (exploration) and sticking to actions that have yielded high rewards in the past (exploitation).
-Another challenge is the environment, which can also involve delayed rewards, where the consequences of an action may not be immediate, typically because a sequence of precise actions is required to obtain the reward. 
-This delay makes it more challenging for agents who receive a reward and understand whether it was for a previous or last action.
+They must balance trying out new actions to discover potentially better policies (exploration) and sticking to actions that have yielded high rewards in the past (exploitation).
+Another common challenge lies in the environment, which can also involve delayed rewards. 
+The consequences of an action may not be immediate, typically because a sequence of precise actions is required to achieve something.
+This delay makes it more challenging for the agent that has to learn whether a reward is due to a previous action or the last one.
 This is referred to as the credit assignment challenge.
 
-Many applications of reinforcement learning exist.
-It can be applied in healthcare, typically to decide treatment dosage through time \citep{miotto2018deep}.
-A recommender system is also an example of a reinforcement learning application \citep{mcinerney2018explore}.
-Robotics is another example where RL learns to control a robot, such as learning a robotic hand to solve Rubik's cube \citep{akkaya2019solving}.
-\todo{Chip design cite{A graph placement methodology for fast chip design}}
+Reinforcement learning has applications in various domains.
+Recommender system \citep{mcinerney2018explore} is good example of an RL application.
+Robotics is another application where an agent learns to control a robot, such as training a robotic hand to solve Rubik's cube \citep{akkaya2019solving}.
+Designing chips is a complex sequential decision-making problem that can also be solved with the help of RL \citep{mirhoseini2021graph}. 
+RL can be applied in healthcare, typically to decide treatment dosage through time \citep{miotto2018deep}.
 Finally, games have been a testbed for reinforcement learning for a long time.
-Some significant breakthroughs have been achieved thanks to games, such as attaining human performance in Atari games \citep{Mnih2015}.
-They offer the best environment for trials and errors as they can be easily simulated.
-There are many other applications, but returning to our example, we did not consider one important parameter.
-When riding your car, you are not alone.
-Other people are also sharing the roads, and your decisions are also based on them, on their behaviour.
+Some significant breakthroughs in RL have been achieved thanks to games, such as attaining human performance in Atari games \citep{Mnih2015}.
+They offer the best environment for trials and errors because they are simulators by nature.
+Indeed, the trial and error nature of RL induces that agent require to interact with its environment a lot.
 
+We just presented applications of RL where a single agent acts rationally to achieve a predefined goal.
+However, back to our first example, when riding your car you are not alone.
+Other people are also sharing the roads, and your decisions are also based on them, on their behaviour.
 When there are multiple agents in the environment, many things change.
-We need to consider how these agents influence the environment.
-There are several types of dynamics in a multi-agent system.
-Agents can take actions simultaneously or sequentially.
-For example, everyone makes decisions simultaneously on the road, while Chess is a turn-based game where agents' decisions are made one after the other.
-In these two examples, the number of agents is also different.
-In Chess, there are only two agents, while on the road, there can be a lot.
-These two examples illustrate the range of problems with multi-agent systems, from a game with two agents to a real-world environment with an unknown number of agents.
-One additional and crucial distinction that should be made in multi-agent environments is that some agents may not learn.
+How these agents influence the environment must be considered because there are several types of dynamics in a multi-agent system.
+Typically, agents can take actions simultaneously or sequentially.
+For example, everyone makes decisions simultaneously on the road, while chess is a turn-based game where agents' decisions are made one after the other.
+Moreover, in these two examples, the number of agents is also different.
+In chess, there are only two agents, while on the road, there can be a lot.
+This illustrates the range of problems that a multi-agent system can represented, from a game with two agents to a real-world environment with an unknown number of agents.
 
 Multi-agent reinforcement learning (MARL) extends single-agent reinforcement learning (SARL) when multiple agents learn in the environment.
+In such system, each agent receives a reward and learn to act in order to maximise its rewards. 
+Learning is the crucial differentiation between multi-agent system and MARL.
 Suppose only one agent is learning in an environment composed of several ones.
-The other agents then have a stationary policy, which does not evolve through time.
-Thus, the agent can be trained with SARL because the other agents are simply part of its environment since they always act the same.
+The other agents then have a stationary policy, which does not evolve through time and can be considered as part of the environment.
 However, when several agents learn, their policies change over time.
 From the point of view of each agent, the environment dynamic is constantly changing.
-This induces non-stationarity in the learning process, known as a moving target problem, and is a first challenge in MARL.
+This induces non-stationarity in the learning process, known as a moving target problem.
 Typically, in a rock-paper-scissor game, if one always chooses rock, one may always choose paper.
 But if the first changes to scissors, the second may finally change to rock.
 This cycle can last forever, and one needs to decide when to stop.
 Finding an equilibrium where strategies stop evolving is indeed a challenging solution.
+This highliths a first challenge in multi-agent RL.
 
-A second challenge in MARL is to determine the optimality of policies.
-In SARL, it is straightforward: the agent must achieve a high sum of rewards, and when it finds the policy achieving the maximum sum of rewards, it stops.
+A second challenge in MARL is to determine the criterion required to assess the optimality of policies.
+In SARL, it is straightforward: the agent must achieve a high sum of rewards, and when it finds the optimal policy achieving the maximum sum of rewards, it stops.
 But how can this be posed in a multi-agent environment when several agents want to maximise their reward?
-The solution of finding an equilibrium is achieved when agents do not want to change their policy.
+The solution of finding an equilibrium is achieved when agents do not benefit of a better reward by changing their policy.
 How to define this equilibrium and whether there are several of them is a dedicated research problem in MARL.
 Moreover, finding the equilibrium providing the maximum sum of rewards can also be challenging.
 
@@ -161,37 +153,29 @@ In addition to understanding that a reward may be caused by a series of actions,
 Back to the example, if you stop because of a stop sign but get damaged by the one following you who did not stop, the corresponding negative reward is not your fault, but the faulty one is the car's driver behind you.
 Other challenges exist, but these four highlight the additional challenges when extending to multi-agent reinforcement learning \cite{marl-book}.
 
-Multi-agent reinforcement learning has been divided into three principal settings.
-Each one is based on the goal of agents.
+Multi-agent reinforcement learning has been divided into three settings.
+This division comes from game theory and allows to simplify the general case to particular one to reduce the complexity arising from the challenges preivously mentioned.
+Each setting is based on the goal of agents.
 The first setting, cooperation, involves agents cooperating to achieve a common goal.
 In the second setting, competition, agents compete to achieve an opposing goal, typically named the zero-sum setting.
 The third setting is named general-sum and encompasses everything else.
-Based on these settings, it is possible to frame the problem in a specific way, helping to solve it more easily.
-Many questions remain when solving MARL, but we kept one.
+This is the general setting and maybe the most challenging because no hypothesis can be exploited to ease the problem.
 
-To summarise, different AI definitions exist, and we focus on how a computer can learn to act rationally.
-Learning is not mandatory to act rationally but might be required when complexity increases.
-Learning in AI is called machine learning and is divided into three sub-areas: supervised or unsupervised learning and reinforcement learning.
-Reinforcement learning allows agents to be trained based on a reward they obtain after making a decision.
-When several agents learn together with RL, it is multi-agent reinforcement learning.
-There are several types of MARL, cooperation, competition and general-sum, and we identified the main challenges irrespective of the three.
-Finally, enfin, this manuscript presents contributions to multi-agent reinforcement.
-
-This introduction may make it clear that we need to consider other learning agents when training one.
-The reader should be confident that training an agent with a single-agent reinforcement learning method might not yield the best answer to these problems.
-This research question has existed in the MARL community for quite some time, and we go beyond by providing insights into how we should consider other learning agents in an environment.
-We focus on two specific settings: training a team to cooperate and training a team to compete against an opposing one.
-In the cooperative setting, we present methods designed to train a team of agents to fulfil a cooperative task and how such methods can be applied to a real-world application.
+This introduction may make it clear that we need to consider other learning agents when training one in MARL.
+The reader should be confident that training an agent with a single-agent reinforcement learning method, ignoring other learning agents, might not yield the best solution to these problems.
+This research question has existed in the MARL community for quite some time, and we go beyond by providing insights in this manuscript into how we should consider other learning agents in an environment.
+We focus on two specific settings: training a team of agents to cooperate and training a team of agents to compete against an opposing one.
+In the cooperative setting, we present contributions that provide methods designed to train agents to fulfil a cooperative task and how such methods can be applied to a real-world application.
 When training a team in an adversarial scenario, we can use the same methods but, again, by considering that there are opponents.
-This highlights the two main parts of the manuscript, each providing background to provide perspective on the novelties of the presented work.
+This highlights the two main parts of the manuscript, each starting by a background section to provide perspective on the novelties of the presented work.
 Before diving into the details of these two settings, we provide the necessary background and notations of reinforcement learning.
-In the following sections, we provide a more detailed outline of this manuscript, followed by a disclaimer on the publications at the foundations of this manuscript and, finally, the context in which this work has been conducted.
+In the following sections, we provide a more detailed outline of this manuscript, followed by a disclaimer on the publications at the foundations of this manuscript and, finally, the context in which some of the work presented has been conducted.
 
 \section{Outline}
 \label{sec:ch1_outline}
 This manuscript is divided into four parts.
 The necessary background is presented in Part~\ref{part:background}, providing an overview of reinforcement learning.
-In Part \ref{part:coop}, we present works related to cooperation, one of the multi-agent settings, while Part \ref{part:compet} extends these topics to a specific general-sum framework where teams compete.
+In Part \ref{part:coop}, we present works related to cooperation, one of the multi-agent settings, while Part \ref{part:compet} extends these topics to a specific general-sum framework where two teams compete.
 Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively reviewing the contributions presented in this manuscript.
 
 \begin{description}
@@ -209,17 +193,18 @@ Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively r
     
     In the second chapter, Chapter~\ref{ch:qvmix}, we present four methods based on the Deep-Quality Value family of algorithms designed to train cooperating agents.
     
-    Chapter~\ref{ch:impmarl} is the third and last chapter and introduces infrastructure management planning, a real-world application that can be tackled in this cooperative framework.
+    Chapter~\ref{ch:impmarl} is the third and last chapter of Part \ref{part:coop} and introduces infrastructure management planning, a real-world application that can be tackled in this cooperative framework.
     In this application, inspections, repairs, and/or retrofits should be timely planned to control the risk of potential system failures.
     
     \item [Part \ref{part:compet}]  Cooperate against an opposing team:
     
-    Chapter~\ref{ch:competition} is the first one and presenting how competition is classically modelled and solved in multi-agent reinforcement learning.
-    It serves the same purpose of Chapter~\ref{ch:cooperation} and is alike, a mix between background and literature review.
+    Chapter~\ref{ch:competition} is the first one and presents how competition is classically modelled and solved in multi-agent reinforcement learning.
+    It serves the same purpose of Chapter~\ref{ch:cooperation} by being a mix between background and literature review.
     
     Chapter~\ref{ch:2teams} presents a particular case of the general-sum settings where two teams compete and how to train them.
 
     \item [Part \ref{part:conclusion}] Conlusion:
+    
     The last chapter of this manuscript, Chapter~\ref{ch:conclusion}, addresses the closing remarks.
 \end{description}
 
@@ -241,11 +226,11 @@ Notably, three central chapters represent adaptations of specific peer-reviewed 
 \section{Context}
 \label{sec:ch1_context}
 To provide a backstory, part of the work presented in this manuscript has been developed during the IRIS project with an industrial consortium of Belgian companies.
-IRIS stands for Intelligent Recognition Information System, and the partners were John Cockerill Defense, ACIC, Multitel, Belgian Royal Military Academy and the University of Li{`e}ge.
+IRIS stands for Intelligent Recognition Information System, and the partners were John Cockerill Defense, ACIC, Multitel, Belgian Royal Military Academy and the University of Liège.
 The IRIS project aims to enhance surveillance capabilities by integrating machine learning.
 Through detection, recognition, and behaviour analysis modules, IRIS seeks to empower operators with timely, actionable information to make optimal decisions in both military and civilian contexts, impacting the safety of individuals, sensitive sites, and equipment integrity.
 Specifically, we explored multi-agent reinforcement learning to provide decision-aid to operators in the context of military missions.
-In short, the IRIS project is a use case of our studies on training a team against an opposing team to learn how military assets should cooperate against a team of the same asset.
+The IRIS project served as a use case of our studies on training a team against an opposing team to learn how military assets should cooperate.
 \todo{check defnese or defence}
 %We acknowledge the Walloon Region's financial support in this project's context.
 
