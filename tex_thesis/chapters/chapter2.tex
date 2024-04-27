@@ -65,11 +65,11 @@ Finally, we insist that an agent's return depends on the joint action taken and 
     \label{fig:ch2_sg}
 \end{figure}
 
-Before discussing challenges to learn in a SG, we hereafter provide some comments about its definition. 
+Before discussing the challenges of learning in an SG, we hereafter provide some comments about its definition. 
 Since the transition function is defined as stochastic, the reward function is always based on the next state obtained.
 Still, we sometimes denote it  $R(s_t, \mathbf{u_t}, i)$ irrespective of this new state to enhance readability.
-Moreover, the expected return is often denoted $E_{\mathbf{\pi}} \left[ G_0 \right]$ leaving the the initial state distribution $p$ and the transition function $P$ depdendies implicit.
-An important characteristic in MARL is that agents do not always observe the state $s_t$ of the environment entirely to select an action.
+Moreover, the expected return is often denoted $E_{\mathbf{\pi}} \left[ G_0 \right]$ leaving the initial state distribution $p$ and the transition function $P$ dependencies implicit.
+An important characteristic of MARL is that agents do not always observe the state $s_t$ of the environment entirely to select an action.
 This partial observability is further developed in Section~\ref{sec:ch2_partial_observability}.
 Finally, in the literature, an SG is sometimes called a Markov game (e.g. \citep{MarkovGames}).
 
@@ -99,13 +99,31 @@ As mentioned in the introduction, specific settings exist in MARL and addressing
 \section{Multi-agent settings} 
 \label{sec:ch2_multi_agent_settings}
 The stochastic game definition proposed in Section~\ref{sec:ch2_stochastic_Game} provides a general framework for multi-agent systems.
-However, three specific settings are commonly distinguished.
+A particular case is the stateless SG played by selecting a single action called the normal-form game.
+These games are also called matrix games because a payoff matrix, a matrix of reward, can represent them.
+This section defines the three specific settings commonly distinguished in MARL, and normal-form game examples will be provided to help provide intuition.
+A typical example is the prisoner dilemma, and its payoff matrix is provided in Table \ref{table:ch2_prisonmatrix}.
+When the player $X$ chooses the action $B$, it receives a reward equal to 0 when player $Y$ chooses the action $A$, provided in the bottom left corner.
+
+\begin{table}
+\setlength{\extrarowheight}{2pt}
+\centering
+\caption{Prisoner dilemma payoff matrix.}
+\begin{tabular}{cc|c|c|}
+  & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $Y$}\\
+  & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}  & \multicolumn{1}{c}{$B$} \\\cline{3-4}
+  \multirow{2}*{Player $X$} & $A$ & $(-1, -1)$ & $(-5, 0)$ \\\cline{3-4}
+                            & $B$ & $(0, -5)$ & $(-2, -2)$ \\\cline{3-4}
+\end{tabular}
+\label{table:ch2_prisonmatrix}
+\end{table}
+
 While MARL takes foundation in RL, it also takes foundation in game theory (GT) \citep{von1947theory} that provided this classification.
 The difference in these settings is the relation between the rewards of agents \citep{marl-book}.
 The first setting, cooperation, involves agents acting to achieve a common goal.
 In this setting, agents typically share the same reward.
-The second setting, competition, is the opposite where agents pursue an opposing goal.
-In this case, agents typically receive rewards that sum to a constant, since the gain of one is equal to the retrofit of others.
+The second setting, competition, is the opposite, where agents pursue an opposing goal.
+In this case, agents typically receive rewards that sum to a constant since the gain of one is equal to the retrofit of others.
 The third setting is named general-sum and encompasses everything else.
 The stochastic game provides a typical framework for a general-sum problem, while its definition is adapted when it is cooperative or competitive.
 Not much detail will be provided here because these settings are the concern of further chapters.
@@ -118,6 +136,19 @@ This is called "common reward games" in \citep{marl-book}.
 Many problems can be considered as being a cooperative multi-agent setting.
 Examples include robot coordination (e.g. in \citep{papoudakis2021benchmarking}), train scheduling (e.g., in \citep{mohanty2020flatland}), traffic control (e.g. in \citep{zhang2019cityflow}) but also games (e.g., Hanabi \citep{Bard_2020}).
 \citet{oroojlooy2022review} provide a review of cooperative MARL, including a more detailed list of applications.
+A typical example of a normal-form cooperative game is ... with a payoff matrix provided in Table \ref{table:ch2_coopmatrix}.
+
+% \begin{table}
+% \setlength{\extrarowheight}{2pt}
+% \begin{tabular}{cc|c|c|}
+%   & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $Y$}\\
+%   & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}  & \multicolumn{1}{c}{$B$} \\\cline{3-4}
+  % \multirow{2}*{Player $X$} & $A$ & $(-1, -1)$ & $(-5, 0)$ \\\cline{3-4}
+                            % & $B$ & $(0, -5)$ & $(-2, -2)$ \\\cline{3-4}
+% \end{tabular}
+% \label{table:ch2_coopmatrix}
+% \end{table}
+
 
 Part~\ref{part:coop} of this manuscript is dedicated to cooperative settings with a common reward.
 In Chapter~\ref{ch:cooperation}, we provide the adaptation of the stochastic game definition to a cooperative setting, followed by examples of environments and methods to solve them.
@@ -343,7 +374,7 @@ Nowadays, advanced policy-based methods relying on the actor-critic paradigm app
 We can cite trust region policy optimisation (TRPO) \citep{schulman2015trust} and its variant proximal policy optimisation (PPO) \citep{schulman2017ppo}.
 Both methods rely on a controlled policy update by constraining the loss of REINFORCE defined in Equation~\ref{eq:ch2_reinforce_grad}.
 
-Finally, policy gradient and actor-critic algorithms also need some form of exploration, usually implemented by adding a penalization term in the loss function. 
+Finally, policy gradient and actor-critic algorithms also need some form of exploration, usually implemented by adding a penalisation term in the loss function. 
 An example is entropy regularisation \citep{williams1991function}, where a low entropy of the policy outcomes is penalised.
 In this context, \cite{bolland2024behind} demonstrates that such techniques change the learning objective and increase the probability of updating the policy toward the optimal one.
 
@@ -403,3 +434,5 @@ As in SARL, such a policy is commonly a recurrent policy approximated with RNN.
 \todo{Remove we when talking about algorithms}
 
 \todo{Figure after text (or before) but check consistency}
+
+\todo{checl consistency table caption and style}

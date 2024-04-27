@@ -1,21 +1,23 @@
 \chapter{Symmetric two team Markov game}\label{ch:2teams}
 \begin{chapter_outline}
-Outline \citep{leroy2022twoteam}
+
+This chapter presents a study of learning scenarios used to train a team of agents to compete against multiple possible strategies of opposing teams.
+After motivating the work in Section \ref{sec:ch7_intro}
+
+This chapter is an adapted version of the publication~\citep{leroy2022twoteam} \textit{Value-based CTDE methods in symmetric two-team Markov game: from cooperation to team competition}, P. Leroy, J. Pisane, and D. Ernst. Deep Reinforcement Learning Workshop NeurIPS, 2022
+
 \end{chapter_outline}
 
-\section{Introduction}
+\section{Introduction} \label{sec:ch7_intro}
 
-
-In this paper, we identify the best learning scenario to train a team of agents to compete against multiple possible strategies of opposing teams.
 We evaluate cooperative value-based methods in a mixed cooperative-competitive environment.
 We restrict ourselves to the case of a symmetric, partially observable, two-team Markov game.
-We selected three training methods based on the centralised training and decentralised execution (CTDE) paradigm: QMIX, MAVEN and QVMix.
+We compare three CTDE methods based on the QMIX, MAVEN and QVMix.
 For each method, we considered three learning scenarios differentiated by the variety of team policies encountered during training.
-For our experiments, we modified the StarCraft Multi-Agent Challenge environment to create competitive environments where both teams could learn and compete simultaneously.
-Our results suggest that training against multiple evolving strategies achieves the best results when, for scoring their performances, teams are faced with several strategies.
+We modified the StarCraft Multi-Agent Challenge environment for our experiments to create competitive environments where both teams could learn and compete simultaneously.
+Our results suggest that training against multiple evolving strategies achieves the best results when teams are faced with several strategies for scoring their performances.
 %This conclusion whether the stationary strategy is better than all trained teams or not.
 %While this result is well known, the main contribution is its demonstration in new environments with these algorithms.
-
 
 Many applications exist where two teams of multiple agents compete, such as in games (Pommerman \citep{resnick2018pommerman}) or in robotics (RoboCup \citep{kitano1997robocup}).
 In certain use-cases, agents are not fully aware of the entire environment, such as in Cyber Physical Production Systems \citep{phan2020learning}, Hide and Seek \citep{baker2019emergent} or Capture the Flag \citep{jaderberg2019human}.
