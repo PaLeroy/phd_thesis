@@ -167,6 +167,19 @@ The extension considers population-based training, where multiple agents train b
 
 \section{Types of algos}\label{sec:ch6_algo}
 
+
+
+la récente étude de eugene sur self-play voiture (eugene cars?)
+
+RL has not been the first choice to solve complex competitive two-player games.
+For example, we think of Deep Blue \citep{campbell2002deep}.
+However, the improvements in hardware has made possible to apply RL algorithms to play such games with partial observability \citep{silver2018general} or even games with more than two competing agents, such as Quake III Arena in Capture the Flag mode \citep{jaderberg2019human} or StarCraft \citep{vinyals2019grandmaster}.
+To train such agents to compete, a paradigm called self-play is used.
+Agents play against themselves, allowing them to face evolving strategies and to improve their skills.
+In more complex games, a population of learning agents is created by duplicating some of the agents during training to enforce the diversity of opponents.
+This allows agents to improve their skills while remaining competent against previously encountered strategies.
+In most of the mixed cooperative-competition papers mentioned before, agents are trained with independent SARL methods in self-play or within a population, except for Baker et. al. \cite{baker2019emergent} who chose a CTDE method that exploit the state of the environment during training.
+
 As introduced, self-play or population based training for competitive settings have already been explored in many works \citep{jaderberg2019human, vinyals2019grandmaster, baker2019emergent}.
 More advanced techniques have been widely studied in the literature such as fictitious play \cite{brown1951iterative} or best response dynamic \citep{baudin2022fictitious}.
 In short, it consists in choosing the policy which is the best response against the average strategy of an opponent.
@@ -176,4 +189,6 @@ These methods are referred to as opponent modelling.
 Extensions of these works consider to additionally learn how the opponent will update its strategy \citep{he2016opponent, foerster2017learning}.
 Recently, Tian et. al. \citep{tian2022multi} introduced a time dynamical opponent model to encode opponent policies in a CTDE framework for mixed cooperative-competitive environment.
 
-la récente étude de eugene sur self-play voiture (eugene cars?)
+
+This learning scenario has proven itself when the number of winning strategies is large, such as in StarCraft \citep{vinyals2019grandmaster}.
+The latter trained a growing population of agents but in this paper, the size of the training population is fixed to five to reduce computational complexity.

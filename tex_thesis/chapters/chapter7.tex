@@ -1,8 +1,11 @@
 \chapter{Symmetric two team Markov game}\label{ch:2teams}
 \begin{chapter_outline}
 
-This chapter presents a study of learning scenarios used to train a team of agents to compete against multiple possible strategies of opposing teams.
-After motivating the work in Section \ref{sec:ch7_intro}
+This chapter presents a study on training a team of agents to compete against another one.
+Section \ref{sec:ch7_intro} introduces the motivations behind this study.
+Following this, we define the two-team Markov game in Section \ref{sec:ch7_2teammarkov} and the adaptation of SMAC to this mixed cooperative-competitive framework in Section \ref{sec:ch7_competsmac}.
+Section \ref{sec:ch7_experiments} describes the learning scenarios used to train and evaluate teams with CTDE methods followed by the details of the experimental setup in Section \ref{sec:ch7_experiments}.
+The corresponding results are presented in Section \ref{sec:ch7_results}, and we conclude this chapter with the discussions in Section \ref{sec:ch7_conclu}.
 
 This chapter is an adapted version of the publication~\citep{leroy2022twoteam} \textit{Value-based CTDE methods in symmetric two-team Markov game: from cooperation to team competition}, P. Leroy, J. Pisane, and D. Ernst. Deep Reinforcement Learning Workshop NeurIPS, 2022
 
@@ -10,223 +13,136 @@ This chapter is an adapted version of the publication~\citep{leroy2022twoteam} \
 
 \section{Introduction} \label{sec:ch7_intro}
 
-We evaluate cooperative value-based methods in a mixed cooperative-competitive environment.
-We restrict ourselves to the case of a symmetric, partially observable, two-team Markov game.
-We compare three CTDE methods based on the QMIX, MAVEN and QVMix.
-For each method, we considered three learning scenarios differentiated by the variety of team policies encountered during training.
-We modified the StarCraft Multi-Agent Challenge environment for our experiments to create competitive environments where both teams could learn and compete simultaneously.
-Our results suggest that training against multiple evolving strategies achieves the best results when teams are faced with several strategies for scoring their performances.
-%This conclusion whether the stationary strategy is better than all trained teams or not.
-%While this result is well known, the main contribution is its demonstration in new environments with these algorithms.
-
 Many applications exist where two teams of multiple agents compete, such as in games (Pommerman \citep{resnick2018pommerman}) or in robotics (RoboCup \citep{kitano1997robocup}).
-In certain use-cases, agents are not fully aware of the entire environment, such as in Cyber Physical Production Systems \citep{phan2020learning}, Hide and Seek \citep{baker2019emergent} or Capture the Flag \citep{jaderberg2019human}.
-To solve the challenges faced within all these applications, reinforcement learning (RL) is a solution.
-RL is a paradigm of machine learning where an agent interacts with an environment by selecting actions based on its observations and receives rewards \citep{sutton2018reinforcement}.
-Multi-agent RL (MARL) is an extension of single-agent RL (SARL) where a single agent acts in the environment.
-The value-based method is a family of RL methods where an agent learns the highest sum of rewards (value) it can achieve by selecting a given action at a given state.
-We distinguish different MARL settings based on the goals of agents. 
-They can share the same goal and cooperate, or compete for an opposite goal to the detriment of other agents.
-In this paper, we evaluate value-based methods designed for cooperative settings to train agents in a partially observable mixed cooperative-competitive environment where two teams of cooperative agents compete to achieve an opposing goal. Our objective is to identify how to train a team to be resilient to different adversarial strategies.
+In certain use cases, agents are not fully aware of the entire environment, such as in Cyber-Physical Production Systems \citep{phan2020learning}, Hide and Seek \citep{baker2019emergent} or Capture the Flag \citep{jaderberg2019human}.
+This manuscript provides many elements demonstrating that RL can solve the challenges faced within all these applications.
+In this chapter, we evaluate CTDE methods for training agents in a mixed cooperative-competitive POSG in which two teams of cooperative agents compete to achieve an opposing goal. 
+The goal is identifying how to train a team to be resilient to different adversarial strategies.
+We combine the cooperative methods from Part \ref{part:coop} with the competitive ones defined in Chapter \ref{ch:competition} to train teams to compete in a symmetric two-team Markov game where two teams of the same agents compete.
 
-The cooperative setting can be considered as a decentralised partially observable Markov decision process (Dec-POMDP) \citep{DecPomdp}, which is a framework where agents have partial observations and share the same rewards.
-An example is the StarCraft Multi-Agent Challenge (SMAC) \citep{samvelyan2019starcraft}.
-The partial observability of agents implies that the control is prevented from being centralised.
-This means that it is not possible to control all agents of a team as if they were a single agent.
-Therefore, decentralisation is required and each agent must select actions independently based on its own observations.
-A first solution is to train each agent of the team independently using SARL methods.
-Another possibility is the centralised training with decentralised execution (CTDE), where information about all agents is exploited during training but not during execution.
-CTDE methods have shown better results than independent methods in Dec-POMDP.
-In this paper, we selected three CTDE value-based methods QMIX \citep{Rashid2018}, MAVEN \citep{Mahajan2019MAVEN:Exploration} and QVMix \citep{leroy2020qvmix}. Other existing methods are discussed in Section \ref{sec:related}.
-
-RL has not been the first choice to solve complex competitive two-player games.
-For example, we think of Deep Blue \citep{campbell2002deep}.
-However, the improvements in hardware has made possible to apply RL algorithms to play such games with partial observability \citep{silver2018general} or even games with more than two competing agents, such as Quake III Arena in Capture the Flag mode \citep{jaderberg2019human} or StarCraft \citep{vinyals2019grandmaster}.
-To train such agents to compete, a paradigm called self-play is used.
-Agents play against themselves, allowing them to face evolving strategies and to improve their skills.
-In more complex games, a population of learning agents is created by duplicating some of the agents during training to enforce the diversity of opponents.
-This allows agents to improve their skills while remaining competent against previously encountered strategies.
-In most of the mixed cooperative-competition papers mentioned before, agents are trained with independent SARL methods in self-play or within a population, except for Baker et. al. \cite{baker2019emergent} who chose a CTDE method that exploit the state of the environment during training.
-
-In this paper, we mix cooperative and competitive methods to train teams to compete in a symmetric two-team Markov game where two teams composed of the same agents compete.
 Specifically, we study the difference between three learning scenarios: learning against a stationary team policy, against a single evolving team strategy (self-play), and against multiple evolving team strategies within a population of learning teams.
-To perform these experiments and to study the performances of each learning scenario, we created a new competitive environment by modifying SMAC which has been designed for cooperation.
-We chose symmetrical competition to ensure fair and balanced competition in addition to the possibility of controlling either team with the same agents. 
-In two different SMAC environments, we trained teams with three value-based CTDE methods, QMIX, MAVEN and QVMix, each with the three learning scenarios and we then analysed how they perform when faced with multiple opposing strategies.
-Our results suggest that when competing with several possible strategies, teams trained in a population achieve the best performance, but a selection process is required to select the best team.
+To study the performance of each learning scenario, we created a new competitive environment by modifying SMAC, initially designed for cooperation and defined in Section \ref{sec:ch3_smac}.
+We chose symmetrical competition to ensure fair and balanced competition, as well as the possibility of controlling either team with the same agents.
+In two different SMAC environments, teams are trained with the three value-based CTDE methods, QMIX, MAVEN, and QVMix, each with three learning scenarios.
+These methods are defined in Section \ref{sec:ch3_value}.
+We then analyse how they perform when faced with multiple opposing strategies by forming test populations of trained teams.
+Our results suggest that when competing against several possible strategies, teams trained in a population achieve the best performance, but a selection process is required to select the best team.
 We reached this conclusion irrespective of whether or not the stationary strategy was better than all trained teams.
 
-We define the two-team Markov game and CTDE value-based methods in Section \ref{sec:background}.
-The competitive SMAC is described in Section \ref{sec:SMAC}.
-In Section \ref{sec:Learning}, we detail the learning scenarios and the performances criteria.
-Details of the experiments are provided in Section \ref{sec:experiments} and their results in Section \ref{sec:results}.
-The related work is presented in Section \ref{sec:related} followed by the conclusion in Section \ref{sec:conclusion}.
+\section{Two-team Markov game}\label{sec:ch7_2teammarkov}
 
-\section{Two-team Markov game}
-%\subsection{Symmetric two-team Markov game}
-Our framework is a special case of a Markov game \citep{MarkovGames}.
-Specifically, we are in a symmetric, mixed cooperative-competitive, partially observable two-team Markov game defined by a tuple $[\mathcal{S}, O, \mathcal{Z}, \mathcal{U}, n, R, P, \gamma]$, where two teams of $n$ agents each compete by choosing an action at every timestep $t$.
-Let $\mathcal{I}=\{1,..,n\}$ and $\mathcal{J}=\{1,-1\}$, the $i^{th}$ agent of the $j^{th}$ team is denoted by $a_{i, j} (i \in \mathcal{I}, j \in \mathcal{J})$ when it is not shortened to $a$.
-Its action space is defined by $\mathcal{U}_{a_{i, j}}$.
-Since we assume team symmetry, agents $a_{i, 1}$ and $a_{i, -1}$ share the same action space ($\forall i$).
-The joint set of $n$ action spaces is denoted by $\mathcal{U}=\bigtimes_{i\in \mathcal{I}} \mathcal{U}_{{a_{i, 1}}} = \bigtimes_{i\in \mathcal{I}} 
+Our framework is a special case of a POSG defined in Chapter \ref{ch:background} with a reward function that provides two rewards, one per team.
+Specifically, we are in a symmetric, mixed cooperative-competitive, partially observable two-team Markov game defined by a tuple $[\mathcal{S}, \mathcal{Z}, \mathcal{U}, n, O, R, P, \gamma, T, p]$.
+The components of this tuple are the same as the ones defined in the stochastic game in Section \ref{sec:ch2_stochastic_Game} or in the Dec-PODMP in Section \ref{sec:ch3_decpomdp}, and we hereafter detail the differences.
+The main one is that $2n$ agents learn in this framework and are divided into two teams of $n$ agents.
+Let $\mathcal{I}=\{1,..,n\}$ and $\mathcal{J}=\{1,-1\}$, the $i^{th}$ agent of the $j^{th}$ team is denoted by $a_{i, j}$ with $i \in \mathcal{I}$ and $ j \in \mathcal{J}$.
+Since we assume team symmetry, agents $a_{i, 1}$ and $a_{i, -1}$ share the same action space $\forall i$, leading to only one team joint action space $\mathcal{U}=\bigtimes_{i\in \mathcal{I}} \mathcal{U}_{{a_{i, 1}}} = \bigtimes_{i\in \mathcal{I}} 
 \mathcal{U}_{{a_{i, -1}}}$.
-The state of the environment at timestep $t$ is $s_t \in \mathcal{S}$ where $\mathcal{S}$ is the set of states, and $o_t^{a} \in \mathcal{Z}$ is the observation of this state perceived by the agent $a$, where $\mathcal{Z}$ is the set of observations. The observation function $O: \mathcal{S} \times I \times J \rightarrow \mathcal{Z}$ determines $o_t^a$.
-At each timestep $t$, each agent simultaneously executes an action $u_t^{a} \in \mathcal{U}_a$ such that the state $s_t$ transits to a new state $s_{t+1}$ with a probability defined by the transition function $P(s_{t+1}|s_t, \mathbf{u_t}): \mathcal{S}^2 \times \mathcal{U}^2 \rightarrow \mathbb{R^+}$ where the joint action $\mathbf{u_t} = \{\mathbf{u^1_t}, \mathbf{u^{-1}_t}\} = \bigcup_{i \in \mathcal{I}, j \in \mathcal{J}} u_t^{a_{i, j}}$. 
-After the joint action is executed, common team rewards $\{r_t^1, r_t^{-1}\} = R(s_{t+1}, s_t, \mathbf{u_t}): \mathcal{S}^2 \times \mathcal{U}^2 \rightarrow \mathbb{R}^2$ are assigned to agents.
-An agent $a$ chooses its action based on its current observation $o_t^{a} \in \mathcal{Z}$ and its history $\tau_t^{a} \in (\mathcal{Z} \times \mathcal{U}_a)^{t-1}$.
-Its policy is the function $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a}): (\mathcal{Z} \times \mathcal{U}_a)^t \rightarrow \mathbb{R^+}$ that maps, from its history and the current observation, the probability of taking action $u_t^{a}$.
-The team policy is denoted by $\mathbf{\pi_j}=\bigcup_{i \in \mathcal{I}} \pi^{a_{i, j}}$.
+This leads the transition function to be defined by $P: \mathcal{S} \times \mathcal{U}^2 \rightarrow \Delta(\mathcal{S})$.
+The symmetry also induces that agents $a_{i, 1}$ and $a_{i, -1}$ have the same uncertainty about the state $\forall i$.
+Still, obviously, the observation function $O: \mathcal{S} \times I \times J \rightarrow \Delta(\mathcal{Z})$ maps a state to different observations for the same $i$.
+Common team rewards $\{r_t^1, r_t^{-1}\} = R(s_{t+1}, s_t, \mathbf{u_t}): \mathcal{S}^2 \times \mathcal{U}^2 \rightarrow \mathbb{R}^2$ are assigned to agents after each timestep.
+The goal is again for each agent $a_{i, j}$ to maximise its expected return $\mathbb{E}_{\mathbf{\pi}, p, P}\left[ \sum_{t=0}^{T-1} \gamma^t r^{j}_t \right]$.
+Finally, the symmetry allows the policy of agent $a_{i, 1}$ to select actions of the agent $a_{i, -1}$ $\forall i$.
 
-During an episode, the cumulative discounted reward obtained from timestep $t$ over the next $T$ timesteps by team $j$ is defined by $R_{t}^j = \sum_{k=0}^{T-1} \gamma^k r^j_{t+k}$ where $\gamma \in [0, 1)$ is the discount factor.
-The goal of each agent is to find the optimal team policy that maximises the expected cumulative discounted reward: $\mathbf{\pi_j^{*}} =\argmax_{\mathbf{\pi_j}} \mathbb{E}[R^j_0|\mathbf{\pi_{j}}, \mathbf{\pi_{-j}}]$ that depends on the other team policy $ \mathbf{\pi_{-j}}$.
-To compute the optimal policy, in value-based methods, we rely on the value function $V^{\mathbf{\pi}, j}(s)=\mathbb{E}[R^j_t | s_t = s, \mathbf{\pi}]$, called the $V$ function.
-We also define the state-joint-action value function $Q^{\mathbf{\pi}, j}(s,\mathbf{u})=\mathbb{E}[R^j_t | s_t=s, \mathbf{u^j_t}=\mathbf{u}, \mathbf{\pi}]$, called the $Q$ function.
-The corresponding individual state-action value function of an agent policy is defined by $Q^{\mathbf{\pi}, a_{i, j}}(s,u)=\mathbb{E}[R^j_t | s_t=s, u^{a_{i, j}}_t=u, \mathbf{\pi}]$ and denoted as $Q_a$ for the sake of conciseness. Since agents share the same reward in the same team, $Q^{\mathbf{\pi}, a_{i, j}}(s,u)=Q^{\mathbf{\pi}, j}(s,\mathbf{u})$.
-Note that the symmetry allows one to control both teams with the same policy.
+If one team is constrained to have a stationary policy, the other team would then be the only one learning, and the two-team Markov game can be considered a Dec-POMDP.
+In our experiments, teams are trained with value-based CTDE methods designed for Dec-POMDP.
+We chose QMIX because of its popularity, MAVEN because of its exploration technique, which outperforms QMIX in complex scenarios, and QVMix because it has proven competitive with these two as illustrated in Chapter \ref{ch:qvmix}.
 
-It is possible to obtain the Dec-POMDP \citep{DecPomdp} definition from that of the two-team Markov game by constraining one team to have a stationary policy.
-The other team would then be the only team learning and the two-team Markov game can be considered as a Dec-POMDP.
-Its formal definition is easily derived from that of the two-team Markov game by eliminating team considerations and ignoring the $j$.
-In our experiments, teams are trained with value-based methods designed for Dec-POMDP.
-As stated in the introduction, it is not possible to learn only the state-joint-action value function $Q(s,\mathbf{u})$ to centrally control the agents because agents must select their action based only on $(o, \tau)$ and do not perceive $s$.
-A solution is known as independent Q learning (IQL) \citep{Tan1993} and consists in training agents to learn $Q_a$ independently, ignoring the presence of other learning agents.
-Another solution is to exploit more information during training but only the available $(o, \tau)$ during execution.
-It is a paradigm called centralised training with decentralised execution (CTDE).
-The algorithms tested in this paper, QMIX \citep{Rashid2018}, MAVEN \citep{Mahajan2019MAVEN:Exploration} and QVMix \citep{leroy2020qvmix} exploit this paradigm.
-All three methods learn $Q(s_t,\mathbf{u_t})$ as a factorisation of $s_t$ and $Q_a$ $\forall a$ during training.
-The $Q_a$ are no longer $Q$ functions but are utility functions used to select actions which are retained for the execution.
-There exists a condition to factorise $Q(s_t,\mathbf{u_t})$, called the Individual-Global-Max condition (IGM), that requires that $\argmax_{\mathbf{u_t}} Q(s_t, \mathbf{u_t}) =\bigcup_{a}\argmax_{u_t^{a}} Q_{a}$ \citep{Son2019QTRAN:Learning}.
-In QMIX, $Q_a$ factorise $Q(s_t,\mathbf{u_t})$ with a hypernetwork.
-The weights of each $Q_a$ in the factorisation are computed based on $s_t$ and are constrained to be positive to ensure IGM.
-MAVEN follows the same principle of QMIX with an additional hierarchical policy network that modifies each $Q_a$ in order to influence agents' behaviour and to improve their exploration capacity.
-QVMix is an extension of the Deep Quality-Value (DQV) family of algorithms \citep{sabatelli2018deepQV,sabatelli2020deep} applied to QMIX where agents learn both the $Q$ and the $V$ functions.
-Those value-based methods which were initially developed for solving Dec-POMDP are thoroughly detailed in Appendix \ref{app:vbmethod}.
-We chose QMIX because of its popularity, MAVEN because of its exploration technique which outperforms QMIX in complex scenarios, and QVMix because it has proven to be competitive with these previously mentioned algorithms.
-Other methods have been developed as described in Section \ref{sec:related}.
+\section{Competitive StarCraft Multi-agent challenge} \label{sec:ch7_competsmac}
 
-\section{Competitive StarCraft Multi-agent challenge}
-\label{sec:SMAC}
-
-To perform our experiments, we created a new environment by modifying the StarCraft Multi-Agent Challenge (SMAC) \citep{samvelyan2019starcraft} to create a competitive environment. 
-SMAC has been developed to train a team to cooperate in a competitive environment but only against the built-in StarCraft AI which has a stationary strategy. 
+To perform our experiments, we created a new environment by modifying SMAC to create a competitive environment. 
 We adapted\footnote{\label{foot_note_code}\url{github.com/PaLeroy/competSmac} - \url{github.com/PaLeroy/competPymarl}} both SMAC and the associated learning framework PyMARL \citep{samvelyan2019starcraft}.
-It is now possible to control both opposing teams in SMAC, as well as train them simultaneously.
-In competitive SMAC, the goal remains unchanged, and it is to defeat the opposing team, by inflicting sufficient damage to reduce the hit points of all opponents to zero.
-The winning team is the one that ends up with the highest sum of remaining hit points at the end.
-If both teams end up with the same total of hit points, it is a draw.
-In SMAC, a map is the name given to the different scenarios, and from an RL perspective, a different map is a different environment.
-For our experiments, we have chosen the $3m$ and $3s5z$ maps.
-In the $3m$ map, two teams of three marines compete for a maximum $100$ timesteps.
-In the $3s5z$ map, two teams of three stalkers and five zealots compete for a maximum $150$ timesteps.
-More details about these two maps and competitive SMAC can be found in Appendix \ref{app:smac}.
+It is now possible to control both opposing teams in SMAC and train them simultaneously.
+In competitive SMAC, the goal remains unchanged, and it is to defeat the opposing team by inflicting sufficient damage to reduce the hit points of all opponents to zero.
+However, unlike in Chapter \ref{ch:qvmix} experiments, the winning team is the one that ends up with the highest sum of remaining hit points at the end.
+It is a draw if both teams end up with the same total of hit points.
+We have chosen the $3m$ and $3s5z$ maps for our experiments but increased the number of maximum timesteps.
+In the $3m$ map, two teams of three marines compete for a maximum of $100$ timesteps.
+In the $3s5z$ map, two teams of three stalkers and five zealots compete for a maximum of $150$ timesteps.
+Additionaly, agents observe their relative position with respect to the centre of the map.
+More details about these two maps and SMAC can be found in Section \ref{sec:ch3_smac}.
 
-
-its relative position with respect to the centre of the map 
-
-
-\section{Learning scenarios and performances criteria}
-Our goal is to train a team to be resilient to different adversarial strategies.
+\section{Learning scenarios and performances criteria} \label{sec:ch7_learningscenar}
+We aim to train a team to be resilient to different adversarial strategies.
 We test three different learning scenarios differentiated by the diversity of opponents' strategies encountered during training.
-Thanks to the environment symmetry, the trained teams can act as any of the two teams in our environments.
+The trained teams can act as any of the two teams in our environments thanks to the environment symmetry.
 In the first learning scenario, the team is trained against a stationary strategy, which we refer to as a heuristic.
-As introduced in Section \ref{sec:background}, such configuration is a Dec-POMDP, framework for which CTDE methods are designed.
-The second scenario is called self-play where the team is trained by playing against itself and thus facing a strategy that continuously improves at the same learning speed.
-This scenario has proven its value in competitive MARL \citep{baker2019emergent}.
+As explained in Section \ref{sec:ch7_2teammarkov}, such configuration is a Dec-POMDP and is the framework for which CTDE methods are designed.
+The second learning scenario is self-play, in which the team is trained by playing against itself, thus facing a strategy that continuously improves at the same learning speed.
 In the third scenario, a population composed of several teams is trained with the same method.
 Teams either play against themselves or against other learning teams.
 Self-play is the special case of a training population composed of a single team.
-This learning scenario has proven itself when the number of winning strategies is large, such as in StarCraft \citep{vinyals2019grandmaster}.
-The latter trained a growing population of agents but in this paper, the size of the training population is fixed to five to reduce computational complexity.
+In this study, the size of the training population is fixed to five to reduce computational complexity.
 
 After training, we evaluate teams with the Elo rating system \citep{elo1978rating}.
-Its purpose is to assign each player of a population with a rating.
-From these ratings, one can compute the probability that a player will win when facing another one.
-Individuals' scores are updated based on the outcome of the episode  and their current Elo scores.
-The Elo rating system is formally described in Appendix \ref{app:elo}.
+The purpose of the Elo rating system is to assign each population player with a rating $R$ to rank them.
+From these ratings, one can compute the probability that a player will win when facing another.
+Let $R_A$ and $R_B$ be the ELO scores of players A and B, respectively.
+The probability that player A wins over player B is $E_A=\frac{10^{R_A/400}}{10^{R_A/400} + 10^{R_B/400}}$ and the probability that B wins over A is $E_B=\frac{10^{R_B/400}}{10^{R_A/400} + 10^{R_B/400}}$.
+One can see that $E_A + E_B = 1$.
+The number $400$ can be considered as a parameter.
+It determines that if player A's Elo score is 400 points above that of B, it has a ten-times greater chance of defeating B.
+In order to update player $ A$'s rating after a game, we take into account its score $S_A$, which is equal to $1$ for a win, $0$ for a loss, and $0.5$ for a draw.
+The updated score is $R'_A = R_A + cst * (S_A - E_A)$ where $cst$ is a constant that defines the maximum possible update of the Elo score.
+Typically, $cst$ is $32$ but for our experiments, we set it to $10$ to decrease the amplitude of oscillations in the Elo score during tests.
 
 We form test populations to compute Elo scores in different configurations.
 To evaluate only the learning scenarios, we form one test population for each CTDE method with teams trained with all learning scenarios.
-To evaluate the performances of the heuristic, we add it in the previously defined test populations to form new ones.
+To evaluate the heuristic's performance, we add it to the previously defined test populations to form new ones.
 To find the best learning scenario/training method pair, we group all trained teams in two test populations, with and without the heuristic.
-To evaluate training efficiency and heuristic performances, each trained team is tested along with training against the heuristic and against teams trained with other learning scenarios but using the same CTDE method.
+To evaluate training efficiency and heuristic performances, each trained team is tested along training against the heuristic and against teams trained with other learning scenarios but using the same CTDE method.
 
-\section{Elo score}
-\label{app:elo}
-The purpose of the Elo rating system \citep{elo1978rating} is to assign each player of a population with a rating $R$ to rank them.
-From these ratings, one can compute the probability that a player will win when facing another one.
-Let $R_A$ and $R_B$ be the ELO scores of player A and B, respectively.
-In such a context, the probability that player A (B) wins over player is B (A) is computed using Equation \ref{eq:elo_predict1} (\ref{eq:elo_predict2}) given below.
+\section{Experiments} \label{sec:ch7_experiments}
 
-\begin{align}
-    \label{eq:elo_predict1}
-    E_A=\frac{10^{R_A/400}}{10^{R_A/400} + 10^{R_B/400}}
-    \\
-    \label{eq:elo_predict2}
-    E_B=\frac{10^{R_B/400}}{10^{R_A/400} + 10^{R_B/400}}
-\end{align}%
-
-One can see that $E_A + E_B = 1$.
-The number $400$ can be considered as a parameter.
-It determines that if the Elo score of player A is 400 points above that of B, it has a ten-times greater chance of defeating B.
-In order to update the rating of player $A$ after a game, we take into account its score $S_A$ which is equal to $1$ for a win, $0$ for a loss and $0.5$ for a draw.
-The updated score $R'_A$ is defined in Equation \ref{eq:elo_update} where $cst$ is a constant that defines the maximum possible update of the Elo score.
-Typically, $cst$ is $32$ but for our experiments, we set it to $10$ to decrease the amplitude of oscillations in the Elo score during tests.
-
-\begin{equation}
-    \label{eq:elo_update}
-    R'_A = R_A + cst * (S_A - E_A)
-\end{equation}
-
-
-
-\section{Experiments}
-
-For our experiments, teams were trained with three learning scenarios (Sec. \ref{sec:Learning}) and with three CTDE methods, QMIX, MAVEN and QVMix (Sec. \ref{sec:background}), in two different environments (Sec. \ref{sec:SMAC}).
+For our experiments, teams were trained with three learning scenarios and with three CTDE methods, in two different environments.
 We conducted the same experimental process for both environments.
-For each method, each learning scenario was executed ten times and stopped after each team had exploited $10^7$ samples.
+Each method's learning scenario was executed ten times and stopped after each team had exploited $10^7$ samples.
 For each method, this resulted in ten teams trained against the heuristic requiring $10^7$ environment timesteps, ten teams trained in self-play requiring $5\times10^6$ environment timesteps and ten training populations of five teams leading to $50$ teams trained within populations requiring at least $5\times10^7$ environment timesteps.
-Therefore, in total, $210$ teams of nine types were trained in both environments.
+Therefore, $210$ teams of nine types were trained in both environments.
 
-To train teams against the heuristic, it was ensured that they play the same number of episodes as team $j=1$ and team $j=-1$.
+To train teams against the heuristic, it was ensured that they play the same number of episodes acting as team $j=1$ and team $j=-1$.
 Concerning the training within a population, each team had an equal chance of playing as team $j=1$ or team $j=-1$, meaning an equal chance to play against any team in the population, including itself.
-For all learning scenarios and methods, network architectures and parameters are the same to ensure fair comparison.
-Learning parameters were determined by default configurations provided by their different authors \citep{Rashid2018,Mahajan2019MAVEN:Exploration,leroy2020qvmix}.
-More details about the training parameters is provided in Appendix \ref{app:train_param}.
-The main differences with the original are that the epsilon anneal time is set to $2$ million instead of $0.5$ million and that the networks are updated every eight episodes in $3m$ and every episode in $3s5z$.
-As in the literature, individual networks of each team share the same parameters to improve learning speed. We present training times in Appendix \ref{app:train_time}.
+Network architectures and parameters are the same for all learning scenarios and methods to ensure fair comparison.
+The default configurations provided by their different authors \citep{Rashid2018,Mahajan2019MAVEN:Exploration,leroy2020qvmix} determined learning parameters.
+However, the epsilon anneal time is set to $2$ million instead of $0.5$ million and the networks are updated every eight episodes in $3m$ and every episode in $3s5z$.
+As in the literature, individual networks of each team share the same parameters to improve learning speed. 
+Appendix \ref{app:train_param} provides more details about the training parameters and we present training times in Appendix \ref{app:train_time}.
 
-In this paper, the heuristic is based on two rules.
+The heuristic policy is based on two rules.
 It moves toward the starting point of the opponent's team until it reaches the opposite side of the map and stops.
-If there are enemies within its shooting range, it attacks the nearest one.
-This heuristic is slightly different from StarCraft's built-in AI originally used to train teams to cooperate in SMAC.
+If enemies are within shooting range, the agent attacks the nearest one.
+This heuristic slightly differs from StarCraft's built-in AI originally used to train teams to cooperate in SMAC.
 The built-in AI also moves toward the other side but selects targets based on a priority score.
-It will choose to attack the closest unit with the highest priority and this unit will remain the target until its priority drops or it can no longer be attacked.
+It will choose to attack the closest unit with the highest priority, which will remain the target until its priority drops or it can no longer be attacked.
 A unit's priority score is based on its type and current action.
-For example, if two of the same units attack and the targeted unit stops attacking, its priority score will drop and the built-in AI will select the other unit to attack.
-This is the main difference with our heuristic which will attack the nearest unit regardless of its action and its priority.
+For example, if two of the same units attack and the targeted unit stops attacking, its priority score will drop, and the built-in AI will select the other unit to attack.
+This is the main difference with our heuristic which will attack the nearest unit regardless of its action and priority.
 Results show that our heuristic is harder to beat than the one provided in SMAC.
 Finally, while both maps are denoted as easy in \citep{samvelyan2019starcraft}, the task of learning everything from scratch is not.
-When learning against the heuristic, teams do not need to learn how to find their opponents, because they automatically move towards them.
-When they learn in self-play or within a population, they first need to learn where to find opponents before they learn to face them.
-This increase in learning complexity compared to their cooperative version led us to this choice of maps, motivated by a compromise between computational complexity and learning complexity.
+When learning against the heuristic, teams do not need to learn how to find their opponents because they automatically move towards them.
+When they learn through self-play or within a population, they first need to learn where to find opponents before they can face them.
+This increased complexity compared to the original SMAC led us to choose these maps, motivated by a compromise between computational complexity and learning complexity.
 
-As described in Section \ref{sec:Learning}, we form test populations to evaluate teams with the Elo rating system.
-For both environments, we have three test populations of 70 teams trained with the same method and the three learning scenarios.
-We also have one test population with all the 210 trained teams.
-We created four additional test populations from the four previously defined by adding the heuristic to them.
+As described in Section \ref{sec:ch7_learningscenar}, we form test populations to evaluate teams with the Elo rating system.
+For both environments, there are three test populations of 70 teams trained with the same method and the three learning scenarios and one test population with all 210 trained teams.
+Four additional test populations are created from the four previously defined by adding the heuristic.
 In practice, to compute the Elo scores in these 16 test populations, each team plays $20$ games against all the other teams in a randomised order.
-Every team starts with an Elo score of $1000$ and we set the maximum Elo score update to $10$, which is sufficiently small for our population sizes.
-In Section \ref{sec:results}, we analyse the distribution of Elo scores after every team had finished its testing games.
+Every team starts with an Elo score of $1000$, and we set the maximum Elo score update to $10$, which is sufficiently small for our population sizes.
+In Section \ref{sec:ch7_results}, we analyse the distribution of Elo scores after every team had finished its testing games.
 
-During training, team neural network parameters are recorded every $2\times10^5$ timesteps until the $10$ millionth played timestep.
-The test populations are composed of the agents whose network parameters correspond to those recorded at the 10 millionth timestep.
+During training, team neural network parameters are recorded every $20000$ timestep until the $10$ millionth played timestep.
+The test populations are composed of agents whose network parameters correspond to those recorded at the 10 millionth timestep.
 The other saved networks allow one to evaluate teams' performances during training.
 We evaluate teams trained with a method and a learning scenario against the heuristic and against all teams trained with the same method but a different learning scenario.
 We analysed the win rates along training timesteps of these different matchups when teams play $24$ games against each other.
-For example, and for the same method, each ten teams trained in self-play played $24$ games against all the $50$ teams trained within a population and against the $10$ teams trained against the heuristic.
+For example, for the same method, each ten teams trained in self-play played $24$ games against all the $50$ teams trained within a population and against the $10$ teams trained against the heuristic.
 
-\section{Results}
+\section{Results} \label{sec:ch7_results}
+
+\begin{figure*}[h]
+\input{tex_thesis/figures/ch7/fig_elo} 
+\end{figure*} 
 
 We present the Elo scores of teams with box plots in Figure \ref{fig:elo_method} when the test population contains teams trained with the same method.
 We first focus on performances when the heuristic is not in the test population (Fig. \ref{subfig:elo_no_h_3m}, \ref{subfig:elo_no_h_3s5z}).
@@ -234,31 +150,27 @@ The first observation is that the best teams are the ones trained within a popul
 We discuss these differences later.
 The second observation is that the population scenario has the highest variance.
 To understand this, we also plot the box plots corresponding to the ten teams that achieved the highest Elo score of each training population, denoted by \textbf{BP}.
-These box plots confirm that there is a difference between teams of the same training population and a selection must be performed to find the best one, so as to optimise the performances of this learning scenario.
-Training against the heuristic is the worst scenario, arguably because agents do not generalise to other strategy than the heuristic.
+These box plots confirm that there is a difference between teams of the same training population and a selection must be performed to find the best one to optimise the performance of this learning scenario.
+Training against the heuristic is the worst scenario, arguably because agents do not generalise to other strategies than the heuristic.
 However, the heuristic is not in these test populations and its impact is the concern of later analysis.
-The performances of teams trained in self-play lies in between the two other learning scenarios.
-While some teams achieve Elo scores close to the best teams of each training population, the scores of others are lower than the lowest scores of teams trained within population.
+The performance of teams trained in self-play lies between the two other learning scenarios.
+While some achieve Elo scores close to those of the best teams in each training population, the scores of others are lower than the lowest scores of teams trained within the population.
 
-\begin{figure*}[h]
-\input{tex_thesis/figures/ch7/fig_elo} 
-\end{figure*} 
-
-The same experiment is performed with the addition of the heuristic in the three test populations and corresponding box plots are presented in Figures \ref{subfig:elo_h_3m} and \ref{subfig:elo_h_3s5z}.
+The same experiment is performed by adding the heuristic in the three test populations, and corresponding box plots are presented in Figures \ref{subfig:elo_h_3m} and \ref{subfig:elo_h_3s5z}.
 The heuristic scores are different depending on the map.
-In the $3m$ map, most of the teams achieve a higher Elo score than the heuristic, whereas in $3s5z$, the heuristic dominates all teams.
-In the $3s5z$ map and for all three learning scenarios, Elo scores slightly decreased with the addition of the heuristic.
+In the $3m$ map, most teams achieve a higher Elo score than the heuristic, whereas in $3s5z$, the heuristic dominates all teams.
+Adding the heuristic slightly decreased Elo scores in the $3s5z$ map for all three learning scenarios.
 The conclusion is straightforward and the heuristic is better than all teams.
 However, one should note that the score ordering between the teams remained the same between Figure \ref{subfig:elo_no_h_3s5z} and \ref{subfig:elo_h_3s5z}.
 In $3m$, one can see that the Elo score of teams trained against the heuristic (\textbf{H}) is higher in Fig. \ref{subfig:elo_h_3m} than the ones in Figure \ref{subfig:elo_no_h_3m}, as a direct consequence of the introduction into the test populations of a team against which they win.
-When compared with the previous test populations (Fig. \ref{subfig:elo_no_h_3m}), teams trained with QVMix achieved higher Elo scores than without the heuristic in the test population (Fig. \ref{subfig:elo_h_methodQVMIX}), while when trained with MAVEN and QMIX, they achieved lower Elo scores (Fig. \ref{subfig:elo_h_methodMAVEN}, \ref{subfig:elo_h_methodQMIX}).
-In all cases, the higher values of box plots are not significantly different but lower values are, meaning that some teams performed poorly against the heuristic.
+When compared with the previous test populations (Fig. \ref{subfig:elo_no_h_3m}), teams trained with QVMix achieved higher Elo scores than without the heuristic in the test population (Fig. \ref{subfig:elo_h_methodQVMIX}).
+In contrast, when trained with MAVEN and QMIX, they achieved lower Elo scores (Fig. \ref{subfig:elo_h_methodMAVEN}, \ref{subfig:elo_h_methodQMIX}).
+In all cases, the higher values of box plots are not significantly different, but lower values are, meaning that some teams performed poorly against the heuristic.
 The conclusion is that teams trained within a population remain the most successful in most of our experiments, no matter if the heuristic is the best or almost the worst team.
 
 \begin{figure*}
     \input{tex_thesis/figures/ch7/fig_training}
 \end{figure*}
-
 
 In Figure \ref{subfig:3m_vs_h}, we present the evolution of win rates against the heuristic along training timesteps by each team in the $3m$ map.
 For all methods, teams trained against the heuristic are the best against it on average.
@@ -271,36 +183,37 @@ The time we have budgeted for training in the $3s5z$ map may be insufficient to 
 However, we find this beneficial because it shows that, even when the heuristic is better than all teams, training against it, with the same training timesteps allowance, is not the best learning scenario when teams have to be good against several strategies.
 This also shows that our heuristic is harder to defeat with respect to the results of \citep{Rashid2018,Mahajan2019MAVEN:Exploration,leroy2020qvmix} where better results are observed in these maps with the former SMAC heuristic.
 
-In the $3m$ map, the standard deviation of green and blue win rates, representing population and self-play learning scenarios respectively, is high and confirms the results of Elo score box plots that there are performance gaps between teams trained within the same learning scenario.
-Observations also suggest that teams trained in self-play would achieve the same win rates as teams trained within a population if they were trained for longer, suggesting a difference of training sample efficiency.
-As teams first need to learn to cross the map to meet opponents and to learn to fight them, this difference is because training within a population, against several strategies, increases the probability of creating episodes where two opposing agents meet and fight at the beginning of training.
+In the $3m$ map, the standard deviation of green and blue win rates, representing population and self-play learning scenarios, respectively, is high.
+This confirms the results of Elo score box plots that there are performance gaps between teams trained within the same learning scenario.
+Observations also suggest that if trained for longer, teams trained in self-play would achieve the same win rates as teams trained within a population, suggesting a difference in training sample efficiency.
+As teams first need to learn to cross the map to meet opponents and fight them, this difference is maybe because training within a population against several strategies increases the probability of creating episodes where two opposing agents meet and fight at the beginning of training.
 
-Win rates from the confrontations between trained teams are presented in Figures \ref{subfig:3m_duo} and \ref{subfig:3s5z_duo}.
+Figures \ref{subfig:3m_duo} and \ref{subfig:3s5z_duo} show win rates from the confrontations between trained teams.
 The draw rates can be obtained by subtracting from $1$ the sum of these two curves.
-This confirms the previous results with box plots that training against the heuristic is the worst scenario, as an average win rate above $60\%$ is achieved against them as shown in the black and red curves.
+This confirms the previous results with box plots that training against the heuristic is the worst scenario, as an average win rate above $60\%$ is achieved against them, as shown in the black and red curves.
 Green and blue curves enable one to analyse self-play against population-learning scenarios.
-At the beginning of the training phase, teams trained within a population are better than self-play ones in the $3m$ map.
-This high win rate decreases with training in favour of the win rate of teams trained in self-play, and for QVMix and QMIX, until it becomes higher than the latter.
+At the beginning of the training phase, teams trained within a population are better than self-play in the $3m$ map.
+This high win rate decreases with training in favour of the win rate of teams trained in self-play for QVMix and QMIX until it becomes higher than the latter.
 Again, this suggests a difference in training sample efficiency.
-Moreover, although the training sample efficiency is lower for teams trained in self-play, the number of environment timesteps required to train them is five-times lower in our setting.
-However, it is, on average, that the self-play teams become better.
-In the $3s5z$ map, this overlap phenomenon does not occur and the average win rates fluctuate around $50\%$ with the green curves remaining just above the blue ones at the end.
-The proximity of performances between teams trained in self-play and within a population is arguably due to the environment and the $3m$ map which does not offer the possibility of winning with very different strategies.
+Moreover, although the training sample efficiency is lower for teams trained in self-play, the number of environment timesteps required to train them is five times lower in our setting.
+However, it is on average that the self-play teams become better.
+In the $3s5z$ map, this overlap phenomenon does not occur, and the average win rates fluctuate around $50\%$ with the green curves remaining just above the blue ones at the end.
+The proximity of performances between teams trained in self-play and within a population is arguably due to the environment and the $3m$ map, which does not offer the possibility of winning with very different strategies.
 As the $3s5z$ map appears to be more complex, with the lack of performances against the heuristic as evidence, teams trained within a population remain better on average.
 
-On average, the results of the teams trained within a population with MAVEN in the 3s5z map differ from the other experiments. 
-Some results are slightly worse in regard to those of the other experiments.
-The reason for this is not clear, as we executed the experiments several times, but this does not affect the conclusions of our experiments that remain clear.
-Finally, it would be necessary to repeat these experiments more times or to analyse the behaviour of the agents in depth to find the problem, which is beyond the scope of this paper. 
+On average, the results of the teams trained within a population with MAVEN in the $3s5z$ map differ from the other experiments. 
+Some results are slightly worse when compared to those of the other experiments.
+The reason for this is unsure, as we executed the experiments several times, but this does not affect the conclusions of our experiments that remain clear.
+Finally, it would be necessary to repeat these experiments more times or to analyse the agents' behaviour in depth to find the problem, which is beyond the scope of the study. 
 
 In Figure \ref{fig:all}, we present the box plots of Elo scores obtained by all trained teams and the heuristic in a single test population for both maps.
-We observe that the learning scenario ranking remains the same as in other experiments.
-In the $3m$ map, QMIX achieves the highest Elo scores while the lowest MAVEN Elo scores are worse than the ones of QMIX and QVMix when teams are trained in self-play or within a population.
+The learning scenario ranking remains the same as in other experiments.
+In the $3m$ map, QMIX achieves the highest Elo scores, while the lowest MAVEN Elo scores are worse than the ones of QMIX and QVMix when teams are trained in self-play or within a population.
 QVMix produces results with a lower variance than QMIX.
-In the $3s5z$ map, QVMix is the one achieving the highest Elo scores and it is also MAVEN that achieves the lowest ones.
-We conducted the same experiment without the heuristic, which led to the same conclusion (see Figure \ref{fig:all_no_h} in Appendix \ref{app:all_no_h}).
-Despite its mechanism of exploration, MAVEN is not able to outperform QMIX and QVMix.
-This is also the case in \citep{Mahajan2019MAVEN:Exploration} and \citep{leroy2020qvmix} where they show that MAVEN outperforms QMIX but not QVMix in more complex Dec-POMDP environments.
+In the $3s5z$ map, QVMix achieves the highest Elo scores, and MAVEN achieves the lowest ones.
+We conducted the same experiment without the heuristic, which led to the same conclusion as shown in Figure \ref{fig:all_no_h}.
+Despite its exploration mechanism, MAVEN cannot outperform QMIX and QVMix.
+This is also the case in \citep{Mahajan2019MAVEN:Exploration} and \citep{leroy2020qvmix}, where they show that MAVEN outperforms QMIX but not QVMix in more complex Dec-POMDP environments.
 
 \begin{figure*}[ht]
 \begin{subfigure}{\textwidth}
@@ -348,54 +261,24 @@ Box plots present the median, the first quantile ($Q1$) and the third quantile (
 \label{fig:all_no_h}
 \end{figure*}
 
-
-
-\section{Related work}
-\label{sec:related}
-Close to our work, Phan et.al. \citep{phan2020learning} proposed the antagonist-ratio training scheme (ARTS) to train a team to be resilient to failures.
-To improve resilience of cooperative methods, they simulate failures as a mixed cooperative-competitive setting where the faulty agents are adversarial agents of another team.
-As in our work, ARTS combines CTDE methods, such as QMIX, and population based training.
-
-In this paper, we consider three CTDE value-based methods QMIX \citep{Rashid2018}, MAVEN \citep{Mahajan2019MAVEN:Exploration} and QVMix \citep{leroy2020qvmix} designed for Dec-POMDP.
-They rely on the same factorisation of $Q(s, \mathbf{u})$ with a constrained hypernetwork.
-This constraint implies representation limits.
-Other research papers have sought to change this factorisation and achieved better performances than QMIX.
-To cite some, QTRAN \citep{Son2019QTRAN:Learning} factorises it by additive decomposition and QPLEX \citep{wang2021qplex} uses a duplex dueling network architecture, taking advantage of the dueling architecture \citep{wang2016dueling}, to learn both $Q(s, \mathbf{u})$ and $Q_a$.
-In parallel, others have succeeded to remove the factorisation, such as LAN \citep{avalos2021local} which also take advantage of the dueling architecture \citep{wang2016dueling} to learn a centralised value function with independent advantage functions.
-Policy-based methods is another family of RL methods that have inspired many CTDE algorithms, such as COMA \citep{Foerster2017}, MADDPG \citep{lowe2017multi}, LIIR \citep{Du2019LIIRLearning}, FACMAC \citep{peng2021facmac} and HATPRO, HAPPO \citep{kuba2021trust}.
-
-
-As introduced, self-play or population based training for competitive settings have already been explored in many works \citep{jaderberg2019human, vinyals2019grandmaster, baker2019emergent}.
-More advanced techniques have been widely studied in the literature such as fictitious play \cite{brown1951iterative} or best response dynamic \citep{baudin2022fictitious}.
-In short, it consists in choosing the policy which is the best response against the average strategy of an opponent.
-In self-play, we mention fictitious play to play Poker \citep{pmlr-v37-heinrich15} and Deep Nash to play Stratego \citep{DM_stratego}.
-In population based training, we mention policy-space response oracles (PSRO) \citep{NIPS2017_3323fe11, Muller2020A}.
-These methods are referred to as opponent modelling.
-Extensions of these works consider to additionally learn how the opponent will update its strategy \citep{he2016opponent, foerster2017learning}.
-Recently, Tian et. al. \citep{tian2022multi} introduced a time dynamical opponent model to encode opponent policies in a CTDE framework for mixed cooperative-competitive environment.
-
-
-
-\section{Discussion and future work}
-In this paper, we evaluated learning scenarios to train teams to face multiple strategies in a symmetric two-team Markov game.
-Teams are trained with three CTDE value-based methods: QMIX, MAVEN and QVMix and with three learning scenarios differentiated by the variety of strategies that teams will encounter during their training.
+\section{Discussion and future work} \label{sec:ch7_conclu}
+This study evaluated learning scenarios to train teams to face multiple strategies in a symmetric two-team Markov game.
+Teams are trained with three value-based CTDE methods, QMIX, MAVEN, and QVMix, and with three learning scenarios differentiated by the variety of strategies they will encounter during their training.
 Specifically, they are trained by playing against a stationary strategy, against themselves, or within a population of teams trained using the same method.
-To perform our experiments, we modified the cooperative environment SMAC to allow teams to compete and train at the same time, and trained teams in two different SMAC environments.
-These nine types of trained teams are evaluated at the end of their training with the Elo rating system.
-Different groups are formed to identify which learning scenario is the best and which learning scenario/training method pair is the best.
+To perform our experiments, we modified the cooperative environment SMAC to allow teams to compete and train simultaneously and trained teams in two different SMAC environments.
+The Elo rating system evaluates these nine types of trained teams at the end of their training.
+Different groups are formed to identify the best learning scenario and the best learning scenario/training method pair.
 We also analysed the win rates of several matchups during training to support the results provided by the Elo scores.
-Our results showed that training teams within a population of learning teams is the best learning scenario, when each team plays the same number of timesteps for training purposes.
+Our results showed that the best learning scenario is to train teams within a population of learning teams when each team plays the same number of timesteps for training purposes.
 We reached this conclusion irrespective of whether or not the stationary strategy was better than all trained teams.
 Finally, a selection procedure is required because teams from the same training population do not perform equally.
 
-
-This work is a first investigation of two-team competition with CTDE methods, and we hereafter suggest several future research directions.
-First, we suggest to perform the same experiments on more complex environments and to tackle the challenges of an asymmetric two-team Markov games.
+This work is one of the first investigations of two-team competition with CTDE methods, and we hereafter suggest several future research directions.
+First, we suggest performing the same experiments on more complex environments and tackling the challenges of asymmetric settings.
 In this paper, we selected value-based methods because of their performances in SMAC \citep{samvelyan2019starcraft} at the time of our experiments.
 Recent CTDE methods overcome these performances and may lead to interesting new results.
-Another research direction would be to study how diversity in the training population impacts the performances. 
+Typically, stochastic policies trained with policy-based methods might provide better results in our setting.
+Another research direction would be to study how diversity in the training population impacts performance. 
 Diversity could be increased by adding the heuristic in the population, confronting agents against older learned policies, varying the size of the population or training teams with different methods in the same population.
-In addition, as described in Section \ref{sec:related}, methods that compute best responses or model the opponent are widely studied in the literature and would be interesting to test in such environment.
-We also propose performing behavioural and policy analyses so as to better understand why some teams achieve a better Elo score and how different are strategies in a single training population.
-
-\todo{Check figure are the same and no problem at import}
+In addition, as described in Chapter \ref{ch:competition}, methods that compute the best responses or model the opponent would be interesting to test in such an environment.
+We also propose performing behavioural and policy analyses to better understand why some teams achieve a better Elo score and how strategies differ in a single training population.
