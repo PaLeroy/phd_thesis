@@ -1,7 +1,7 @@
 \chapter{The Deep Quality-Value family in Dec-POMDP}\label{ch:qvmix}
 \begin{chapter_outline}
 
-This chapter presents four value-based methods from the Deep Quality-Value (DQV) family for the Dec-POMDP framework.
+This chapter presents four value-based methods issued from the Deep Quality-Value (DQV) family for the Dec-POMDP framework.
 We introduce the DQV family and detail the contribution of this chapter in Section~\ref{sec:ch4_intro}.
 We then formally define DQV and the four methods in Section~\ref{sec:ch4_methods}.
 The experimental setup to evaluate them is presented in Section~\ref{sec:ch4_experiments}, followed by the corresponding results in Section~\ref{sec:ch4_results}.
@@ -14,61 +14,57 @@ This chapter is an adapted version of the publication \citep{leroy2020qvmix} \te
 
 \section{Introduction} \label{sec:ch4_intro}
 
-This chapter introduces four methods to learn to cooperate in a Dec-POMDP.
-These four methods are adapted from the Deep Quality-Value (DQV) family of algorithm \citep{sabatelli2020deep}.
-The key idea of DQV methods is to jointly learn an approximation of the state-value function $V$ alongside an approximation of the state-action value function $Q$.
-They have proven to significantly outperform popular algorithms, such as DQN and DDQN, in single-agent reinforcement learning (SARL), defined in Section~\ref{sec:ch2_value_based_methods}.
-
-The four methods introduced in this chapter follow two modes of training and execution in a Dec-POMDP, introduced in Section~\ref{sec:ch3_intro}.
-Two methods designed for the decentralised mode are called IQV and IQV-Max.
-The other two are for the centralised training with a decentralised execution (CTDE) mode. 
-They are called QVMix and QVMix-Max.
-
-These four algorithms are designed for the Dec-POMDP framework, defined in Section~\ref{sec:ch3_decpomdp}.
-Specifically, they are tested with the StarCraft Multi-Agent Challenge (SMAC) suite of environments, introduced in Section~\ref{fig:ch3_smac}.
+This chapter introduces four methods to learn to cooperate in a Dec-POMDP, defined in Section~\ref{sec:ch3_decpomdp}.
+They are adapted from the Deep Quality-Value (DQV) family of algorithm \citep{sabatelli2020deep}.
+DQV methods jointly learn an approximation of the state-value function $V$ alongside an approximation of the state-action value function $Q$.
+They have proven to significantly outperform popular algorithms in SARL, such as DQN and DDQN defined in Section~\ref{sec:ch2_value_based_methods}.
+The four methods follow two modes of training and execution in a Dec-POMDP, introduced in Section~\ref{sec:ch3_intro}.
+The methods designed for the decentralised mode are called IQV and IQV-Max.
+The other two dedicated to the CTDE mode are called QVMix and QVMix-Max.
+They are tested with the StarCraft Multi-Agent Challenge (SMAC) suite of environments, introduced in Section~\ref{fig:ch3_smac}.
 They are compared with IQL, QMIX and MAVEN, three value-based methods in multi-agent reinforcement learning defined in Section~\ref{sec:ch3_value}.
 
 Finally, the contributions of \citep{leroy2020qvmix} presented in this chapter can be divided into three parts.
 The first is the generalisation of the DQV family of algorithms to cooperative MARL problems, their performance in the decentralised mode and their fundamental limitations.
 The second is the introduction of two methods, QVMix and QVMix-Max.
 Both combine the original benefits of the DQV algorithms with CTDE, resulting in a better performance than state-of-the-art techniques of their time.
-The third is to link the performance of QVMix, to the overestimation bias of the $Q$ function that characterises model-free RL algorithms.
+The third is to link their better performance to the overestimation bias of the $Q$ function that characterises model-free RL algorithms.
 
 \section{Methods} \label{sec:ch4_methods} 
 
 As introduced, the work presented in this chapter revolves around the Deep Quality-Value (DQV) family of DRL algorithms \citep{sabatelli2018deepQV, sabatelli2020deep}.
 These SARL techniques learn an approximation of the state value function $V$ alongside an approximation of the state-action value function $Q$.
 The DQV algorithms extend the tabular RL algorithms called QV($\lambda$) learning \citep{wiering2005qv, wiering2009qv} with neural networks as function approximations.
-Learning a joint approximation of the $V$ function, $V(s;\phi)\approx V^{\pi^*}(s)$, and of the $Q$ function, $Q(s, u;\theta)\approx Q^{\pi^*}(s, u)$, is possible in two different ways.
+There are two possible ways of learning a joint approximation of the $V$ function, $V(s;\phi)\approx V^{\pi^*}(s)$, and of the $Q$ function, $Q(s, u;\theta)\approx Q^{\pi^*}(s, u)$.
 
-DQV learns an approximation of the $V$ function by minimising the loss
+DQV learns an approximation of the $V$ function by minimising
 \begin{equation}
-    \mathcal{L}(\phi) = \mathbb{E}_{\langle s_{t}, u_{t},r_{t},s_{t+1}\rangle\sim B} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \phi') - V(s_{t}; \phi)\big)^{2}\bigg],
+    \mathcal{L}(\phi) = \mathbb{E}_{B} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \phi') - V(s_{t}; \phi)\big)^{2}\bigg],
     \label{eq:ch4_dqv_v_update}
 \end{equation} 
-while the $Q$ function is learned by minimizing the second loss
+while the $Q$ function is learned by minimising 
 \begin{equation}
-    \mathcal{L}(\theta) = \mathbb{E}_{\langle s_{t}, u_{t},r_{t},s_{t+1}\rangle\sim B} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \phi')  - Q(s_{t}, u_{t}; \theta)\big)^{2}\bigg].
+    \mathcal{L}(\theta) = \mathbb{E}_{B} \bigg[\big(r_{t} + \gamma V(s_{t+1}; \phi')  - Q(s_{t}, u_{t}; \theta)\big)^{2}\bigg].
 \label{eq:ch4_dqv_q_update}
 \end{equation}
     
 DQV-Max learns the $Q$ function with the same loss defined in Equation \eqref{eq:ch4_dqv_q_update} but learns the $V$ function by minimising
 \begin{equation}
-        \mathcal{L}(\phi) = \mathbb{E}_{\langle s_{t}, u_{t},r_{t},s_{t+1}\rangle\sim B} \bigg[\big(r_{t} + \gamma \: \underset{u\in \mathcal{U}}{\max}\: Q(s_{t+1}, u; \theta') - V(s_{t}; \phi)\big)^{2}\bigg].
+        \mathcal{L}(\phi) = \mathbb{E}_{B} \bigg[\big(r_{t} + \gamma \: \underset{u\in \mathcal{U}}{\max}\: Q(s_{t+1}, u; \theta') - V(s_{t}; \phi)\big)^{2}\bigg].
         \label{eq:ch4_dqv_max_v}
 \end{equation}
-
 As in DQN, the replay buffer $B$ stores transitions $\langle s_{t},u_{t},r_{t},s_{t+1}\rangle$ from which batches of transitions are sampled to update the networks.
 The target network $\theta'$ and $\phi'$ are a copies of $\theta$ and $\phi$ updated periodically.
 
-The extension to MARL methods is straightforward.
-For the decentralised mode, this leads to IQV and IQV-Max using, respectively, the DQV and DQV-Max update rules to learn $Q_a(\tau^a, u^a;\theta)$ and $V_a(\tau^a;\phi)$ $\forall a \in \mathcal{A}$ independently, following the same principles of IQL.
-For the CTDE mode, the methods are QVMix and QVMix-Max, and the $Q$ network is the same as in QMIX.
-Again, they follow the DQV and DQV-Max update rules to learn $Q^{mix}_{tot}(s, \mathbf{u})$, using the same monotonic factorisation of individual utility functions.
-In both QVMix and QVMix-Max, the $V$ network also computes a central state value function $V^{mix}_{tot}(s)$ as a function of individual $V_a(\tau^a;\theta)$, they have the same architecture as the QMIX networks, except that actions are not considered. 
+The extension to the decentralised MARL methods is straightforward, like IQL from DQN.
+This leads to IQV and IQV-Max using, respectively, the DQV and DQV-Max update rules to learn $Q_a(\tau^a, u^a;\theta)$ and $V_a(\tau^a;\phi)$ independently.
+For the CTDE mode, the methods are QVMix and QVMix-Max, and they follow the DQV and DQV-Max update rules to learn $Q^{mix}_{tot}(s, \mathbf{u})$.
+The architecture of the $Q_a$ and the mixer network is the same as in QMIX, using exactly the same monotonic decomposition.
+In both QVMix and QVMix-Max, the $V$ network computes a central state value function $V^{mix}_{tot}(s)$ as a function of individual $V_a(\tau^a;\theta)$.
+It has the same architecture as the $Q$ ones of QMIX, except they have a single output. 
 The architecture is presented in Figure~\ref{fig:ch4_qvmix}.
 In QVMix, $V^{mix}_{tot}$ is updated following the loss defined in Equation~\ref{eq:ch4_dqv_v_update} and with the loss defined in Equation~\ref{eq:ch4_dqv_max_v} for QVMix-Max.
-As in QMIX, individual networks are GRU and $B$ stores sequences of contiguous transitions instead of single transitions to train recurrent neural networks.
+Individual networks are GRU, and $B$ stores sequences of contiguous transitions instead of single transitions to train recurrent neural networks.
 
 \begin{figure}
 \centering
@@ -77,11 +73,12 @@ As in QMIX, individual networks are GRU and $B$ stores sequences of contiguous t
 \label{fig:ch4_qvmix}
 \end{figure}
 
-\todo{read matthia thesis to add more}
+\todo{read Matthia thesis to add more?}
+
 \section{Experiments} \label{sec:ch4_experiments}
 
 Our experiments evaluate seven methods in total.
-The four defined in this chapter, QVMix, QVMix-Max, IQV and IQV-Max and the three forming the state of the art at that time, QMIX, MAVEN and IQL, all three defined in Chapter~\ref{ch:cooperation}.
+The four defined in this chapter, QVMix, QVMix-Max, IQV and IQV-Max and the three forming the state of the art at that time, QMIX, MAVEN and IQL, defined in Chapter~\ref{ch:cooperation}.
 As a test-bed, we use SMAC and evaluate the methods on eight different maps: \texttt{3m}, \texttt{8m}, \texttt{so\_many\_baneling}, \texttt{2m\_vs\_1z}, \texttt{MMM}, \texttt{2s3z}, \texttt{3s5z} and \texttt{3s\_vs\_3z}. 
 We refer the reader to Section~\ref{sec:ch3_smac} for the details on SMAC.
 It is worth noting that the maps chosen for our experiments differ in complexity. 
@@ -96,9 +93,16 @@ Specifically, we refer to the authors of QMIX, MAVEN, and IQL to determine the h
 For a more thorough presentation of all used hyper-parameters, we refer the reader to the open-sourced code\footnote{\url{https://github.com/PaLeroy/QVMix}}.
 As is common practice within the literature, the individual networks' parameters are shared among agents to improve the algorithms' learning speed.
 This means a single individual $Q_a$ network is used for all agents.
-To allow individual networks to produce different policies per agent, a one-hot encoding of the agent id ($\{1,..,n\}$) is added to the observation space to allow agents.
+A one-hot encoding of the agent id ($\{1,..,n\}$) is added to the observation space to allow individual networks to produce different policies per agent.
 
 \section{Results} \label{sec:ch4_results}
+We report the results of experiments in two different ways.
+We start by analysing each tested method's win rate before investigating the quality of the value functions learned by all algorithms.
+
+The means of win rate for each map and algorithm are reported in Table~\ref{tab:main_results}. 
+Suppose the algorithms perform equally in terms of overall performance, meaning the average win rate is the same. 
+In that case, we consider the one which significantly converges the fastest to be the best-performing algorithm.
+Please note that reporting an episode's win rate is a good indicator of the quality of an agent's learned policy since, as introduced in the previous section, a win directly corresponds to the best achievable sum of rewards an agent can receive.
 
 \begin{table*}
     \centering
@@ -107,28 +111,20 @@ To allow individual networks to produce different policies per agent, a one-hot 
     Means of win rates achieved in eight scenarios at the end of training by QMIX, MAVEN, QVMix, QVMix-Max, IQL, IQV, and IQVMax. 
     In the first four scenarios, \texttt{3m}, \texttt{8m}, \texttt{so\_many\_baneling} and \texttt{2m\_vs\_1z}, it is measured after $5$ millions training timesteps.
     In the last four, \texttt{MMM}, \texttt{2s3z}, \texttt{3s5z} and \texttt{3s\_vs\_3z} it is measured after $10$ millions training timesteps.
-    We report the best and second-best means in the green and yellow cells. When results are equivalent, the cells report the fastest and second-fastest method that reaches a win-rate of $100\%$ as shown in Figure~\ref{fig:all_win_curves}.}
+    We report the best and second-best means by \textbf{bolding} and \underline{underlining} them. When results are equivalent, the cells report the fastest and second-fastest method that reaches a win-rate of $100\%$ as shown in Figure~\ref{fig:all_win_curves}.}
     \label{tab:main_results}
 \end{table*}
 
-We report the results of experiments in two different ways.
-We start by first analysing the win rate of each tested method and then also investigate the quality of the value functions learned by all algorithms.
-
-The means of win rate for each map and algorithm are reported in Table~\ref{tab:main_results}. 
-Suppose the algorithms perform equally in terms of overall performance, meaning the average win rate is the same. 
-In that case, we consider the one which significantly converges the fastest to be the best-performing algorithm.
-Please note that reporting an episode's win rate is a good indicator of the quality of an agent's learned policy since, as introduced in the previous section, a win directly corresponds to the best achievable sum of rewards an agent can receive.
-
-We start by observing the differences in terms of performance between methods for the decentralised mode (IQL, IQV and IQV-Max) and their respective CTDE extensions (QMIX, QVMix and QVMix-Max) and MAVEN.
+We start by observing the differences in performance between the decentralised mode methods IQL, IQV, and IQV-Max and their respective CTDE extensions QMIX, QVMix, QVMix-Max, and MAVEN.
 As one might expect, we can see from the results reported in Figure~\ref{fig:ch4_2m1zwin} that methods for the decentralised mode converge slowly when compared to their CTDE counterparts on the considered \texttt{2\_vs\_1z} map.
 This is particularly interesting since it shows that the DQV family of algorithms can be successfully adapted to MARL, both in the decentralised mode and in the CTDE one.
 However, these results are challenged once the number of agents in the maps increases: examples of such maps are \texttt{so\_many\_baneling}, \texttt{MMM} or \texttt{3s5z}.
-The performance of decentralised methods starts to drop, highlighting that CTDE methods are required once the complexity of the training scenario increases, as is clearly reported both in Table~\ref{tab:main_results} and in Figure~\ref{fig:all_win_curves}, where the evolution of the win rate of each algorithm on every tested map is presented.
+The performance of decentralised methods starts to drop, highlighting that CTDE methods learn faster once the complexity of the training scenario increases, as is clearly reported both in Table~\ref{tab:main_results} and in Figure~\ref{fig:all_win_curves}, where the evolution of the win rate of each algorithm on every tested map is presented.
 
 \begin{figure}
 \centering
 \includegraphics[width=.8\linewidth]{tex_thesis/figures/ch4/2m1zall.pdf}
-\caption{Mean of win rates achieved in the \texttt{2m\_vs\_1z} map by QVMix, QVMix-Max, QMIX, MAVEN, IQV, IQVMax and IQL. The error band is proportional to the variance of the measure. We can observe that all CTDE methods result in faster training than decentralised ones. All four novel algorithms based on the DQV family of algorithms can be successfully used in cooperative MARL.}
+\caption{Mean of win rates achieved in the \texttt{2m\_vs\_1z} map by QVMix, QVMix-Max, QMIX, MAVEN, IQV, IQVMax and IQL. The error band is proportional to the variance of the measure. We observe that all CTDE methods result in faster training than decentralised ones. All four novel algorithms based on the DQV algorithms can be successfully used in cooperative MARL.}
 \label{fig:ch4_2m1zwin}
 \end{figure}
 
@@ -140,13 +136,13 @@ The performance of decentralised methods starts to drop, highlighting that CTDE 
 \end{figure*}
 
 Therefore, directing attention to CTDE methods, we observe that only QVMix and QVMix-Max perform as well as QMIX and MAVEN in most of the eight maps.
-When we consider the \texttt{MMM}, \texttt{3m}, \texttt{2m\_vs\_1z} and the \texttt{so\_many\_baneling} maps, we can observe that there is no significant difference between the performance that is obtained by our algorithms and that of QMIX and MAVEN. 
+When we consider the \texttt{MMM}, \texttt{3m}, \texttt{2m\_vs\_1z} and the \texttt{so\_many\_baneling} maps, we observe that there is no significant difference between the performance that is obtained by our algorithms and that of QMIX and MAVEN. 
 All methods converge towards the best possible winning rate and, in terms of convergence speed, perform closely.
 
 However, when considering the \texttt{2s3z}, \texttt{3s5z} and \texttt{8m} maps, we observe that the performance of QVMix results in even faster learning. 
 Of greater interest, when looking at the results obtained on the \texttt{3s5z} map, QVMix is the only algorithm approaching the best possible win rate.
 It is also worth noting that the performance of QVMix-Max is always competitive with the one obtained by QVMix, QMIX and MAVEN.
-These results are not surprising since a similar performance was observed when DQV-Max was tested in a SARL set-up \cite{sabatelli2020deep}.
+These results are not surprising since a similar performance was observed when DQV-Max was tested in a SARL set-up by \cite{sabatelli2020deep}.
 
 \begin{figure*}
 \centering
@@ -157,31 +153,33 @@ These results are not surprising since a similar performance was observed when D
 
 To understand the reasons behind why QVMix is the best performing algorithm overall, we analyse how well each method estimates the state-joint-action value function $Q_{mix}^{tot}(s_t, \mathbf{u_t})$. 
 Since, in most maps, decentralised methods do not perform as well as CTDE methods, we restrict our analysis to CTDE algorithms only where their respective mixer networks give the estimated $Q(s_t, \mathbf{u_t})$.
-Since the state space of the maps provided by the SMAC environment is not finite, it is unfortunately impossible to compute each state's real $Q(s_t, \mathbf{u_t})$.
-To overcome this problem, we compute the discounted sum of rewards obtained with the current policy in each visited state during an episode and compare the results with the value function inferred from the $Q$ values estimated by the mixer network for these states.
+Since the state space of the maps provided by the SMAC environment is not finite, it is not impossible to compute the exact $Q_{tot}(s_t, \mathbf{u_t})$ for all states to compare them with the estimations.
+To overcome this problem, we compute the discounted sum of rewards obtained with the current policy in each visited state during an episode and compare the results with the value function inferred from the $Q_{tot}$ values estimated by the mixer network for these states.
 The closer the estimates are to the real $Q(s_t, \argmax_{\mathbf{u}}(Q(s_t,\mathbf{u})))$, the more accurate the learned value function is.
 
 For this experiment, we selected two different maps: the \texttt{2m\_vs\_1z} map, which corresponds to the map on which the best results have been achieved by all methods at the same time, and the \texttt{3s5z} map, which on the other hand, is the map on which QVMix, and others, performed less well.
-In Figure~\ref{fig:exp_plots_overestim:q_best_worse} we report the averaged estimated $Q$ values, represented by the solid lines, and the actual discounted sum of rewards, represented by the dash-dotted lines.
+In Figure~\ref{fig:exp_plots_overestim:q_best_worse}, we report the averaged estimated $Q$ values, represented by the solid lines, and the actual discounted sum of rewards, represented by the dash-dotted lines.
 All are computed for each visited state at testing time.
 In both scenarios, we can observe that the $Q$ values estimated by QMIX and MAVEN suffer from the overestimation bias of the $Q$ function, while this is not the case for QVMix and QVMix-Max.
 Therefore, we justify the better quality of QVMix and QVMix-Max policies by better approximating the $Q$ functions.
-However, further work are required to understand this phenomenon in more detail.
+However, further work is required to understand this phenomenon in more detail.
 
 \section{Discussion and future work} \label{sec:ch4_conclusion}
 
 In this chapter, we introduced four new value-based methods for training a team of agents in a Dec-POMDP.
-Two of our methods are designed for a decentralised mode (IQV and IQVMax), while two are dedicated to centralised training with a decentralised execution mode (QVMix and QVMix-Max).
+Two of our methods, IQV and IQVMax, are designed for the decentralised mode, while the two dedicated to the CTDE mode are QVMix and QVMix-Max.
 We compared these algorithms with three methods from the literature and used the StarCraft Multi-Agent Challenge as a benchmark. 
 We have shown that QVMix and QVMix-Max achieve the same results as popular state-of-the-art techniques (QMIX and MAVEN) and that on some of the maps, QVMix can result in faster and better learning.
 We suggest that this better performance can be related to the fact that QVMix seems to suffer less from the overestimation bias of the $Q$ function.
 
 In future work, it would be interesting to analyze each agent's behaviour and study the impact of the value function in the optimisation procedure.
-Furthermore, we aim to find the best possible set of hyperparameters for each algorithm so that its performance can be exploited even further and more fairly.
+Furthermore, we aim to find the best possible set of hyperparameters for each algorithm to exploit its performance even further and more fairly.
 
-Restrospective:
+The dueling architecture is sometimes considered close to the DQV family because of the state value function approximation.
+However, in DQV methods, the approximation really approximates the expected return
+Retrospectively, QPLEX \citep{wang2021qplex} or LAN\citep{avalos2023local} exploits the dueling structure which is a form of learning $V$ are methods that would have been nice to compare against, especially studying how they deal with the overestimation bias compared to QVMix and QVMix-Max.
+Following the ideas of LAN learns a central V with independent advantages to compute independent $Q$ wit and how 
 
-QPLEX and duleing architecture
 
 better approxim value function. What about its value? in LAN they also have a centralised V and decentralised Q...
 
