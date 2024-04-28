@@ -106,7 +106,7 @@ A class of methods involves modelling other agents to predict their policy.
 This is called agent modelling, which means that their policy is approximated from the observed past actions.
 Once other agents' policies are modelled, the best response against their approximated policy can be computed.
 This is done in fictitious play \citep{brown1951iterative} for the normal-form game or more recently in Poker \citep{pmlr-v37-heinrich15} 
-Extensions consider additionally learning how the opponent will update its strategy \citep{he2016opponent, foerster2017learning}.
+Extensions consider additionally learning how the opponent will update its strategy \citep{he2016opponent, foerster2017lola}.
 
 There is also a different class of method called joint action learning.
 These methods directly learn $n$ state-joint-actions value functions $Q_i(s, \mathbf{u})$, to learn equilibrium Q value iteratively with a temporal difference.

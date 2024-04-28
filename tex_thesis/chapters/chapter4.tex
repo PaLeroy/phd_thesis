@@ -85,8 +85,8 @@ It is worth noting that the maps chosen for our experiments differ in complexity
 In SMAC, the goal is to maximise the sum of discounted rewards achieved by reducing each opponent team unit's health to zero, which is called a win.
 
 Each method is executed on every map ten times, and neural networks are trained from scratch each time.
-Networks are trained for $5m$ timesteps for the first four maps mentioned above and $10m$ timesteps for the four others, chosen because of the time required to achieve convergence.
-Every $20.000$ timestep, the parameters of the networks are saved to perform $24$ testing episodes.
+Networks are trained for $5m$ time steps for the first four maps mentioned above and $10m$ time steps for the four others, chosen because of the time required to achieve convergence.
+Every $20.000$ time step, the parameters of the networks are saved to perform $24$ testing episodes.
 
 Each algorithm uses the same hyperparameter values to compare the tested method fairly.
 Specifically, we refer to the authors of QMIX, MAVEN, and IQL to determine the hyper-parameters set and keep the same values for QVMix, QVMix-Max, IQV, and IQV-Max. 
@@ -108,8 +108,8 @@ Please note that reporting an episode's win rate is a good indicator of the qual
     \centering
     \caption{
     Means of win rates achieved in eight scenarios at the end of training by QMIX, MAVEN, QVMix, QVMix-Max, IQL, IQV, and IQVMax. 
-    In the first four scenarios, \texttt{3m}, \texttt{8m}, \texttt{so\_many\_baneling} and \texttt{2m\_vs\_1z}, it is measured after $5$ millions training timesteps.
-    In the last four, \texttt{MMM}, \texttt{2s3z}, \texttt{3s5z} and \texttt{3s\_vs\_3z} it is measured after $10$ millions training timesteps.
+    In the first four scenarios, \texttt{3m}, \texttt{8m}, \texttt{so\_many\_baneling} and \texttt{2m\_vs\_1z}, it is measured after $5$ millions training time steps.
+    In the last four, \texttt{MMM}, \texttt{2s3z}, \texttt{3s5z} and \texttt{3s\_vs\_3z} it is measured after $10$ millions training time steps.
     We report the best and second-best means by \textbf{bolding} and \underline{underlining} them. When results are equivalent, the cells report the fastest and second-fastest method that reaches a win rate of $100\%$ as shown in Figure~\ref{fig:all_win_curves}.}
     \input{tex_thesis/figures/ch4/table_mean}
     \label{tab:main_results}
@@ -191,5 +191,3 @@ Finally, LAN proposes to learn a single central $V$ and independent advantage $A
 It would be interesting to study how to relax the constraint of the $Q$ mixer in QVMix and QVMix-Max to train only independent $Q_a$, using a single central $V$ approximation as a target.
 
 
-\todo{read Matthia's thesis to add more?}
-\todo{std fraction}

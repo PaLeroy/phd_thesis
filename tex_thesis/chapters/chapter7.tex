@@ -40,7 +40,7 @@ Since we assume team symmetry, agents $a_{i, 1}$ and $a_{i, -1}$ share the same 
 This leads the transition function to be defined by $P: \mathcal{S} \times \mathcal{U}^2 \rightarrow \Delta(\mathcal{S})$.
 The symmetry also induces that agents $a_{i, 1}$ and $a_{i, -1}$ have a similar uncertainty about the state $\forall i$.
 Still, obviously, the observation function $O: \mathcal{S} \times I \times J \rightarrow \Delta(\mathcal{Z})$ maps a state to different observations for the same $i$.
-Common team rewards $\{r_t^1, r_t^{-1}\} = R(s_{t+1}, s_t, \mathbf{u_t}): \mathcal{S}^2 \times \mathcal{U}^2 \rightarrow \mathbb{R}^2$ are assigned to agents after each timestep.
+Common team rewards $\{r_t^1, r_t^{-1}\} = R(s_{t+1}, s_t, \mathbf{u_t}): \mathcal{S}^2 \times \mathcal{U}^2 \rightarrow \mathbb{R}^2$ are assigned to agents after each time step.
 The goal of each agent $a_{i, j}$ to maximise its expected return $\mathbb{E}_{\mathbf{\pi}, p, P}\left[ \sum_{t=0}^{T-1} \gamma^t r^{j}_t \right]$ where the joint policy $\pi \in \mathcal{U}^2$.
 Finally, the symmetry allows the policy of agent $a_{i, 1}$ to select actions of the agent $a_{i, -1}$ $\forall i$.
 
@@ -57,8 +57,8 @@ In competitive SMAC, the goal remains unchanged, and it is to defeat the opposin
 However, unlike in Chapter \ref{ch:qvmix} experiments, the winning team is the one that ends up with the highest sum of remaining hit points at the end.
 It is a draw if both teams end up with the same total of hit points.
 We have chosen the $3m$ and $3s5z$ maps for our experiments but increased the time horizon.
-In the $3m$ map, two teams of three marines compete for a maximum of $100$ timesteps.
-In the $3s5z$ map, two teams of three stalkers and five zealots compete for a maximum of $150$ timesteps.
+In the $3m$ map, two teams of three marines compete for a maximum of $100$ time steps.
+In the $3s5z$ map, two teams of three stalkers and five zealots compete for a maximum of $150$ time steps.
 Additionaly, agents observe their relative position with respect to the centre of the map.
 More details about these two maps and SMAC can be found in Section \ref{sec:ch3_smac}.
 
@@ -97,7 +97,7 @@ To evaluate training efficiency and heuristic performances, each trained team is
 For our experiments, teams were trained with three learning scenarios and with three CTDE methods, in two different environments.
 We conducted the same experimental process for both environments.
 Each method's learning scenario was executed ten times and stopped after each team had exploited $10^7$ samples.
-For each method, this resulted in ten teams trained against the heuristic requiring $10^7$ environment timesteps, ten teams trained in self-play requiring $5\times10^6$ environment timesteps and ten training populations of five teams leading to $50$ teams trained within populations requiring at least $5\times10^7$ environment timesteps.
+For each method, this resulted in ten teams trained against the heuristic requiring $10^7$ environment time steps, ten teams trained in self-play requiring $5\times10^6$ environment time steps and ten training populations of five teams leading to $50$ teams trained within populations requiring at least $5\times10^7$ environment time steps.
 Therefore, $210$ teams of nine types were trained in both environments.
 
 To train teams against the heuristic, it was ensured that they play the same number of episodes, acting as team $j=1$ and team $j=-1$.
@@ -130,16 +130,16 @@ In practice, to compute the Elo scores in these 16 test populations, each team p
 Every team starts with an Elo score of $1000$, and we set the maximum Elo score update to $10$, which is sufficiently small for our population sizes.
 In Section \ref{sec:ch7_results}, we analyse the distribution of Elo scores after every team had finished its testing games.
 
-During training, team neural network parameters are recorded every $20000$ timestep until the $10$ millionth played timestep.
-The test populations are composed of agents whose network parameters correspond to those recorded at the 10 millionth timestep.
+During training, team neural network parameters are recorded every $20000$ time step until the $10$ millionth played time step.
+The test populations are composed of agents whose network parameters correspond to those recorded at the 10 millionth time step.
 The other saved networks allow one to evaluate teams' performances during training.
 We evaluate teams trained with a method and a learning scenario against the heuristic and against all teams trained with the same method but a different learning scenario.
-We analysed the win rates along training timesteps of these different matchups when teams play $24$ games against each other.
+We analysed the win rates along training time steps of these different matchups when teams play $24$ games against each other.
 For example, for the same method, each ten teams trained in self-play played $24$ games against all the $50$ teams trained within a population and against the $10$ teams trained against the heuristic.
 
 \section{Results} \label{sec:ch7_results}
 
-\begin{figure*}[h]
+\begin{figure*}
 \input{tex_thesis/figures/ch7/fig_elo} 
 \end{figure*} 
 
@@ -171,7 +171,7 @@ The conclusion is that teams trained within a population remain the most success
     \input{tex_thesis/figures/ch7/fig_training}
 \end{figure*}
 
-In Figure \ref{subfig:3m_vs_h}, we present the evolution of win rates against the heuristic along training timesteps by each team in the $3m$ map.
+In Figure \ref{subfig:3m_vs_h}, we present the evolution of win rates against the heuristic along training time steps by each team in the $3m$ map.
 For all methods, teams trained against the heuristic are the best against it on average.
 This explains why their Elo scores improve when the heuristic is included in the test population.
 This is also the case for QVMix teams trained in self-play and within a population that performed better and learned faster than teams trained with MAVEN and QMIX with these two learning scenarios.
@@ -179,7 +179,7 @@ However, in the $3s5z$ map, it can be seen in Figure \ref{subfig:3s5z_vsh} that 
 Only the win rates of teams trained against the heuristic, especially with QVMix and QMIX, increase at the end of the training but with a high variance in comparison to the $3m$ map (Fig. \ref{subfig:3m_vs_h}).
 For QVMix, the win rates of teams trained with a population also increase at the end of the training phase.
 The time we have budgeted for training in the $3s5z$ map may be insufficient to achieve a high win rate.
-However, we find this beneficial because it shows that, even when the heuristic is better than all teams, training against it, with the same training timesteps allowance, is not the best learning scenario when teams have to be good against several strategies.
+However, we find this beneficial because it shows that, even when the heuristic is better than all teams, training against it, with the same training time steps allowance, is not the best learning scenario when teams have to be good against several strategies.
 This also shows that our heuristic is harder to defeat with respect to the results of \citep{Rashid2018,Mahajan2019MAVEN:Exploration,leroy2020qvmix} where better results are observed in these maps with the former SMAC heuristic.
 
 In the $3m$ map, the standard deviation of green and blue win rates, representing population and self-play learning scenarios, respectively, is high.
@@ -194,7 +194,7 @@ Green and blue curves enable one to analyse self-play against population-learnin
 At the beginning of the training phase, teams trained within a population are better than self-play in the $3m$ map.
 This high win rate decreases with training in favour of the win rate of teams trained in self-play for QVMix and QMIX until it becomes higher than the latter.
 Again, this suggests a difference in training sample efficiency.
-Moreover, although the training sample efficiency is lower for teams trained in self-play, the number of environment timesteps required to train them is five times lower in our setting.
+Moreover, although the training sample efficiency is lower for teams trained in self-play, the number of environment time steps required to train them is five times lower in our setting.
 However, it is on average that the self-play teams become better.
 In the $3s5z$ map, this overlap phenomenon does not occur, and the average win rates fluctuate around $50\%$ with the green curves remaining just above the blue ones at the end.
 The proximity of performances between teams trained in self-play and within a population is arguably due to the environment and the $3m$ map, which does not offer the possibility of winning with very different strategies.
@@ -203,25 +203,25 @@ As the $3s5z$ map appears to be more complex, with the lack of performances agai
 \begin{figure*}[ht]
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=.95\textwidth]{tex_thesis/figures/ch7/3m_tiny_all_h_clean.pdf}
+\includegraphics[width=.9\textwidth]{tex_thesis/figures/ch7/3m_tiny_all_h_clean.pdf}
 \caption{$3m$ map \textbf{with} the heuristic.}
 \label{subfig:3m_all_h}
 \end{subfigure}
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch7/3m_tiny_all_no_h_clean.pdf}
+\includegraphics[width=.9\textwidth]{tex_thesis/figures/ch7/3m_tiny_all_no_h_clean.pdf}
 \caption{$3m$ map \textbf{without} the heuristic.}
 \label{subfig:3m_all_no_h}
 \end{subfigure}
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=.95\textwidth]{tex_thesis/figures/ch7/3s5z_tiny_all_h_clean.pdf}
+\includegraphics[width=.9\textwidth]{tex_thesis/figures/ch7/3s5z_tiny_all_h_clean.pdf}
 \caption{$3s5z$ map \textbf{with} the heuristic.}
 \label{subfig:3s5z_all_h}
 \end{subfigure}
 \begin{subfigure}{\textwidth}
 \centering
-\includegraphics[width=\textwidth]{tex_thesis/figures/ch7/3s5z_tiny_all_no_h_clean.pdf}
+\includegraphics[width=.9\textwidth]{tex_thesis/figures/ch7/3s5z_tiny_all_no_h_clean.pdf}
 \caption{$3s5z$ map \textbf{without} the heuristic.}
 \label{subfig:3s5z_all_no_h}
 \end{subfigure}
@@ -257,7 +257,7 @@ To perform our experiments, we modified the cooperative environment SMAC to allo
 The Elo rating system evaluates these nine types of trained teams at the end of their training.
 Different groups are formed to identify the best learning scenario and the best learning scenario/training method pair.
 We also analysed the win rates of several matchups during training to support the results provided by the Elo scores.
-Our results showed that the best learning scenario is to train teams within a population of learning teams when each team plays the same number of timesteps for training purposes.
+Our results showed that the best learning scenario is to train teams within a population of learning teams when each team plays the same number of time steps for training purposes.
 We reached this conclusion irrespective of whether or not the stationary strategy was better than all trained teams.
 Finally, a selection procedure is required because teams from the same training population do not perform equally.
 
@@ -268,5 +268,5 @@ Recent CTDE methods overcome these performances and may lead to interesting new 
 Typically, stochastic policies trained with policy-based methods might provide better results in our setting.
 Another research direction would be to study how diversity in the training population impacts performance. 
 Diversity could be increased by adding the heuristic in the population, confronting agents against older learned policies, varying the size of the population or training teams with different methods in the same population.
-In addition, as described in Chapter \ref{ch:competition}, methods that compute the best responses, exploit PSRO or model the opponent, would be interesting to test in such an environment.
-We also propose performing behavioural and policy analyses to better understand why some teams achieve a better Elo score and how strategies differ in a single training population.
+In addition, as described in Chapter \ref{ch:competition}, methods that compute the best responses, exploit PSRO or model the opponent would be interesting to test in such an environment.
+We also propose performing behavioural and policy analyses to understand why some teams achieve a better Elo score and how strategies differ in a single training population.

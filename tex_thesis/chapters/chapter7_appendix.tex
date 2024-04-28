@@ -5,7 +5,7 @@ The learning parameters of the three methods were determined by default configur
 They are the same as the ones used in QVMix implementation \citep{leroy2020qvmix}.
 We hereafter provide a description of some of these training parameters.
 
-Individual networks are 64 cells GRU enclosed with fully connected layers (see Fig \ref{fig:indivQ}).
+Individual networks are 64 cells GRU enclosed with fully connected layers (see Chapter \ref{ch:cooperation}).
 The mixer network is the same as in \citep{Rashid2018} with an embedded size of 32.
 The individual and mixer networks are the same for the three methods.
 We used the default parameters of MAVEN policy networks provided by \citep{Mahajan2019MAVEN:Exploration}.
@@ -37,7 +37,7 @@ We had access to several types of computers, with different numbers of CPUs acce
 Training times for each experiment performed are presented in Figure \ref{fig:training_time}.
 With all these different hardware configurations, it is not possible to rigorously compare the times of the experiments.
 However, it is possible to present the time complexity.
-As explained in Section \ref{sec:experiments}, training in self-play requires five times fewer environment timesteps than training within a population but also five times fewer network updates.
+As explained in Section \ref{sec:ch7_experiments}, training in self-play requires five times fewer environment timesteps than training within a population but also five times fewer network updates.
 Furthermore, when training a population, networks are updated sequentially, which also increases the time.
 Finally, SC2 processes are prone to errors and, therefore, sometimes need to be restarted.
 As the actions of all agents in the different running environments are performed simultaneously, these restarts are time-consuming operations as the processes have to wait for the faulty one.

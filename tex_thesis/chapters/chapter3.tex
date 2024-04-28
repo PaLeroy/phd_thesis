@@ -61,7 +61,7 @@ The optimal joint policy is denoted by $\mathbf{\pi^{*}} =\argmax_{\mathbf{\pi}}
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{tex_thesis/figures/ch3/DECPOMDP.pdf}
-    \caption{Interaction of agents with the environment in a decentralised partially observable Markov decision process~\citep{DecPomdp}. \todo{refaire les obs}}
+    \caption{Interaction of agents with the environment in a decentralised partially observable Markov decision process~\citep{DecPomdp}.}
     \label{fig:ch3_decpomdp}
 \end{figure}
 
@@ -76,11 +76,10 @@ The introduction may already provided some insights about this claim and the fol
 Like MDP is the fully-observable POMDP, there exist several particular cases of Dec-POMDP based on the observability of the agents.
 This allows us to define the required assumptions to train a single agent to decide the joint action to make the centralised execution mode possible.
 When the joint observation can identify the state while the observation of one agent can not, this is a jointly observable Dec-POMDP, also referred to as a decentralised MDP by~\cite{DecPomdp}.
-But to allow centralised execution, it should be considered that agents can share their observation in order to take the decision centrally by identifying the state with the joint-observation.
-Note that such assumption allows centralised execution but does not make the problem of decentralised execution simpler, because each agent still does not observe the state~\citep{bernstein2002complexity}.
-The direct extreme case is the fully observable Dec-POMDP where all agents observe directly the state.
-These assumptions can lead to the multi-agent Markov decision process~\citep{boutilier1996planning}.
-\todo{review last takes}
+However, to allow centralised execution, it should be considered that agents can share their observations to make the decision centrally by identifying the state with the joint observation.
+Note that such an assumption allows centralised execution but does not make the problem of decentralised execution simpler because each agent still does not observe the state~\citep{bernstein2002complexity}.
+The direct extreme case is the fully observable Dec-POMDP, where all agents observe the state directly.
+These assumptions can lead to the specific framework called a multi-agent Markov decision process~\citep{boutilier1996planning}.
 
 There are also several variations of factored Dec-POMDP described in~\citep{DecPomdp} whether the transition or reward or observation functions can be considered factored, meaning they can be decomposed in agent-wise independent factors.
 While other special cases can be found in~\citep{DecPomdp}, their definitions allowed to solve them by benefiting from these additional hypothesis.
@@ -127,7 +126,6 @@ A mixed cooperative-competitive game can be made by controlling the targets.
 Many more examples of cooperative MARL applications exist.
 Many can be found in the books of~\cite{DecPomdp} and~\cite{marl-book}, in the review on cooperative MARL done by~\cite{oroojlooy2022review}, such as resource allocation, stock market,...
 
-\todo{Figure mosaïque avec les environments pour que ça soit joli}
 
 \subsection{StarCraft multi-agent challenge} \label{sec:ch3_smac}
 The StarCraft multi-agent challenge (SMAC)~\citep{samvelyan2019starcraft} and its improved version SMACv2~\citep{ellis2023smacv2} are probably the most studied suite of environments with CTDE methods.
@@ -495,7 +493,3 @@ Messages have no impact on the state transition or the reward.
 This is maybe one of the first works addressing communication in MARL, specifically in the cooperative setting.
 In its master thesis,~\cite{fombellida2020master} studied how communication can affect performance in SMAC and also presented a survey of communication methods.
 The challenges include adapting to various numbers of agents, targeted communication, and limiting the number of messages.
-
-
-\todo{Refaire les schémas des méthodes?}
-\todo{unify o in policy and tau}
