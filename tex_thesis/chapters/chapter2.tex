@@ -198,12 +198,11 @@ To evaluate a policy, we define the state value function $V^\pi(s) = \mathbb{E}_
 While it may appear meaningless for a single-agent environment, it is interesting to observe that the optimal policy is a Nash equilibrium.
 Indeed, the agent can not profit from changing its policy.
 
-An important property in MDP and SG not mentioned in the SG definition is that the next state is a dependent only of the current state and action.
+An important property in MDP and SG not mentioned in the SG definition is that the next state depends only on the current state and action.
 This is called the Markovian property.
-It is important because it implies that a policy based solely on the current state is as good as a policy based on the history of states and actions.
+It is important because it implies that a policy based solely on the current state is as good as one based on history of states and actions.
 Moreover, we defined the policy as the probability of taking action in a given state.
 A particular case of this stochastic policy is a deterministic policy, denoted $\pi(s):\mathcal{S}\rightarrow\mathcal{U}$, or standardly $\mu(s)$.
-
 
 \begin{figure}[h]
     \centering
@@ -241,38 +240,58 @@ Nevertheless, the following section introduces dynamic programming, a technique 
 Dynamic programming provides the foundation of model-free methods that are afterwards introduced.
 
 \subsection{Dynamic programming}
-Dynamic programming \citep{bellman1966dynamic} methods compute the optimal policy given a model of an MDP \citep{sutton2018reinforcement}.
-To provide some intuitions that will help understand later methods, we first present the development of value functions for any policy $\pi$ and $\forall s, u$, called the Bellman equation:
+Dynamic programming (DP) \citep{bellman1966dynamic} methods compute the optimal policies given a model of an MDP \citep{sutton2018reinforcement}.
+First, we present the Bellman equation to provide some intuitions to help understand later methods and discuss dynamic programming methods.
+They are obtained by developing value functions, highlighting their recursive relationships, for any policy $\pi$ and $\forall s, u$,
 \begin{equation}
 \label{eq:ch2_V_2}
 \begin{split}
-    V^\pi(s)= \mathbb{E}_{\pi}\left[G_t|s_t=s\right] & = \mathbb{E}_{\pi}\left[r_t + \gamma V^\pi(s_{t+1})|s_t=s\right]\\
-     & = \sum_{u} \pi(u|s) \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma V^\pi(s')),
+    V^\pi(s)= \mathbb{E}_{\pi}\left[G_t|s_t=s\right] & = \mathbb{E}_{\pi}\left[r_t + \gamma V^\pi(s_{t+1})|s_t=s\right],
 \end{split}
 \end{equation}
+and,
 \begin{equation}
 \label{eq:ch2_Q_2}
 \begin{split}
-    Q^\pi(s, u) = \mathbb{E}_{\pi}\left[G_t|s_t=s, u_t=u\right] & = \mathbb{E}_{\pi}\left[r_t + \gamma V^\pi(s_{t+1})|s_t=s, u_t=u \right] \\
-    &  = \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma V^\pi(s')).
+    Q^\pi(s, u) = \mathbb{E}_{\pi}\left[G_t|s_t=s, u_t=u\right] & = \mathbb{E}_{\pi}\left[r_t + \gamma V^\pi(s_{t+1})|s_t=s, u_t=u \right].
 \end{split}
 \end{equation}
-Dynamic programming also rely on the property that the value functions $V^{\pi^*}$ and $Q^{\pi^*}$ of the optimal policy ${\pi^*}$ are the unique solution of the Bellman optimality equations $\forall s, u$:
+
+From these equations, a policy $\pi'$ is better than another $\pi$ if $V^{\pi'}(s)>V^\pi(s)$.
+The policy better than all others is the optimal policy.
+While there can be several optimal policies, all are denoted by $\pi^*$, and their state value function $V^{\pi^*}(s)$ is the same $\forall s$.
+The optimal policies are the unique solution of the Bellman optimality equations, $\forall s, u$,
 \begin{equation}
 \label{eq:ch2_bellmanV}
-    V^{\pi^*}(s) = \max_u \mathbb{E}[r_t + \gamma V^{\pi^*}(s_{t+1})| s_t=s, u_t=u],
+    V^{\pi^*}(s) = \max_{\pi}V^\pi(s) = \max_u \mathbb{E}_{\pi^*}[r_t + \gamma V^{\pi^*}(s_{t+1})| s_t=s, u_t=u],
 \end{equation}
+and,
 \begin{equation}
 \label{eq:ch2_bellmanQ}
-    Q^{\pi^*}(s, u) = \mathbb{E}[r_t + \gamma \max_{u'} Q^{\pi^*}(s_{t+1}, u') |s_t=s, u_t=u].
+    Q^{\pi^*}(s, u) =  \max_{\pi}Q^\pi(s, u) = \mathbb{E}_{\pi^*}[r_t + \gamma \max_{u'} Q^{\pi^*}(s_{t+1}, u') |s_t=s, u_t=u].
 \end{equation}
+The optimality equations given in Equation \ref{eq:ch2_bellmanV} represent a system of $|\mathcal{S}|$ equations with $|\mathcal{S}|$ unknown, and solving this system would allow one to compute the optimal policy.
+This can also be done with the system defined in Equation \ref{eq:ch2_bellmanQ}.
+The condition is, of course, to have reversible access to the MDP model.
+Solving either system is usually not considered for computational reasons.
+It is, therefore, methods computing an approximate solution to the Belman optimality equations which are favored.
 
-Not going into the details of policy evaluation, policy improvement, policy iteration and value iteration, e.g. presented in \citep{sutton2018reinforcement}, one can find the optimal policy by iteratively evaluating and improving the policy with the value functions.
+DP is an example of methods that compute the solutions by iteratively updating approximations, until it converges.
+DP can solve Equation \ref{eq:ch2_V_2} by updating estimates $v_k$ with $v_{k+1} = \sum_{u} \pi(u|s) \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$ where $v_0$ can have arbitrary values for non terminal states.
+This is called iterative policy evaluation and is proven to converge if $k\rightarrow\infty$.
+Policy evaluation allows the refinement of any given policy $\pi$ by exploiting Equation \ref{eq:ch2_Q_2} to evaluate other actions than $\pi(s)$ using $Q^\pi(s, u) =  \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$. 
+This is called policy improvement.
+Alternating policy evaluation and improvement allows to iteratively compute the optimal policy, which is called policy iteration.
+Policy iteration convergence time can be a big drawback in policy iteration.
+However, the convergence guarantee can be kept while combining evaluation and improvement, leading to an approximation called value iteration $v_{k+1} = \max_u \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$.
+Many more details about these DP methods are provided by \cite{sutton2018reinforcement}.
+
 In addition to requiring the model knowledge $P$ and $R$, the complexity of computing all these values increases with the size of the state and the action spaces, often referred to as the curse of dimensionality, which may limit their usage.
-Moreover, computing them is impossible for continuous spaces.
-Because of our direction towards model-free RL, without the model knowledge, our interest here is to present Equations~\ref{eq:ch2_bellmanV},~\ref{eq:ch2_bellmanQ},~\ref{eq:ch2_V_2} and~\ref{eq:ch2_Q_2} that may ease the understanding of further concepts.
+However, \cite{sutton2018reinforcement} claim that this take is somehow incorrect, explaining that DP has a polynomial complexity with respect to $|\mathcal{S}|$ and $|\mathcal{U}|$.
+Moreover, computing them is impossible for continuous spaces without discretising the spaces.
+Because of our direction towards model-free RL, without the model knowledge, the interest is to present these equations and methods that may ease the understanding of further concepts.
 
-\todo{belman operator}
+
 
 \subsection{Value-based methods} \label{sec:ch2_value_based_methods}
 Value-based methods are designed to learn value functions.
@@ -280,7 +299,7 @@ Maybe one of the most common methods in model-free RL is Q-learning \citep{watki
 This enables the agent to greedily select the action following the deterministic policy $\pi^*(s)=\argmax_u Q^{\pi^*}(s, u)$.
 
 Q-learning is a tabular method because it maintains $Q(s, u)$ estimations in a table, one value for each state-action pair.
-It updates these estimations based on themselves, called bootstrapping, and is based on temporal difference (TD) learning.
+It updates these estimations based on themselves, called bootstrapping, and is based on temporal difference (TD) learning \citep{sutton2018reinforcement}.
 Following the update 
 \begin{equation}
 \label{eq:ch2_QLearning}
