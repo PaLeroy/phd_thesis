@@ -11,40 +11,40 @@ We conclude this chapter in Section \ref{sec:ch6_algo} by defining methods to so
 \end{chapter_outline}
 
 \section{Introduction}\label{sec:ch6_intro}
-In Part \ref{part:background} of this manuscript, we present the stochastic game, a general framework for multi-agent reinforcement learning, and the different settings of MARL.
+In Part \ref{part:background} of this manuscript, we present the general framework for MARL and its different settings.
 In Part \ref{part:coop}, we focused on the cooperative setting, where all agents receive the same reward.
 In this third part of the manuscript, we focus on a different setting where two teams of agents compete against each other.
 This chapter provides an overview of MARL in the competition and general-sum setting.
 The next one then presents the two-team competition setting and conducted experiments to highlight how to train teams by combining the methods defined in Part \ref{part:coop} and the methods to train agents to compete presented in this chapter.
 
-One of the challenges of MARL is agents may never stop adapting their policies to the new policies of other agents which are also adapting to changes since they are also learning.
-This never-ending adaptation cycle led many researchers to define equilibrium, achieved when agents do not want to change their policy.
-As introduced in previous chapters, finding and selecting equilibrium represent some of the main challenges of MARL.
-When agents receive a common reward, like in Dec-POMDP, deciding which joint policies are the best is straightforward.
-However, this becomes less obvious when agents receive different rewards, like in competitive and general-sum settings, where the change in the return of agents may not be fair between two equilibria.
-Section \ref{sec:ch6_solutions} discusses different solutions in MARL to achieve equilibrium and to rank agents' policies.
+One problem of MARL is that agents may never stop adapting their policies to the new policies of other agents who are also adapting to changes since they are also learning.
+This never-ending adaptation cycle led many researchers to define equilibria, achieved when agents do not want to change their policy.
+Moreover, when agents receive a common reward, like in Dec-POMDP, deciding which of two joint policies is the best is straightforward.
+However, this becomes less obvious when agents receive different rewards, like in competitive and general-sum settings, where the change in the return of agents may not be fair between two joint policies, equilibria or not.
+As introduced in previous chapters, finding and selecting an equilibrium represents one of the main challenges of MARL.
+Section \ref{sec:ch6_solutions} discusses different solutions in MARL to achieve an equilibrium and rank policies.
 
 Once these solutions are defined, Section \ref{sec:ch6_history} presents an overview of the history of acting in multi-agent systems.
-As will be discussed, the solution concept definitions are provided from game theory, and we cover some of its foundations, including RL and adversarial search methods.
-Finally, Section \ref{sec:ch6_algo} discusses self-play and population-based training, two training scenarios allowing RL agents to learn to act in complex games.
+As will be discussed, game theory provides the solution concept definitions, and we cover some of its foundations, including historical RL and planning methods.
+Finally, Section \ref{sec:ch6_algo} discusses self-play and population-based training, two learning scenarios allowing agents to learn to act in complex games.
 
 \section{Solutions}\label{sec:ch6_solutions}
 The solution to an MDP is the policy that maximises the agent's expected return.
-While finding the optimal policy may be challenging, deciding which of two policies is better is simple, given the expected return.
-In a stochastic game, the return of each agent is $G_0^{a_i} = \mathbb{E}_{\mathbf{\pi}}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, also shortened $G^i(\mathbf{\pi})$ in the following.
-Choosing between two joint policies is as straightforward in a Dec-POMDP as in SARL because agents all receive the same reward.
-But in other settings, when agents receive different rewards, it becomes difficult to determine which joint policies are better without favouring one agent.
+While finding the optimal policy may be challenging, deciding which of two policies is better, given the expected return, is simple.
+In a POSG, the return of each agent is $G_0^{a_i} = \mathbb{E}_{\mathbf{\pi}}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, also shortened $G^i(\mathbf{\pi})$ in the following.
+Choosing between two joint policies is as straightforward in a Dec-POMDP as in SARL because agents all receive the same reward, and their return changes identically.
+However, in other settings, when agents receive different rewards, it can become challenging to determine which joint policy is a better solution to the POSG.
+This is because the change in the return of each agent will likely be different.
 Moreover, maximising each agent's return may lead to never-ending learning, where each agent adapts to the others.
-Therefore, alternative solutions to games have been required, and this section provides different ones.
-Most of these solutions are based on the joint policy of all agents.
-\cite{marl-book} defines multi-agent reinforcement learning as a pair composed of an environment and a solution concept.
+Therefore, alternative solutions to games have been defined, and this section provides some.
+\cite{marl-book} defines MARL as a pair composed of an environment and a solution concept.
 While this section defines some, a thorough list can be found in \citep{marl-book}.
 
-One of the straightforward solutions is the best response.
+One of the solutions is the best response.
 It evaluates the policy of an agent $a_i$ by considering that the policies of all other agents $\mathbf{\pi^{-i}}$ are fixed.
 The best response policy is in the set of $\argmax_{\pi^{i}} G^i (\pi^{i}, \mathbf{\pi^{-i}})$ and may not be unique.
 It is indeed the solution that provides the optimal return when other agents' policies are fixed.
-It can be used to iteratively compute a solution for all agents by computing the best response policy of one agent after the others.
+It can be used to iteratively compute a solution for all agents by computing the best response policy of one agent after the others, as will be shown later.
 
 Another well-known solution is the minimax solution, which we define in a two-player zero-sum game.
 In such a game, the agent's reward can be modelled as the negative of the other's, so $r_t^{a_i} = -r_t^{a_{-i}}$ and $G^i(\mathbf{\pi}) = - G^{-i}(\mathbf{\pi})$.
@@ -55,58 +55,61 @@ Regarding best responses defined previously, one can interpret the minimax joint
 
 Extending this concept of mutual best responses to general-sum games with two or more agents can be the definition of the Nash equilibrium \citep{marl-book}.
 This equilibrium is achieved when no agent benefits from changing its current policy.
-A joint policy $\mathbf{\pi}$ is a Nash equilibrium if for all agents $a_i$, any $\pi'_i$ is such that $G^i(\pi'_i , \mathbf{\pi^{-i}}) \le G^i(\mathbf{\pi})$ \citep{nash1950equilibrium}.
-One important property is that only stochastic policies can achieve a Nash equilibrium in some games.
+A joint policy $\mathbf{\pi}$ is a Nash equilibrium if $\forall a_i$, any $\pi'_i$ is such that $G^i(\pi'_i , \mathbf{\pi^{-i}}) \le G^i(\mathbf{\pi})$ \citep{nash1950equilibrium}.
+For some environments, only stochastic policies can achieve a Nash equilibrium.
 For the rock-paper-scissor game, one example of stochastic policies achieving a Nash equilibrium is to take each action with a uniform probability.
 Moreover, a Nash equilibrium is not necessarily unique and has different expected return values for each agent.
 This highlights the challenge of selecting the optimal equilibrium because the difference in returns between equilibria is not always the same between agents.
-The existence of these three solutions in a stochastic game has been demonstrated, and we refer the reader to the book of \cite{marl-book}.
-They also discuss the complexity of computing an equilibrium and explain how Nash equilibrium cannot be computed in polynomial time.
 
-Variants and extensions of the Nash equilibrium exist.
+These three solutions have been demonstrated in an SG, and we refer the reader to the book of \cite{marl-book}.
+They also discuss the complexity of computing an equilibrium and explain that Nash equilibrium cannot be computed in polynomial time in the general case.
+Variants and extensions of the Nash equilibrium also exist.
 The $\epsilon$-Nash equilibrium allows a surrounding region to improve flexibility and reduce the strict Nash equilibrium.
 Until now, we have silently considered that agents take actions independently.
 However, this is not always the case.
 Indeed, agents may have correlated policies leading to the correlated equilibrium, also called coarse equilibrium.
 This equilibrium generalises the Nash equilibrium to correlated policies.
 Both are fully covered by \cite{marl-book}, who also conclude the definitions of equilibrium by highlighting their three main limitations: the possible sub-optimality, the non-uniqueness, and the incompleteness of these equilibrium solutions.
+The latter means that the equilibrium solution does not provide specific actions to guide players back to the equilibrium path once they deviate from it.
 
-Another type of solution is a Pareto optimal joint policy.
+A non-equilibrium solution is a Pareto optimal joint policy.
 It comes from the multi-objective optimisation literature \citep{ehrgott2012vilfredo}.
 A joint-policy $\mathbf{\pi}$ Pareto dominates an other one $\mathbf{\pi'}$ if $G^i(\mathbf{\pi}) \ge G^i(\mathbf{\pi'})\forall i$ but for one agent $a_i$, $G^i(\mathbf{\pi}) > G^i(\mathbf{\pi'})$.
 In other words, a joint policy is Pareto-dominated if one agent can achieve better returns without reducing the returns of others.
-A Pareto optimal joint policy is easily defined as not Pareto-dominated by any other one.
-The difference between Nash equilibrium is that here, no agents can be better without making others worse.
-While the Nash equilibrium considers one agent changing without being worse.
+A Pareto optimal joint policy is easily defined as not Pareto-dominated by any other.
+The difference between Nash equilibrium is that here, no agent can improve its return without worsening one of the others.
+Meanwhile, the Nash equilibrium considers a single agent to change without becoming worse.
 This Pareto optimality combined with equilibrium allows the solution to be improved.
-Specifically, it reduces the number of equilibriums considered because it seems obvious that a Pareto optimal equilibrium is better than a non-Parto one.
-Again, there is often not a unique Pareto-optimal joint policy.
+Specifically, it reduces the number of equilibriums considered because it seems evident that a Pareto optimal equilibrium is better than a non-Parto one.
+However, there is often no unique Pareto-optimal joint policy.
 More importantly, a joint policy can be Pareto-optimal without being an equilibrium one.
+Finally, Pareto optimality does not consider how the return is distributed amongst agents, leading to the notion of social welfare and fairness detailed in \citep{marl-book}.
 
 \section{History}\label{sec:ch6_history}
-Game theory (GT) \citep{von1947theory} is as much the foundation of multi-agent reinforcement learning as is reinforcement learning \citep{Nowe2012GTMARL, marl-book}.
+Game theory (GT) \citep{von1947theory} is as much the foundation of MARL as is RL \citep{Nowe2012GTMARL, marl-book}.
 The solution concepts presented in Section \ref{sec:ch6_solutions} and the classification in three types of multi-agent settings are results from game theory.
-From normal-form games to repeated normal-form games, GT with RL has a long history and partially observable stochastic games are the complex extension of these settings.
+GT with RL has a long history, ranging from normal-form games to repeated normal-form games, and POSG is the complex extension of these settings.
 In the following, we present the premise of binding GT and RL and cover methods that have led to what exists now to try to solve POSG.
-We finish with planning methods dedicated to the extensive-form games that contributed to POSG progress.
+We finish with planning methods dedicated to the extensive-form games that contributed to POSG's progress.
 This section presents some methods at the foundation of MARL to highlight foundations from dynamic programming.
 These methods are described in \citep{marl-book} and \citep{russel2010}, already exploited in this manuscript, in addition to the chapter "Game theory and Multi-agent RL" \citep{Nowe2012GTMARL} presenting others.
 
 In non-repeated normal-form games, finding the minimax solution with linear programming \citep{marl-book} is possible.
 Game theory with RL also started in normal-form games.
 For another example, we can cite the study on independent Q-Learning in cooperative normal-form games by \cite{claus1998dynamics}.
-Many methods also have been proposed for stochastic games.
+Many methods also have been proposed for SG.
 Learning the optimal value function for all states in an SG is possible using dynamic programming.
 Value iteration \citep{stochasticGames} is an example of such a method, the same name as its homologue in MDP \citep{sutton2018reinforcement} despite being slightly different in the concept.
 As in SARL, this method requires knowledge of the environment model and has the same limitations.
 
 A class of methods involves modelling other agents to predict their policy.
-This is called agent modelling and means that their policy is approximated from the observed past actions.
+This is called agent modelling, which means that their policy is approximated from the observed past actions.
 Once other agents' policies are modelled, the best response against their approximated policy can be computed.
-This is done in fictitious play \citep{brown1951iterative} for the normal-form game.
+This is done in fictitious play \citep{brown1951iterative} for the normal-form game or more recently in Poker \citep{pmlr-v37-heinrich15} 
+Extensions consider additionally learning how the opponent will update its strategy \citep{he2016opponent, foerster2017learning}.
 
 There is also a different class of method called joint action learning.
-These methods directly learn $n$ state-joint-actions value functions $Q_i(s, \mathbf{u})$, with the goal of learning equilibrium Q value iteratively with a temporal difference.
+These methods directly learn $n$ state-joint-actions value functions $Q_i(s, \mathbf{u})$, to learn equilibrium Q value iteratively with a temporal difference.
 However, these methods require assumptions on the type of equilibrium agent aim.
 This leads to different algorithms, such as Minimax Q-learning \citep{MarkovGames}, Nash Q-learning \citep{hu2003nash} and Correlated Q-learning \citep{greenwald2003correlated}.
 These algorithms have some limitations in the type of equilibrium they can achieve \citep{marl-book}.
@@ -121,7 +124,7 @@ Section \ref{sec:ch2_model_based_vs_model_free} defines planning as computing a 
 Planning has a long history in multi-agent systems, especially in fully observable two-player zero-sum games with turn-taking actions.
 These games are called extensive-form games, different from the repeated normal-form ones because agents do not act simultaneously \citep{Nowe2012GTMARL}.
 Famous examples include Chess and Go.
-In such board games, agents take action in turn, modifying the state of the board observable by both.
+In such board games, agents take action, modifying the state of the board that is observable by both.
 Both obtain zero rewards except at the end of the game.
 If one wins, it obtains a reward equal to 1; if it is a draw, both receive a reward equal to 1/2.
 The sum of all rewards is thus always 1.
@@ -137,7 +140,7 @@ This information is typically given by an evaluation function approximating the 
 A well-known informed tree search method is A*.
 
 Back to adversarial search, growing the tree of all possibilities is possible.
-However, one needs to consider the presence of other agents and especially the uncertainty regarding their future actions.
+However, one needs to consider the presence of other agents, especially the uncertainty regarding their future actions.
 This motivates the need for a search algorithm to be executed for every action.
 In Section \ref{sec:ch6_solutions}, we presented the minimax solution providing the minimax value if both players play optimally.
 The minimax algorithm is an adversarial search algorithm that computes this minimax value from each tree node.
@@ -145,12 +148,12 @@ Therefore, the optimal action is to select the action with the maximum minimax v
 However, despite being able to prune such a tree and not compute all values with the alpha-beta minimax algorithm, problems still arise as the tree's size increases.
 A solution is thus to define a criterion to stop expanding the tree at a given node and approximate the minimax value at this node.
 However, this approximation cannot always be perfect and could lead to suboptimal choices in complex games.
-It is now clear that a game's complexity is linked to the number of possible games.
+The reader should now understand why a game's complexity is linked to the number of possible games.
 
 This leads to Monte Carlo tree search (MCTS), in which states are evaluated by playing games with random actions instead of an evaluation function.
 This allows the agent to estimate the win rate achievable from a state without knowledge.
 In MCTS, the tree is expanded iteratively by selecting nodes to evaluate by random games.
-The underlying idea is not to explore the tree arbitrarly but only focus on nodes providing frequently good results.
+The underlying idea is not to explore the tree arbitrarily but to focus on nodes that frequently provide good results.
 Simple rules define the selection and expansion process of nodes.
 Random games are played from intermediate nodes, not always the root, whose direct parent have already been used to start a random game.
 For each expanded node, the win rate associated with the action taken to reach it and the number of times this node has been selected are stored.
@@ -159,38 +162,42 @@ These two quantities drive the selection process, highlighting the exploration/e
 AlphaGo \citep{silver2016mastering} allowed an agent to beat the best humans by modifying the traditional MCTS to benefit from the learning capabilities of neural networks.
 Instead of playing random games to approximate win rates and probabilities of taking actions, two neural networks approximate them.
 The MCTS searches are guided by neural networks, which play games that are then used to train the neural network.
-These networks are initially trained with a dataset of human games before using games generated by letting the agent plays against itself.
-AlphaGo Zero \citep{silver2017mastering} is the extension without pre-training the networks with human data and other small changes.
+These networks are initially trained with a dataset of human games before using games generated by letting the agent play against itself.
+AlphaGo Zero \citep{silver2017mastering} is the extension without pre-training the networks with human data and other minor changes.
+They have been generalised to AlphaZero \citep{silver2018general}, which also plays Go and Shogi.
+Later, such tree search method has been extended to MuZero, which learns the model of any game to play it  \citep{schrittwieser2020mastering}.
 MCTS and these two extensions are part of the self-play class of algorithms, training the same strategy for all agents in the environment.
-The next section presents works that combine model-free RL and self-play.
+The following section presents works that combine model-free RL and self-play.
 The extension considers population-based training, where multiple agents train by playing against each other.
 
-\section{Types of algos}\label{sec:ch6_algo}
+\section{Self-play and population-based training}\label{sec:ch6_algo}
+Its name implicitly defines self-play as methods that train an agent by making it play against itself.
+In the previous section, we mentioned the model-based methods that have been generalised to AlphaZero \citep{silver2018general}.
+However, self-play can also be exploited with model-free methods.
+One of the first methods combining model-free RL with neural network and self-play is TD-Gammon, which plays backgammon, starting from random network parameters to achieve a master level \citep{tesauro1994td}.
+Later, the success of modern RL methods allowed the achievement of human-level performance in other games, such as in Stratego \citep{stratego}.
+Self-play has also been used with more than two competing agents in mixed cooperative-competitive environments, like the framework introduced in Chapter \ref{ch:2teams}, such as Hide and Seek \citep{baker2019emergent} or open AI five.
+In Hide and Seek, they trained agents in self-play with PPO and a centralised critic with access to the state, a CTDE method.
+They demonstrated that the auto-curriculum provided by self-play, in addition to learning successive strategies, allows agents to understand the environment better and perform better on new tasks than agents trained with the classical unsupervised RL method, where agents learn to explore the environment.
+Self-play also shown benefits for autonomous driving \citep{cornelisse2024humancompatible}.
 
+In some, the self-play agent sometimes plays against an old version of itself.
+This allows it to be resilient against diverse strategies, not generalise, and not forget how to play them.
+An essential requirement of self-play is the policy that the agent learns should be able to act in place of other agents.
+When agents are heterogenous, typically in their uncertainty about the state or in their action space, self-play may not be possible.
+A solution is to train a population of policies for each agent \citep{jaderberg2017population}.
+Moreover, in self-play, when agents play against a past version of themselves, it is considered a particular case of population-based training because several policies are kept to play against.
 
-
-la récente étude de eugene sur self-play voiture (eugene cars?)
-
-RL has not been the first choice to solve complex competitive two-player games.
-For example, we think of Deep Blue \citep{campbell2002deep}.
-However, the improvements in hardware has made possible to apply RL algorithms to play such games with partial observability \citep{silver2018general} or even games with more than two competing agents, such as Quake III Arena in Capture the Flag mode \citep{jaderberg2019human} or StarCraft \citep{vinyals2019grandmaster}.
-To train such agents to compete, a paradigm called self-play is used.
-Agents play against themselves, allowing them to face evolving strategies and to improve their skills.
-In more complex games, a population of learning agents is created by duplicating some of the agents during training to enforce the diversity of opponents.
-This allows agents to improve their skills while remaining competent against previously encountered strategies.
-In most of the mixed cooperative-competition papers mentioned before, agents are trained with independent SARL methods in self-play or within a population, except for Baker et. al. \cite{baker2019emergent} who chose a CTDE method that exploit the state of the environment during training.
-
-As introduced, self-play or population based training for competitive settings have already been explored in many works \citep{jaderberg2019human, vinyals2019grandmaster, baker2019emergent}.
-More advanced techniques have been widely studied in the literature such as fictitious play \cite{brown1951iterative} or best response dynamic \citep{baudin2022fictitious}.
-In short, it consists in choosing the policy which is the best response against the average strategy of an opponent.
-In self-play, we mention fictitious play to play Poker \citep{pmlr-v37-heinrich15} and Deep Nash to play Stratego \citep{DM_stratego}.
-In population based training, we mention policy-space response oracles (PSRO) \citep{NIPS2017_3323fe11, Muller2020A}.
-These methods are referred to as opponent modelling.
-Extensions of these works consider to additionally learn how the opponent will update its strategy \citep{he2016opponent, foerster2017learning}.
-Recently, Tian et. al. \citep{tian2022multi} introduced a time dynamical opponent model to encode opponent policies in a CTDE framework for mixed cooperative-competitive environment.
-
-
-This learning scenario has proven itself when the number of winning strategies is large, such as in StarCraft \citep{vinyals2019grandmaster}.
-The latter trained a growing population of agents but in this paper, the size of the training population is fixed to five to reduce computational complexity.
-
-\todo{faire ici}
+There are several examples of games where human-level performance has been achieved with population-based training.
+We can think of Quake III Arena in Capture the Flag mode \citep{jaderberg2019human}, StarCraft \citep{vinyals2019grandmaster}.
+In these two, self-play is still possible because agents are the same.
+Still, population-based training allows for solving complex games because, on the one hand, it updates all policies from the population instead of just one.
+On the other hand, there are many different strategies in such games.
+Indeed, the classical process of population-based training starts with several policies, which are evaluated and updated as they play games against each other.
+The population may be modified by increasing its size, duplicating some populations, or freezing others.
+Maybe the most successful method when training a population is to use policy space response oracles (PSRO) \citep{NIPS2017_3323fe11, Muller2020A}.
+In short, PSRO reframes the population based training as a normal-form meta game where actions are policies.
+It computes the probabilities of selecting each policy in each population of agents to achieve an equilibrium.
+From these computed distributions, it is possible to create new best-response policies to be added to the population.
+The complexity of such a method is immense because, on the one hand, the distributions of actual strategies to achieve equilibrium should be established.
+On the other hand, the best responses to such distribution should be computed by training new agents.
