@@ -61,7 +61,7 @@ Finally, we insist that an agent's return depends on the joint action taken and 
 \begin{figure}
     \centering
     \includegraphics[width=.8\textwidth]{tex_thesis/figures/ch2/SG.pdf}
-    \caption{Interaction of agents with the environment in a stochastic game \citep{stochasticGames}. Agents $i \in \{1,..,n\}$ have access to the state $s_t$ to select actions $u_t^i$. As a consequence, they each receive a reward $r_t^i$ and the environment transitions in a new state $s_{t+1}$.}
+    \caption{Interaction of three agents with the environment in a stochastic game \citep{stochasticGames}. Agents $i \in \{1,..,n\}$ have access to the state $s_t$ to select actions $u_t^i$. As a consequence, they each receive a reward $r_t^i$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch2_sg}
 \end{figure}
 
@@ -107,13 +107,13 @@ When agent 0 chooses the action $B$, it receives a reward equal to 0 when agent 
 
 \begin{table}
 \centering
-\caption{Prisoner dilemma payoff matrix.}
 \begin{tabular}{cc|c|c|}
   & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Agent 1}\\
   & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}  & \multicolumn{1}{c}{$B$} \\\cline{3-4}
   \multirow{2}*{\rotatebox[origin=c]{90}{Agent 0}} & $A$ & $(-1, -1)$ & $(-5, 0)$ \\\cline{3-4}
                             & $B$ & $(0, -5)$ & $(-2, -2)$ \\\cline{3-4}
 \end{tabular}
+\caption{Prisoner dilemma payoff matrix.}
 \label{table:ch2_prisonmatrix}
 \end{table}
 
@@ -139,13 +139,14 @@ An example of a normal-form cooperative game with a payoff matrix is provided in
 
 \begin{table}
 \centering
-\caption{Payoff matrix of a cooperative normal-form game.}
+
 \begin{tabular}{cc|c|c|}
   & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Agent 1}\\
   & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}  & \multicolumn{1}{c}{$B$} \\\cline{3-4}
   \multirow{2}*{\rotatebox[origin=c]{90}{Agent 0}} & $A$ & $(-1, -1)$ & $(1, 1)$ \\\cline{3-4}
                             & $B$ & $(1, 1)$ & $(3, 3)$ \\\cline{3-4}
 \end{tabular}
+\caption{Payoff matrix of a cooperative normal-form game.}
 \label{table:ch2_coopmatrix}
 \end{table}
 
@@ -170,13 +171,14 @@ Part~\ref{part:compet} of this manuscript is not only dedicated to competitive s
 
 \begin{table}
 \centering
-\caption{Payoff matrix of a competitive normal-form game.}
+
 \begin{tabular}{cc|c|c|}
   & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Agent 1}\\
   & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}  & \multicolumn{1}{c}{$B$} \\\cline{3-4}
   \multirow{2}*{\rotatebox[origin=c]{90}{Agent 0}} & $A$ & $(0, 0)$ & $(-2, 2)$ \\\cline{3-4}
                             & $B$ & $(1, -1)$ & $(2, -2)$ \\\cline{3-4}
 \end{tabular}
+\caption{Payoff matrix of a competitive normal-form game.}
 \label{table:ch2_competmatrix}
 \end{table}
 
@@ -215,7 +217,7 @@ An important property in MDP and SG that is not mentioned in the SG definition i
 This is called the Markovian property.
 It is important because it implies that a policy based solely on the current state is as good as one based on the history of states and actions.
 Moreover, we defined the policy as the probability of taking action in a given state.
-A particular case of this stochastic policy is a deterministic policy, denoted $\pi(s):\mathcal{S}\rightarrow\mathcal{U}$, or standardly $\mu(s)$.
+A particular case is a deterministic policy, denoted $\pi(s):\mathcal{S}\rightarrow\mathcal{U}$, or standardly $\mu(s)$.
 
 \begin{figure}[h]
     \centering
@@ -239,7 +241,7 @@ Learning by trial and error without a model is referred to as model-free RL, and
 
 Planning and RL are two different approaches to finding an MDP's solution when the model is known.
 They differ in how they represent the solution.
-Planning is the historical one, where methods build a local representation of their solution, typically by evaluating policies or resolving an optimisation problem, around a given state and discarding them after taking action.
+Planning is the historical one, where methods build a local representation of their solution, typically by evaluating policies or resolving an optimisation problem around a given state and discarding them after taking action.
 It typically does not involve learning anything.
 This is how DeepBlue \citep{campbell2002deep} defeated human champions without learning by evaluating the outcome of many actions before taking each action.
 Conversely, the RL approach stores a global solution, typically a learned policy or a state-action value function, whether it can access the model.
@@ -424,7 +426,7 @@ The corresponding interaction diagram of a POMDP is presented in Figure \ref{fig
 \begin{figure}
     \centering
     \includegraphics[width=.8\linewidth]{tex_thesis/figures/ch2/POMDP.pdf}
-    \caption{Interaction of agent with the environment in a partially observable Markov decision process\citep{KAELBLING199899}. The agent does not have access to the state $s_t$ but to an observation $o_t$ defined by the observation function $O$. Based on $o_t$, it selects one action $u_t$. As a consequence, it receives a reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
+    \caption{Interaction of agent with the environment in a partially observable Markov decision process \citep{KAELBLING199899}. The agent does not have access to the state $s_t$ but to an observation $o_t$ defined by the observation function $O$. Based on $o_t$, it selects one action $u_t$. As a consequence, it receives a reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch2_pomdp}
 \end{figure}
 

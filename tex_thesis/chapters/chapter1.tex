@@ -10,12 +10,12 @@ As suggested by the traffic sign, you then take the action to stop the car.
 This also involves reasoning but impacts your environment.
 Indeed, you push on the brakes, and the car decelerates until it stops.
 
-These decisions are based on what we learned, even if some can be made without knowledge.
+These decisions are based on what you learned, even if some can be made without knowledge.
 Indeed, you probably studied the traffic signs to know it was a stop one.
 You practised your driving skills to obtain your driver's license by trial and error, but hopefully also with the help of a supervisor.
 You did acquire these skills by learning.
-We learn by supervision, having examples of decisions and feedback to highlight whether some were right or wrong.
-However, we also learn by interacting with and testing our environment.
+You learn by supervision, having examples of decisions and feedback to highlight whether some were right or wrong.
+However, you also learn by interacting with and testing our environment.
 Many may recall a child tossing objects from a table, discovering gravity in action, possibly motivating the quote from \cite{sutton2018reinforcement} ``The idea that we learn by interacting with our environment is probably the first to occur to us when we think about nature of learning''.
 In summary, you learn by yourself and with the help of others.
 Nevertheless, this manuscript is not about how humans learn to make decisions.
@@ -55,7 +55,7 @@ ML is divided into different areas based on available data and goals.
 For example, an agent can learn to predict the type of a traffic sign based on its picture.
 To achieve this, a model can be built with the help of a dataset of pictures and their corresponding labels.
 In this case, the model is a mathematical function that maps a picture, a collection of pixel values, to a type of traffic sign.
-The model performance is initially poor and improves while training. 
+The model performance is initially poor but improves during training. 
 It learns!
 During the training phase, the system predicts the types of images from the dataset.
 By using actual and predicted types of traffic signs, the model is refined to improve it.
@@ -64,7 +64,7 @@ Another area of ML is unsupervised learning when labels are not provided with th
 Indeed, the lack of labels induces the absence of supervision, but the model can still learn patterns in the image structure instead of learning to predict its label.
 Removing part of the image and training the model to predict the missing pixel is an example of unsupervised learning called inpainting.
 Unsupervised learning serves many purposes.
-For example, it is common to pre-train a model with unlabeled data, typically found in abundance, to establish a foundation of knowledge before introducing labels, which are often more challenging to acquire, to train the model on a specific task using supervised learning.
+For example, it is common to pre-train a model with unlabeled data, which are typically abundant, to establish a foundation of knowledge before introducing labels, which are often more challenging to acquire, to train the model on a specific task using supervised learning.
 
 At the beginning of this introduction, we presented the decision-making process by highlighting parts based on their impact.
 Learning to predict something via supervised learning allows one to make decisions that impact the environment.
@@ -87,7 +87,7 @@ Back to our example, when not stopping at a stop sign at a crossroad, you can ca
 But whether you decide to break or to do nothing, your environment is evolving.
 Indeed, in addition to receiving rewards, the agent's environment can evolve due to its action.
 We then say that the state of the environment evolves based on the action.
-The agent is part of the environment but interacts with it, somehow defined inside and outside of it.
+The agent is part of the environment and interacts with it, somehow defined inside and outside of it.
 Nevertheless, this dynamic nature of the environment adds a new dimension to the learning process because the agent needs to learn to make a sequence of optimal decisions.
 Note that it is possible to design an RL problem without environment evolution.
 
@@ -103,31 +103,31 @@ This delay makes it more challenging for the agent that has to learn whether a r
 This is referred to as the credit assignment challenge.
 
 Reinforcement learning has applications in various domains.
-Recommender system \citep{mcinerney2018explore} is good example of an RL application.
+Recommender system \citep{mcinerney2018explore} is an excellent example of an RL application.
 Robotics is another application where an agent learns to control a robot, such as training a robotic hand to solve Rubik's cube \citep{akkaya2019solving}.
 Designing chips is a complex sequential decision-making problem that can also be solved with the help of RL \citep{mirhoseini2021graph}. 
 RL can be applied in healthcare, typically to decide treatment dosage through time \citep{miotto2018deep}.
 Finally, games have been a testbed for reinforcement learning for a long time.
 Some significant breakthroughs in RL have been achieved thanks to games, such as attaining human performance in Atari games \citep{Mnih2015}.
-They offer the best environment for trials and errors because they are simulators by nature.
-Indeed, the trial and error nature of RL induces that agent require to interact with its environment a lot.
+They offer the best environment for trials and errors because they are natural simulators.
+Indeed, the trial-and-error nature of RL requires that an agent interact with its environment a lot.
 
 We just presented applications of RL where a single agent acts rationally to achieve a predefined goal.
 However, back to our first example, when riding your car you are not alone.
 Other people are also sharing the roads, and your decisions are also based on them, on their behaviour.
 When there are multiple agents in the environment, many things change.
-How these agents influence the environment must be considered because there are several types of dynamics in a multi-agent system.
+How these agents influence the environment must be considered because a multi-agent system has several types of dynamics.
 Typically, agents can take actions simultaneously or sequentially.
-For example, everyone makes decisions simultaneously on the road, while chess is a turn-based game where agents' decisions are made one after the other.
-Moreover, in these two examples, the number of agents is also different.
+For example, everyone makes decisions simultaneously on the road, while chess is a turn-based game in which agents make their decisions one after the other.
+Moreover, the number of agents is also different in these two examples.
 In chess, there are only two agents, while on the road, there can be a lot.
-This illustrates the range of problems that a multi-agent system can represented, from a game with two agents to a real-world environment with an unknown number of agents.
+This illustrates the wide range of problems that a multi-agent system can represent, from a game with two agents to a real-world environment with an unknown number of agents.
 
 Multi-agent reinforcement learning (MARL) extends single-agent reinforcement learning (SARL) when multiple agents learn in the environment.
-In such system, each agent receives a reward and learn to act in order to maximise its rewards. 
-Learning is the crucial differentiation between multi-agent system and MARL.
+In such a system, each agent receives a reward and learns to act to maximise its rewards. 
+Learning is the crucial differentiation between multi-agent systems and MARL.
 Suppose only one agent is learning in an environment composed of several ones.
-The other agents then have a stationary policy, which does not evolve through time and can be considered as part of the environment.
+The other agents then have a stationary policy that does not change over time, and they can be considered part of the environment.
 However, when several agents learn, their policies change over time.
 From the point of view of each agent, the environment dynamic is constantly changing.
 This induces non-stationarity in the learning process, known as a moving target problem.
@@ -137,12 +137,12 @@ This cycle can last forever, and one needs to decide when to stop.
 Finding an equilibrium where strategies stop evolving is indeed a challenging solution.
 This highliths a first challenge in multi-agent RL.
 
-A second challenge is to determine the criterion required to assess the optimality of policies.
+A second challenge is determining the criterion required to assess the optimality of policies.
 In SARL, it is straightforward: the agent must achieve a high sum of rewards, and when it finds the optimal policy achieving the maximum sum of rewards, it stops.
 But how can this be posed in a multi-agent environment when several agents want to maximise their reward?
-The solution of finding an equilibrium is achieved when agents do not benefit of a better reward by changing their policy.
+The solution of finding an equilibrium is achieved when agents do not benefit from a better reward by changing their policy.
 How to define this equilibrium and whether there are several of them is a dedicated research problem in MARL.
-Moreover, finding the equilibrium providing the maximum sum of rewards can also be challenging.
+Moreover, finding the equilibrium providing the maximum sum of rewards to all agents can be challenging.
 
 The third challenge is the number of agents.
 The environment's dynamic is often a function of every agent's action, leading to a combination of actions that scales exponentially with the number of agents.
@@ -154,22 +154,22 @@ Back to the example, if you stop because of a stop sign but get damaged by the o
 Other challenges exist, but these four highlight the additional challenges when extending to multi-agent reinforcement learning \cite{marl-book}.
 
 Multi-agent reinforcement learning has been divided into three settings.
-This division comes from game theory and allows to simplify the general case to particular one to reduce the complexity arising from the challenges preivously mentioned.
+This division comes from game theory and allows simplifying the general case to a particular one to reduce the complexity arising from the challenges previously mentioned.
 Each setting is based on the goal of agents.
 The first setting, cooperation, involves agents cooperating to achieve a common goal.
 In the second setting, competition, agents compete to achieve an opposing goal, typically named the zero-sum setting.
 The third setting is named general-sum and encompasses everything else.
 This is the general setting and maybe the most challenging because no hypothesis can be exploited to ease the problem.
 
-This introduction may make it clear that we need to consider other learning agents when training one in MARL.
+This introduction clearly identifies that we must consider other learning agents when training one in MARL.
 The reader should be confident that training an agent with a single-agent reinforcement learning method, ignoring other learning agents, might not yield the best solution to these problems.
 This research question has existed in the MARL community for quite some time, and we go beyond by providing insights in this manuscript into how we should consider other learning agents in an environment.
 We focus on two specific settings: training a team of agents to cooperate and training a team of agents to compete against an opposing one.
-In the cooperative setting, we present contributions that provide methods designed to train agents to fulfil a cooperative task and how such methods can be applied to a real-world application.
+In the cooperative setting, we present two contributions that provide methods designed to train agents to fulfil a cooperative task and how they can be applied in a specific real-world setting.
 When training a team in an adversarial scenario, we can use the same methods but, again, by considering that there are opponents.
-This highlights the two main parts of the manuscript, each starting by a background section to provide perspective on the novelties of the presented work.
+This highlights the two main parts of the manuscript, each starting with a background section that provides perspective on the novelties of the presented work.
 Before diving into the details of these two settings, we provide the necessary background and notations of reinforcement learning.
-In the following sections, we provide a more detailed outline of this manuscript, followed by a disclaimer on the publications at the foundations of this manuscript and, finally, the context in which some of the work presented has been conducted.
+In the following sections, we provide a more detailed outline of this manuscript, followed by a disclaimer on the publications that form its foundation and, finally, the industrial context in which some of the work presented has been conducted.
 
 \section{Outline}
 \label{sec:ch1_outline}
@@ -183,8 +183,9 @@ Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively r
     
     Chapter~\ref{ch:background} is the single chapter of Part \ref{part:background} presenting the basic multi-agent reinforcement learning framework and details its different settings and challenges.
     More importantly, this chapter presents the foundations of MARL issued from single-agent reinforcement learning.
-    For those unfamiliar with reinforcement learning, this chapter is a must-read, and we refer the reader to numerous additional works if more details are required.
-    In contrast, these concepts should be well known for the familiar ones, and Chapter~\ref{ch:background} serves as a notation introduction.
+    This chapter is a must-read for those unfamiliar with reinforcement learning. 
+    If more details are required, we refer the reader to numerous additional works.
+    In contrast, these concepts should be well-known for the familiar ones, and Chapter~\ref{ch:background} serves as a notation introduction.
 
     \item [Part \ref{part:coop}] Learn to cooperate:
     
@@ -199,7 +200,7 @@ Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively r
     \item [Part \ref{part:compet}]  Cooperate against an opposing team:
     
     Chapter~\ref{ch:competition} is the first one and presents how competition is classically modelled and solved in multi-agent reinforcement learning.
-    It serves the same purpose of Chapter~\ref{ch:cooperation} by being a mix between background and literature review.
+    It serves the same purpose as Chapter~\ref{ch:cooperation} by being a mix between background and literature review.
     
     Chapter~\ref{ch:2teams} presents a particular case of the general-sum settings where two teams compete and how to train them.
 
@@ -230,30 +231,25 @@ IRIS stands for Intelligent Recognition Information System, and the partners wer
 The IRIS project aims to enhance surveillance capabilities by integrating machine learning.
 Through detection, recognition, and behaviour analysis modules, IRIS seeks to empower operators with timely, actionable information to make optimal decisions in both military and civilian contexts, impacting the safety of individuals, sensitive sites, and equipment integrity.
 Specifically, we explored multi-agent reinforcement learning to provide decision-aid to operators in the context of military missions.
-The IRIS project served as a use case of our studies on training a team against an opposing team to learn how military assets should cooperate.
+The IRIS project served as a case of our studies on training a team against an opposing team to learn how military assets should cooperate.
 
+\newpage
 \section{TODOLIST}
+
+\todo{abstract}
 
 \todo{Uniformiser RL MARL ou reinforcement learning multi-agent reinforcement learning}
 
-\todo{Remove we or you when talking about algorithms}
-
-\todo{Figure after text (or before) but check consistency}
-
-\todo{checl consistency table caption and style}
-
-\todo{refaire les obs figure 3.1}
-
-\todo{check overfull box}
-
 \todo{read Matthia's thesis to add more?}
 
-\todo{Refaire les schémas des méthodes?}
+\todo{Remove we or you when talking about algorithms}
 
-\todo{unify o in policy and tau}
+\todo{check overfull box}
 
 \todo{Figure mosaique avec les environments pour que ça soit joli}
 
 \todo{references}
 
-\todo{repasse gramarly}
+\todo{Refaire les schémas des méthodes (tout en noir, enlever mot en mathmode)}
+
+\todo{changer la figure 5.3 pour supperposer au lieu d'aligner (code matplotlib mosaic)}

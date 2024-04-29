@@ -106,12 +106,12 @@ Please note that reporting an episode's win rate is a good indicator of the qual
 
 \begin{table*}
     \centering
+    \input{tex_thesis/figures/ch4/table_mean}
     \caption{
     Means of win rates achieved in eight scenarios at the end of training by QMIX, MAVEN, QVMix, QVMix-Max, IQL, IQV, and IQVMax. 
     In the first four scenarios, \texttt{3m}, \texttt{8m}, \texttt{so\_many\_baneling} and \texttt{2m\_vs\_1z}, it is measured after $5$ millions training time steps.
     In the last four, \texttt{MMM}, \texttt{2s3z}, \texttt{3s5z} and \texttt{3s\_vs\_3z} it is measured after $10$ millions training time steps.
     We report the best and second-best means by \textbf{bolding} and \underline{underlining} them. When results are equivalent, the cells report the fastest and second-fastest method that reaches a win rate of $100\%$ as shown in Figure~\ref{fig:all_win_curves}.}
-    \input{tex_thesis/figures/ch4/table_mean}
     \label{tab:main_results}
 \end{table*}
 
@@ -177,7 +177,7 @@ We suggest that this better performance can be related to the fact that QVMix se
 
 In future work, it would be interesting to analyse each agent's behaviour and study the impact of the value function in the optimisation procedure.
 Furthermore, following the recommendations from \citep{gorsane2022towards}, testing in different environment suites is crucial. 
-The next chapter also tests QVMix, which provides performance similar to QMIX, as is the case with SMAC.
+The next chapter also tests QVMix, which provides performance similar to QMIX, as with SMAC.
 In this following study, QVMix is also compared to policy-based methods, which are missing in the analysis of this chapter and are justified by the performance of existing ones at the time of development.
 The number of agents is also limited in SMAC.
 The next chapter covers setting up to 100 agents, which allows testing the scalability of methods.

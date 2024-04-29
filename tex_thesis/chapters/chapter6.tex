@@ -25,7 +25,7 @@ As introduced in previous chapters, finding and selecting an equilibrium represe
 Section \ref{sec:ch6_solutions} discusses different solutions in MARL to achieve an equilibrium and rank policies.
 
 Once these solutions are defined, Section \ref{sec:ch6_history} presents an overview of the history of acting in multi-agent systems.
-As will be discussed, game theory provides the solution concept definitions, and we cover some of its foundations, including historical RL and planning methods.
+As will be discussed, game theory defines solution concepts, and we cover some of its foundations, including historical RL and planning methods.
 Finally, Section \ref{sec:ch6_algo} discusses self-play and population-based training, two learning scenarios allowing agents to learn to act in complex games.
 
 \section{Solutions}\label{sec:ch6_solutions}
@@ -109,7 +109,7 @@ This is done in fictitious play \citep{brown1951iterative} for the normal-form g
 Extensions consider additionally learning how the opponent will update its strategy \citep{he2016opponent, foerster2017lola}.
 
 There is also a different class of method called joint action learning.
-These methods directly learn $n$ state-joint-actions value functions $Q_i(s, \mathbf{u})$, to learn equilibrium Q value iteratively with a temporal difference.
+These methods directly learn $n$ state-joint-actions value functions $Q_i(s, \mathbf{u})$ to learn equilibrium Q value iteratively with a temporal difference.
 However, these methods require assumptions on the type of equilibrium agent aim.
 This leads to different algorithms, such as Minimax Q-learning \citep{MarkovGames}, Nash Q-learning \citep{hu2003nash} and Correlated Q-learning \citep{greenwald2003correlated}.
 These algorithms have some limitations in the type of equilibrium they can achieve \citep{marl-book}.
@@ -196,7 +196,7 @@ On the other hand, there are many different strategies in such games.
 Indeed, the classical process of population-based training starts with several policies, which are evaluated and updated as they play games against each other.
 The population may be modified by increasing its size, duplicating some populations, or freezing others.
 Maybe the most successful method when training a population is to use policy space response oracles (PSRO) \citep{NIPS2017_3323fe11, Muller2020A}.
-In short, PSRO reframes the population based training as a normal-form meta game where actions are policies.
+In short, PSRO reframes population-based training as a normal-form metagame in which actions are policies.
 It computes the probabilities of selecting each policy in each population of agents to achieve an equilibrium.
 From these computed distributions, it is possible to create new best-response policies to be added to the population.
 The complexity of such a method is immense because, on the one hand, the distributions of actual strategies to achieve equilibrium should be established.

@@ -3,7 +3,7 @@
 
 This chapter covers the required basics and related works in the cooperative setting.
 After an introduction in Section~\ref{sec:ch3_intro}, we define in Section~\ref{sec:ch3_decpomdp} the cooperative framework called decentralised partially observable Markov decision process.
-Section~\ref{sec:ch3_env} presents examples of its application, followed by a precise description of the StarCraft Multi-agent challenge, an important environment suite in this manuscript.
+Section~\ref{sec:ch3_env} presents examples of its application, followed by a precise description of the StarCraft multi-agent challenge, a popular environment suite in this manuscript.
 We then detail several value-based methods in Section~\ref{sec:ch3_value} and policy-based methods in Section~\ref{sec:ch3_policy}.
 We finally discuss other approaches of interest in Section \ref{sec:ch3_further}.
 \end{chapter_outline}
@@ -15,7 +15,7 @@ This second part of the thesis considers the decentralised POMDP (Dec-POMDP)~\ci
 Such a framework is also called common reward games, e.g. by~\cite{marl-book}.
 Its definition is provided in Section~\ref{sec:ch3_decpomdp}.
 
-Nevertheless, when it comes to cooperation in a multi-agent system, one notion to discuss first is whether action selection and agent training are centralised or decentralised.
+Nevertheless, when it comes to cooperation in a multi-agent system, one topic to discuss is whether action selection and agent training are centralised or decentralised.
 This is also referred to as the modes of execution and training in~\citep{marl-book}.
 This manuscript considers three combinations: centralised training and execution, decentralised training and execution, and centralised training with decentralised execution.
 
@@ -26,18 +26,18 @@ However, as presented in Section~\ref{sec:ch2_partial_observability}, some setti
 All agents may not access the same information or perceive only a part of the environment's state.
 It would then be impossible to consider that one agent can replace all agents and select actions in a centralised mode.
 
-On the contrary, the decentralised execution mode is the one that considers that each agent selects its own action independently.
+On the contrary, the decentralised execution mode considers that each agent selects its action independently.
 This can be done irrespective of the information they can access.
 The corresponding decentralised training mode is when these agents are trained independently.
 In other words, these agents assume they are the single agent learning in the environment.
-We refer to the decentralised mode when training agents independently with single-agent reinforcement learning to select an action based on their own observation.
+We refer to the decentralised mode when training agents independently with single-agent reinforcement learning to select an action based on their observation.
 
 Finally, the third mode unifies the two formers and is centralised training with decentralised execution (CTDE).
 It allows decentralised execution, with each agent selecting actions based on their observations, but allows for the exploitation of more information during training.
 Indeed, RL agents are usually trained in a simulator, having access to every piece of information.
 Typically, this mode benefits from the state of the environment or exploits the actions made by other agents during training.
 
-From the research question highlighted in Chapter \ref{ch:introduction}, these different modes showcase that there are several ways to consider, or not, the other learning agents when training one.
+From the research question highlighted in Chapter \ref{ch:introduction}, these different modes showcase several ways to consider, or not, the other learning agents when training one.
 This Part~\ref{part:coop} focuses on methods that exploit the CTDE mode to solve cooperative tasks.
 This chapter presents Dec-POMDP environments and CTDE methods issued from the literature.
 The performance of these methods is not compared in this chapter but in both next ones.
@@ -46,7 +46,7 @@ They present two specific contributions: another CTDE method in Chapter~\ref{ch:
 \section{Decentralised partially observable Markov decision process}
 \label{sec:ch3_decpomdp}
 As introduced, the definition of the decentralised partially observable Markov decision process (Dec-POMDP)~\citep{DecPomdp} can be derived from the partially observable stochastic game definition.
-It is the same expect for the reward function maps to a same reward, a reward common to all agents.
+It is the same, except the reward function maps to a single reward common to all agents.
 
 We define the Dec-POMDP by a tuple $[\mathcal{S}, \mathcal{Z}, \mathcal{U}, n, O, R, P, \gamma, T, p]$, where $n$ agents $a_i$, $i \in \mathcal{A} \equiv \{1,..,n\}$, simultaneously choose an action at every time step $t$.
 The interaction of the agents with the environment in a Dec-POMDP is presented in Figure \ref{fig:ch3_decpomdp}.
@@ -60,20 +60,21 @@ The optimal joint policy is denoted by $\mathbf{\pi^{*}} =\argmax_{\mathbf{\pi}}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\linewidth]{tex_thesis/figures/ch3/DECPOMDP.pdf}
-    \caption{Interaction of agents with the environment in a decentralised partially observable Markov decision process~\citep{DecPomdp}.}
+    \includegraphics[width=0.8\linewidth]{tex_thesis/figures/ch3/decpomdp.pdf}
+    \caption{Interaction of three agents with the environment in a decentralised partially observable Markov decision process~\citep{DecPomdp}.}
     \label{fig:ch3_decpomdp}
 \end{figure}
 
-We introduced main challenges in MARL and hereafter discuss the main impact of provided a common reward is to increase the complexity of the credit assignment problem.
-Indeed, this can be considered as the most complex case because all agents receive exactly the same feedback on their action.
-The non stationarity of learning agents and their number still remain a problem.
+We introduced the main challenges in MARL and will discuss hereafter the main impact of providing a common reward, which is to increase the complexity of the credit assignment problem.
+Indeed, this can be considered the most complex case because all agents receive the same feedback on their actions.
+The non-stationarity of learning agents and their number remains a problem.
 However, choosing between two equilibria has become a trivial problem because one agent will never be disadvantaged compared to others.
-Nevertheless, common reward is not the single assumption already discussed.
-Indeed, the centralised mode of training also help allevitating to the complexity of these challenges, while the decentralized mode generally does not go without additional assumption in addition to the common reward.
-The introduction may already provided some insights about this claim and the following sections will demonstrate it.
+Nevertheless, the common reward is not the single assumption already discussed.
+Indeed, the centralised training mode also helps alleviate the complexity of these challenges.
+In contrast, the decentralised mode does not consider additional assumptions besides the common reward.
+The introduction may already provide some insights about this claim, and the following sections will demonstrate it.
 
-Like MDP is the fully-observable POMDP, there exist several particular cases of Dec-POMDP based on the observability of the agents.
+Like MDP is the fully observable POMDP, there exist several particular cases of Dec-POMDP based on the observability of the agents.
 This allows us to define the required assumptions to train a single agent to decide the joint action to make the centralised execution mode possible.
 When the joint observation can identify the state while the observation of one agent can not, this is a jointly observable Dec-POMDP, also referred to as a decentralised MDP by~\cite{DecPomdp}.
 However, to allow centralised execution, it should be considered that agents can share their observations to make the decision centrally by identifying the state with the joint observation.
@@ -81,31 +82,31 @@ Note that such an assumption allows centralised execution but does not make the 
 The direct extreme case is the fully observable Dec-POMDP, where all agents observe the state directly.
 These assumptions can lead to the specific framework called a multi-agent Markov decision process~\citep{boutilier1996planning}.
 
-There are also several variations of factored Dec-POMDP described in~\citep{DecPomdp} whether the transition or reward or observation functions can be considered factored, meaning they can be decomposed in agent-wise independent factors.
-While other special cases can be found in~\citep{DecPomdp}, their definitions allowed to solve them by benefiting from these additional hypothesis.
+There are also several variations of factored Dec-POMDP described in~\citep{DecPomdp} whether the transition, reward, or observation functions can be considered factored, meaning they can be decomposed in agent-wise independent factors.
+While other particular cases can be found in~\citep{DecPomdp}, their definitions allow to solve them by benefiting from additional hypotheses.
 For example, in a completely factored Dec-POMDP, the decentralised mode allows to find the optimal policy, while in complex Dec-POMDP, without such a strong hypothesis, this is not always the case.
-In the following, we consider CTDE algorithms that tackle the general case of Dec-POMDP, but they may have some foundation on these special cases.
+In the following, we consider CTDE algorithms that tackle the general case of Dec-POMDP, but they may have some foundation in these particular cases.
 
-Highlighted in Section \ref{sec:ch2_partial_observability}, it is not possible to compute a belief of the state as a function of the agent's history in a Dec-POMDP because agents only access their own observations and actions.
-Not being able to compute a Markovian statistic induces the complexity of solving Dec-POMDP to become really challenging, even more than POMDP~\citep{DecPomdp}.
+Highlighted in Section \ref{sec:ch2_partial_observability}, it is not possible to compute a belief of the state as a function of the agent's history in a Dec-POMDP because agents only access their observations and actions.
+Not being able to compute a Markovian statistic induces the complexity of solving Dec-POMDP to become challenging, even more than POMDP~\citep{DecPomdp}.
 For example, this forces planning methods to consider policies that map histories to action, unlike belief to action in POMDP and RL approaches defined later based on RNN, like in POMDP.
-This leads the method of enumerating and evluating all possible deterministic joint policies to select the best is only possible for small problems.
-This is because the number of possible histories grows with the length of episodes, and so the number of policies to learn grows exponentially with this length.
+This leads the method of enumerating and evaluating all possible deterministic joint policies to select the best to be only possible for small problems.
+This is because the number of possible histories grows with the length of episodes, so the number of policies to learn grows doubly exponentially with this length.
 
 Finally,~\cite{DecPomdp} present methods that find optimal deterministic joint policy since at least one exists in finite time horizon Dec-POMDP~\citep{oliehoek2008optimal}.
-These methods include dynamic programming, that solve the problem iteratively backward starting from the last time step of the finite-horizon, pruning computed policies along the way to reduce the large unnecessary amount of them.
-They also include Multiagent A*, taking foundation in search methods~\citep{russel2010} that are described in Chapter \ref{ch:competition}.
-In short, it is a search in the space of joint policy that uses value function as heuristics to explore the tree of possible joint-policy.
-\cite{DecPomdp} also present methods that do not provide guarantee on optimality but allow to scale to larger timehorizon for the finite horizon while also presenting challenges and corresponding methods to the infinite one.
+These methods include dynamic programming, which solves the problem iteratively backwards, starting from the last time step of the finite horizon, pruning computed policies along the way to reduce the large number of unnecessary ones.
+They also include multi-agent A*, taking foundation in search methods~\citep{russel2010} described in Chapter \ref{ch:competition}.
+In short, it is a search in the space of joint policy that uses value functions as heuristics to explore the tree of possible joint policies.
+\cite{DecPomdp} also present methods that do not guarantee optimality but allow to scale to a larger time horizon for the finite horizon while presenting challenges and corresponding methods to the infinite one.
 Aside from the scalability issues, these methods rely on the model of the environment, motivating the use of model-free RL methods presented later in this chapter.
 
 \section{Environments}
 \label{sec:ch3_env}
-Before diving into the details of CTDE methods, we provide an overview of the existing suites\footnotemark  of environments from the literature.
+Before discussing CTDE methods in detail, we provide an overview of the existing suites\footnotemark of environments in the literature.
 We then describe the StarCraft multi-agent challenge (SMAC), perhaps one of the most studied environment suites in the community, but also used in our experiments in Chapter~\ref{ch:qvmix}.
 Moreover, Chapter~\ref{ch:impmarl} is dedicated to a specific suite of environments, and we leave its description there.
 
-\footnotetext{In this manuscript, an environment refers to an instance of a particular framework (here, of a Dec-POMDP). In the literature, we commonly see it to refer to either a collection of environments or an instance of one. We use "suite" to distinguish between these two.}
+\footnotetext{In this manuscript, an environment refers to an instance of a particular framework (here, of a Dec-POMDP). We commonly see it in the literature as either a collection of environments or an instance of one. We use "suite" to distinguish between these two.}
 
 The multi-agent particle environments (MPE)~\citep{lowe2017multi} is a popular suite in the MARL community with cooperative scenarios.
 In MPE, particles move in a 2D grid with continuous action and state spaces.
@@ -117,7 +118,7 @@ MaMuJoCo essentially factorises MuJoCo's decisions by decentralising the decisio
 It is an example of a SARL environment extended to MARL.
 Other cooperative environments based on game simulators include the Hanabi Challenge~\citep{Bard_2020}, a "cooperative solitaire" between two and five players, and Google Research Football~\citep{kurach2020google}, a football game simulator.
 
-Cooperative MARL methods are mostly benchmarked on these games and simulators, but real-world applications also exist.
+Cooperative MARL methods are primarily benchmarked on these games and simulators, but real-world applications also exist.
 City flow~\citep{zhang2019cityflow} are traffic control environments where agents control traffic lights in a city.
 In Flatland~\citep{mohanty2020flatland}, agents control trains to solve a scheduling problem, avoiding collisions by coordinating trains not to take the same routes.
 The multi-robot warehouse~\citep{papoudakis2021benchmarking, christianos2020shared} simulates warehouse agents needing to deliver requested goods.
@@ -156,8 +157,8 @@ Also note that in Chapter~\ref{ch:2teams}, we present a contribution where SMAC 
     \label{fig:ch3_smac}
 \end{figure}
 
-We hereafter touroughly define the elements of the Dec-POMDP implemented in SMAC.
-Agents have partial observability characterised by a sight range, a circle inside which they can observe other agents.
+Hereafter, we thoroughly define the elements of the Dec-POMDP implemented in SMAC.
+Agents have partial observability, characterised by a sight range, a circle inside which they can observe other agents.
 An agent observes information about itself: its remaining hit points and shield points and four booleans representing the direction it can move in (NSWE). 
 It also observes information about other agents within its sight range: the relative distance, relative x, relative y and the remaining hit points and shield points. 
 If the other agent is an ally, it also observes its last performed action performed.
@@ -173,12 +174,10 @@ Some actions are forbidden in SMAC, such as an attack if the opponent is not wit
 Therefore, agents must consider which ones are available before choosing an action.
 
 At each time step, agents receive the same zero or positive reward. 
-This reward is a sum of three factors: a zero or positive reward for the damage dealt, a positive reward if an enemy unit's hit points reach zero, and a positive reward if all enemy units are defeated. 
-Maximising the reward forces the team to neutralise every unit of the opposing team.
-Neutralising every opponent unit is commonly called a win in SMAC experiments.
+This reward is a sum of three factors: a zero or positive reward for the damage dealt, a positive reward if an enemy unit's hit points reach zero, and a positive reward if all enemy units are defeated. Maximisingg the reward forces the team toneutralisee every unit of the opposing team. Neutralising every opponent unit is commonly called a win in SMAC experiments.
 
 We hereafter describe both scenarios of Figure~\ref{fig:ch3_smac}.
-There are other types of units in other scenarios, and we refer the reader to~\citep{samvelyan2019starcraft}.
+There are other types of units in different scenarios, and we refer the reader to~\citep{samvelyan2019starcraft}.
 In the $3m$ scenario, represented in Figure~\ref{fig:ch3_3m}, six marines compete in two teams of three.
 A marine has $45$ hit points and shoots at range, inflicting $6$ damage points to an opponent for each attack.
 In the $3s5z$ scenario, represented in Figure~\ref{fig:ch3_3s5z}, six stalkers and ten zealots compete in two teams of eight.
@@ -194,14 +193,14 @@ Finally, it can be intriguing to see an environment where two teams compete is c
 This is because the built-in AI is stationary. 
 These agents are not learning agents and can be considered part of the environment.
 The built-in AI strategy is a rule-based policy.
-Specifically, each agent moves toward the starting point of the opponent's team until it reaches the opposite side of the map and stops.
+Precisely, each agent moves toward the starting point of the opponent's team until it reaches the opposite side of the map and stops.
 If they encounter opponents in their sight range, they select one as their target based on a priority score.
 They will choose to attack the closest unit with the highest priority, which will remain the target until its priority drops or until it can no longer be attacked.
 A unit's priority score is based on its type and current action.
 For example, if two of the same units attack and the targeted unit stops attacking, its priority score will drop, and the built-in AI agents will select the other unit to attack.
 One of the weaknesses of this built-in AI strategy that the learning agents need to learn is to stop attacking to stay alive, with the condition that an ally should be attacking.
 Agents must cooperate to attack and share the possible damage inflicted by the opponents.
-The next sections cover the MARL methods to achieve this coordination.
+The following sections cover the MARL methods to achieve this coordination.
 
 \section{Value-based methods}
 \label{sec:ch3_value}
@@ -253,7 +252,7 @@ These three have been tested in the contributions presented in later chapters.
 Other methods exist, and we finish this section with a related work discussion.
 
 \subsection{QMIX}
-QMIX~\citep{Rashid2018} is a CTDE method where the approximation of $Q_{tot}$ is performed by a monotone factorisation of the individual $Q_a$ functions while also being a function of the state:
+QMIX~\citep{Rashid2018} is a CTDE method where the approximation of $Q_{tot}$ is performed by a monotonefactorisationn of the individual $Q_a$ functions while also being a function of the state:
 \begin{equation}
      Q_{tot}^{mix}(s_t, \mathbf{u_t})=\text{Mixer} \left(Q_{a_1}(\tau^{a_1}_t, u_t^{a_1}) ,..,Q_{a_n}(\tau^{a_n}_t, u_t^{a_n}), s_t\right).
      \label{eq:ch3_qmixappendix}
@@ -287,7 +286,8 @@ The optimisation procedure follows the same principles of the DQN algorithm, and
     \bigg].
     \label{eq:QMIX_loss}
 \end{equation}
-During training, actions are selected with an epsilon greedy policy from $Q_a$, and at testing, actions are selected with a greedy policy.
+During training, actions are selected with an epsilon greedy policy from $Q_a$.
+At testing, actions are selected with a greedy policy.
 Individual $Q_a$ networks and the mixer are all copied to produce target networks represented by $\theta'$.
 
 \begin{figure}
@@ -303,8 +303,8 @@ When evaluating CTDE methods, IQL is commonly tested by training the same archit
 
 \subsection{MAVEN}
 \citet{Mahajan2019MAVEN:Exploration} defined the class of state-joint-action value functions that QMIX cannot represent due to its exploration strategy and the monotonicity constraint.
-They demonstrated the existence of payoff matrices in an n-player normal form game with more than three actions per agent for which QMIX learns a suboptimal policy for any training duration with both epsilon greedy and uniform exploration.
-To tackle this problem, they modified the individual $Q_a$ architecture, which is now also a function of the latent space to influence agent behaviour.
+They demonstrated the existence of payoff matrices in an n-player normal-form game with more than three actions per agent, for which QMIX learns a suboptimal policy for any training duration, using both epsilon greedy and uniform exploration.
+To tackle this problem, they modified the individual $Q_a$ architecture, which is now a function of the latent space to influence agent behaviour.
 The underlying objective is to train agents to learn an ensemble of policies to improve their exploration capabilities.
 
 Specifically, the latent variable is the input of a second and new hypernetwork that computes parameters of the fully connected layer linking recurrent cells to the outputs of the individual $Q_a$ networks.
@@ -330,7 +330,7 @@ This second objective is computed by fixing both hypernetworks and individual ne
 
 The third part of the objective ensures that different values of $z$ imply different behaviours. 
 It is a mutual information loss between the latent variable and the trajectories performed by agents to favour different behaviours for different latent variable values.
-For further details on the MAVEN optimisation procedure and especially on constructing the mutual information objective, we refer the reader to~\cite{Mahajan2019MAVEN:Exploration}.
+For further details on the MAVENoptimisationn procedure and especially on constructing the mutual information objective, we refer the reader to~\cite{Mahajan2019MAVEN:Exploration}.
 
 \subsection{QPLEX}
 QPLEX~\citep{wang2021qplex} extends QMIX with the dueling structure $Q(s_t, u_t) = V(s_t) + A(s_t, u_t)$~\citep{wang2016dueling}, learning a factorisation of $V$ and $A$ with transformers~\citep{vaswani2017attention}.
@@ -350,16 +350,16 @@ The constraint on the $Q_a$ is transferred to the advantage functions $A_i$, lea
 
 \subsection{Other value-based methods}
 In addition to QMIX~\citep{Rashid2018}, QVMix~\citep{leroy2020qvmix} and QPLEX~\citep{wang2021qplex}, Qatten \citep{yang2020qatten} is another example of $Q_{tot}$ factorisation with transformers.
-Other, such as QTRAN~\citep{Son2019QTRAN:Learning} and Weighted-QMIX~\citep{rashid2020weighted} factorise $Q_{tot}$ differently from the QMIX and VDN approach with the goal of improving the representational capacity of the factorisation.
-However, they end up to not always satisfy IGM.
+Other, such as QTRAN~\citep{Son2019QTRAN:Learning} and Weighted-QMIX~\citep{rashid2020weighted}factorisee $Q_{tot}$ differently from the QMIX and VDN approach to improve the representational capacity of the factorisationn.
+However, they end up not always satisfying IGM.
 Other methods learn to cooperate without factorising $Q_{tot}$ to satisfy IGM.
-An example is local advantage network (LAN)~\citep{avalos2023local}, which learn a central state value function of the joint policy $V^{\mathbf{\pi}}$ and individual advantages $A^a$ to learn $Q_a$ during training, keeping only $A_a$ at execution.
-There are many others methods relying on the value function decomposition.
-Finally, \cite{hong_rethinkigm} claim that many have been trying to improve the $Q_{tot}$ factorisation to satisfy IGM but only a few examine IGM defects.
-Lossy decomposition occurs when the actions that maximises $Q_{tot}$ are not the one maximising $Q_a$.
+An example is local advantage network (LAN)~\citep{avalos2023local}, which learns a central state value function of the joint policy $V^{\mathbf{\pi}}$ and individual advantages $A^a$ to learn $Q_a$ during training, keeping only $A_a$ at execution.
+There are many other methods relying on the value function decomposition.
+Finally, \cite{hong_rethinkigm} claims that many have been trying to improve the $Q_{tot}$ factorisation to satisfy IGM, but only a few examine IGM defects.
+Lossy decomposition occurs when the actions that maximise $Q_{tot}$ are not the ones maximising $Q_a$.
 They demonstrate the existence of lossy decomposition when the observation of one agent is characterised as insufficient.
 An observation is insufficient when it does not change when the state changes. 
-This claim is somehow similar to the one of \cite{Mahajan2019MAVEN:Exploration} who demonstrated the existence of games where QMIX cannot approximate correctly $Q_{tot}$, focusing on the reward structure.
+This claim is somehow similar to the one of \cite{Mahajan2019MAVEN:Exploration}, who demonstrated the existence of games where QMIX cannot correctly approximate  $Q_{tot}$, focusing on the reward structure.
 This highlights some remaining challenges in CTDE value-based methods.
 
 \section{Policy-based methods}
@@ -413,7 +413,7 @@ Here, this leads to $\sum_{i=1}^n|\mathcal{U}^i|$ outputs which would become imp
 To alleviate this, the critic can take as input $\mathbf{u^{-a}}$ and only outputs $|\mathcal{U}^a|$ outputs.
 To use the same critic for all agents implies that all action spaces are the same size.
 
-A major limitation is that this method is only possible for discrete action spaces, especially considering the sum of the possible actions in the advantage.
+A significant limitation is that this method is only possible for discrete action spaces, especially considering the sum over all actions in the advantage.
 \cite{foerster2017coma} argue that it would be possible to apply COMA with continuous action spaces easily by evaluating $\sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))$ with Monte-Carlo estimations or by using policy construction that allows to compute it anatically.
 A final observation is that the critic is considered central because using the state $s_t$, but it should be called $n$ times to update the $n$ actor networks.
 
@@ -440,7 +440,7 @@ In MADDPG, each decentralised actor $\mu^a(\tau^a, o^a;\theta)$ is updated by as
 \label{eq:ch3_maddpg_grad}
     \nabla_\theta J(\mu^a) = \mathbb{E}_B\left[\nabla_{\theta} \mu^a(\tau_t^a, o_t^a;\theta) \nabla_{u^a} Q_a^{\mathbf{\mu}}(s_t, \mathbf{u_t^{-a}}, u a; \phi)|u^a=\mu^a(\tau_t^a, o_t^a)\right],
 \end{equation}
-where actions of other agents are taken from the replay buffer while action of agent $a$ is provided by its deterministic policy when computing the state-joint-action value function.
+where actions of other agents are taken from the replay buffer while the action of agent $a$ is provided by its deterministic policy when computing the state-joint-action value function.
 The critic is updated following the same centralised loss adapted from DQN defined in Equation \ref{eq:ch3_centralQloss} where, in addition to a target network to compute $Q$, actions of agents to compute this target value are taken from target deterministic policies.
 While MADDPG addresses stochastic games with individual rewards, it can be applied easily in Dec-POMDP, with the drawbacks mentioned earlier.
 Note that the critic of MADDPG is monolithic and different for each agent, like COMA.
@@ -461,25 +461,25 @@ Instead, FACMAC computes a single gradient based on the current joint policy $\m
 With discrete action space, using a Straight-Through GumbelSoftmax~\citep{jang2017categorical} allows for a discrete but differentiable policy.
 
 Finally, updating the joint policy instead of independently updating the policies is claimed to be required to optimally benefit from the centralised critic by \cite{peng2021facmac}.
-They confront the work by \cite{lyu2021contrasting} who showcase the suboptimality of the independent updates of actor networks despite using a monolithic centralised critic.
+They confront the work by \cite{lyu2021contrasting}, who showcase the suboptimality of the independent updates of actor networks despite using a monolithic centralised critic.
 
 \subsection{Other policy-based methods}
 
 Multi-agent deep deterministic policy gradient (MADDPG)~\citep{lowe2017multi} is a well-established method which does not learn a single centralised critic but one per agent.
-It is designed for continuous action spaces and has been exploited in stochastic game and can be adapted to Dec-POMDP easily.
+It is designed for continuous action spaces, has been exploited in stochastic games, and can easily be adapted to Dec-POMDP.
 Another method, LIIR~\citep{Du2019LIIRLearning}, aims to provide credit assignment by computing individual intrinsic rewards.
 Following the success of TRPO~\citep{schulman2015trust} and PPO~\citep{schulman2017ppo} in SARL, IPPO \citep{de2020independent}, MAPPO \citep{yu2022surprising} alongside HATPRO and HAPPO~\citep{kuba2021trust} demonstrate that the popular actor-critic methods from SARL can be extended to cooperative MARL tasks.
 
 \section{Other approaches}
 \label{sec:ch3_further}
 This chapter defines several methods for the three modes of training and execution in a Dec-POMDP.
-While we defer the comparison of performance to later chapter, we mentioned some of their limitation and other existing methods.
-Hereafter, we discuss completely different approaches behong the definition of a Dec-POMDP that tackles the cooperative MARL problem differently.
+While we defer the performance comparison to a later chapter, we mentioned some of their limitations and other existing methods.
+Hereafter, we discuss completely different approaches beyond the definition of a Dec-POMDP that tackle the MARL problem differently, in the cooperative setting or not.
 
 Mean-field game is an additional way of modelling the multi-agent framework~\citep{lauriere2022learning}.
 By construction, mean-field games can consider an infinite number of agents because the reward is computed by considering the mean of the distribution of agents' strategies or states rather than individual agents.
-This approach significantly reduces the computational complexity compared to traditional methods, making it suitable for analyzing systems with a large population of interacting agents.
-It is an interesting approach to replace the CTDE methods considered in this manuscript that have difficulty scaling up with the number of agents, as shown later in Chapter\ref{ch:impmarl}.
+This approach significantly reduces the computational complexity compared to traditional methods, making it suitable for analysing systems with a large population of interacting agents.
+It is an exciting approach to replace the CTDE methods considered in this manuscript that have difficulty scaling up with the number of agents, as shown later in Chapter\ref{ch:impmarl}.
 
 Another approach for dealing with cooperative multi-agent settings is to link the recent success of sequence models in language and reinforcement learning by using a multi-agent transformer (MAT) that learns to transform a sequence of observations into a sequence of actions, one per agent~\citep{wen2022multiagent}.
 Such approaches have become increasingly popular with the rise of foundation and large language models.
@@ -488,8 +488,8 @@ Finally, we do not address communication in the environment.
 Communication is also an additional topic mentioned by~\citep{DecPomdp}.
 Allowing agents to send messages can be modelled in different ways.
 \cite{foerster2016learning} propose that messages are the parallel of actions.
-An agent decides on a message and an action based on its observations and messages sent by other agents.
+An agent decides on a message and an action based on observations and messages sent by other agents.
 Messages have no impact on the state transition or the reward.
-This is maybe one of the first works addressing communication in MARL, specifically in the cooperative setting.
+This may be one of the first works addressing communication in MARL, specifically in the cooperative setting.
 In its master thesis,~\cite{fombellida2020master} studied how communication can affect performance in SMAC and also presented a survey of communication methods.
 The challenges include adapting to various numbers of agents, targeted communication, and limiting the number of messages.
