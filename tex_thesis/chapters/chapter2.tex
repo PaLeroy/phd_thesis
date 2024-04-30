@@ -434,7 +434,8 @@ As explained in Section \ref{sec:ch2_mdp}, policies are solely based on the curr
 In a POMDP, the agent's policy $\pi$ can no longer be a function of the state.
 Moreover, the observation does not necessarily hold the Markovian property, and acting only based on the current observation could be suboptimal.
 Therefore, the policy is commonly a function of the history of past observations and past actions $\tau_t=(\mathcal{Z} \times \mathcal{U})^t$, in addition to the current observation, and is denoted $\pi(u_t|\tau_t,o_t): (\mathcal{Z} \times \mathcal{U})^t \times \mathcal{Z} \rightarrow \Delta(\mathcal{U})$.
-Some authors implicitly include the current observation in $\tau$, allowing them to write $\pi(u|\tau)$ and $Q(\tau,u)$. We sometimes do it to improve readability as well.
+Some authors implicitly include the current observation in $\tau$, allowing them to write $\pi(u|\tau)$ and $Q(\tau,u)$.
+We sometimes do it to improve readability as well.
 
 To solve a POMDP, a solution is to compute the policy based on a belief $b(s)=\mathbb{P}(s|\tau,o)$, the probability of being in a given state, knowing the history of observations and actions.
 As in the different methods previously defined, the belief can be implicitly approximated with recurrent neural networks (RNN), such as GRU \citep{Chung2014EmpiricalModeling} or LSTM \citep{Hochreiter1997LongMemory}.

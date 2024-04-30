@@ -196,7 +196,7 @@
     breaklinks=true, pdfpagemode=UseNone, pageanchor=true, pdfpagemode=UseOutlines,%
     plainpages=false, bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,%
     hypertexnames=true, pdfhighlight=/O,%nesting=true,%frenchlinks,%
-    urlcolor=webbrown, linkcolor=RoyalBlue, citecolor=webgreen, %pagecolor=RoyalBlue,%
+    urlcolor=vertinge, linkcolor=vertinge, citecolor=vertinge, %pagecolor=RoyalBlue,%
     %urlcolor=Black, linkcolor=Black, citecolor=Black, %pagecolor=Black,%
     pdftitle={\myTitle},%
     pdfauthor={\textcopyright\ \myName, \myUni, \myFaculty},%
@@ -379,16 +379,30 @@
 
 }
 
+% \newenvironment{chapter_outline}[1]
+% {
+% \begin{tcolorbox}[breakable,width=.9\textwidth
+% 		,enhanced jigsaw, pad at break*=1mm, breakable,
+%     left=4mm, right=4mm, top=4mm, bottom=1mm, boxrule=0pt, frame hidden,
+% 		% borderline south={0.5mm}{0mm}{Maroon},
+% 		% borderline east={0.5mm}{0mm}{Maroon},
+%     borderline west={0.5mm}{0mm}{vertinge},
+% 		arc=.5mm,
+% 		title={\Large \textbf{Outline}}, coltitle=vertinge,
+% 		colback=LightBluebis, colbacktitle=LightBluebis
+% 		% colbacktitle=Maroon
+% 		]
+% }
 \newenvironment{chapter_outline}[1]
 {
 \begin{tcolorbox}[breakable,width=.9\textwidth
 		,enhanced jigsaw, pad at break*=1mm, breakable,
     left=4mm, right=4mm, top=4mm, bottom=1mm, boxrule=0pt, frame hidden,
-		% borderline south={0.5mm}{0mm}{Maroon},
-		% borderline east={0.5mm}{0mm}{Maroon},
-    borderline west={0.5mm}{0mm}{Maroon},
+		 borderline south={0.5mm}{0mm}{vertinge},
+		% borderline east={0.5mm}{0mm}{vertinge},
+        % borderline west={0mm}{0mm}{vertinge},
 		arc=.5mm,
-		title={\Large \textbf{Outline}}, coltitle=Maroon,
+		title={}, coltitle=vertinge,
 		colback=LightBluebis, colbacktitle=LightBluebis
 		% colbacktitle=Maroon
 		]
