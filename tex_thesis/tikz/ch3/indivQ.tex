@@ -1,9 +1,9 @@
 \begin{tikzpicture}[node distance=.5cm]
 
-\tikzstyle{netbox} = [rectangle, rounded corners, minimum width=2cm, minimum height=0.5cm,text centered, draw=red]
+\tikzstyle{netbox} = [rectangle, rounded corners, minimum width=2cm, minimum height=0.5cm,text centered, draw=black]
 \tikzstyle{io} = [minimum width=0.2cm,minimum height=0.5cm, text centered]
 
-\node (output_node) [io] {$\{Q_a(o_t^a, u^a_{j}) \forall u^a_j \in \mathcal{U}_a \}$};
+\node (output_node) [io] {$\{Q_a(o_t^a, u^a_{j})$ $\forall u^a_j \in \mathcal{U}_a \}$};
 \node (fctop) [netbox, below=of output_node, yshift=-0.3cm] {FC layer};
 \node (rec_net) [netbox, below=of fctop, text width=2cm] {Recurrent layer};
 \node (fcbot) [netbox, below=of rec_net] {FC layer};
@@ -18,6 +18,5 @@
 \draw [-Latex, thick] (input_rec) -- (rec_net);
 \draw [-Latex, thick] (rec_net) -- (output_rec);
 
-\draw[thick, rounded corners, draw=red, fill=red!50, opacity=0.2] ($(fctop.north west)+(-0.5,0.5)$) rectangle ($(fcbot.south east)+(0.5,-0.5)$);
-\draw[thick, rounded corners, draw=red] ($(fctop.north west)+(-0.5,0.5)$) rectangle ($(fcbot.south east)+(0.5,-0.5)$);
+\draw[thick, rounded corners, draw=black] ($(fctop.north west)+(-0.5,0.5)$) rectangle ($(fcbot.south east)+(0.5,-0.5)$);
 \end{tikzpicture}

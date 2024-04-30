@@ -20,7 +20,7 @@ This is also referred to as the modes of execution and training in~\citep{marl-b
 This manuscript considers three combinations: centralised training and execution, decentralised training and execution, and centralised training with decentralised execution.
 
 Since all agents receive the same reward, training a single agent that centrally selects joint actions is possible and would benefit from sharing common knowledge.
-This is the centralised mode, where one agent is trained with single-agent reinforcement learning methods.
+This is the centralised mode, where one agent is trained with SARL methods.
 For example, controlling a robotic hand composed of several actuators can be done with a single agent controlling every actuator.
 However, as presented in Section~\ref{sec:ch2_partial_observability}, some setting induces partial observability.
 All agents may not access the same information or perceive only a part of the environment's state.
@@ -30,7 +30,7 @@ On the contrary, the decentralised execution mode considers that each agent sele
 This can be done irrespective of the information they can access.
 The corresponding decentralised training mode is when these agents are trained independently.
 In other words, these agents assume they are the single agent learning in the environment.
-We refer to the decentralised mode when training agents independently with single-agent reinforcement learning to select an action based on their observation.
+We refer to the decentralised mode when training agents independently with SARL to select an action based on their observation.
 
 Finally, the third mode unifies the two formers and is centralised training with decentralised execution (CTDE).
 It allows decentralised execution, with each agent selecting actions based on their observations, but allows for the exploitation of more information during training.
@@ -273,7 +273,7 @@ The entire QMIX architecture is presented in Figure~\ref{fig:qmix}.
 \begin{figure}
 \centering
 \input{tex_thesis/tikz/ch3/qmix}
-\caption{QMIX architecture. Individual $Q_a$ are in red, and the mixing network is in blue.}
+\caption{QMIX architecture.}
 \label{fig:qmix}
 \end{figure}
 
@@ -481,7 +481,7 @@ By construction, mean-field games can consider an infinite number of agents beca
 This approach significantly reduces the computational complexity compared to traditional methods, making it suitable for analysing systems with a large population of interacting agents.
 It is an exciting approach to replace the CTDE methods considered in this manuscript that have difficulty scaling up with the number of agents, as shown later in Chapter\ref{ch:impmarl}.
 
-Another approach for dealing with cooperative multi-agent settings is to link the recent success of sequence models in language and reinforcement learning by using a multi-agent transformer (MAT) that learns to transform a sequence of observations into a sequence of actions, one per agent~\citep{wen2022multiagent}.
+Another approach for dealing with cooperative multi-agent settings is to link the recent success of sequence models in language and RL by using a multi-agent transformer (MAT) that learns to transform a sequence of observations into a sequence of actions, one per agent~\citep{wen2022multiagent}.
 Such approaches have become increasingly popular with the rise of foundation and large language models.
 
 Finally, we do not address communication in the environment.

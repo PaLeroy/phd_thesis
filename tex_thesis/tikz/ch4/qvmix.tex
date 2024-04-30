@@ -1,9 +1,9 @@
 
 \begin{tikzpicture}[node distance=.5cm]
 
-\tikzstyle{netbox} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm, draw=blue]
-\tikzstyle{mixerbox} = [rectangle, rounded corners, minimum width=4.5cm, minimum height=1.5cm, draw=blue]
-\tikzstyle{indixQbox} = [rectangle, rounded corners, minimum width=1.3cm, minimum height=2cm, draw=red]
+\tikzstyle{netbox} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm, draw=black]
+\tikzstyle{mixerbox} = [rectangle, rounded corners, thick, minimum width=4.8cm, minimum height=1.5cm, draw=black]
+\tikzstyle{indixQbox} = [rectangle, rounded corners, thick, minimum width=1.3cm, minimum height=2cm, draw=black]
 \tikzstyle{io} = [minimum width=0.2cm,minimum height=0.5cm]
 \tikzstyle{emptynetbox} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm]
 
@@ -29,6 +29,6 @@
 \draw [-Latex, thick] (mixer_net) -- (output_node);
 
 %\draw[thick, rounded corners, draw=blue, fill=blue!50, opacity=0.2] ($(mixerbox.north west)+(-0.5,0.5)$) rectangle ($(indivQboxn.south east)+(1,-0.5)$);
-\draw[thick, rounded corners, draw=red, fill=red!50, opacity=0.2] ($(indivQbox1.north west)$) rectangle ($(indivQbox1.south east)$);
-\draw[thick, rounded corners, draw=red, fill=red!50, opacity=0.2] ($(indivQboxn.north west)$) rectangle ($(indivQboxn.south east)$);
+\draw[thick, rounded corners, draw=black] ($(indivQbox1.north west)$) rectangle ($(indivQbox1.south east)$);
+\draw[thick, rounded corners, draw=black] ($(indivQboxn.north west)$) rectangle ($(indivQboxn.south east)$);
 \end{tikzpicture}

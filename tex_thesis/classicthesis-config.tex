@@ -50,7 +50,7 @@
 \newcommand{\myDepartment}{Department of EE and CS\xspace}
 \newcommand{\myUni}{University of Liege\xspace}
 \newcommand{\myLocation}{Liege, Belgium\xspace}
-\newcommand{\myTime}{July 2023\xspace}
+\newcommand{\myTime}{April 2024\xspace}
 \newcommand{\myVersion}{version 1.0\xspace}
 
 % ********************************************************************
@@ -317,29 +317,6 @@
 \usetikzlibrary{positioning,fit,calc,decorations.pathreplacing,arrows,backgrounds,shapes}
 \usetikzlibrary{automata,arrows}
 
-% UMNN paper
-\usepackage{xparse}
-\usepackage[nomessages]{fp}% http://ctan.org/pkg/fp
-\ExplSyntaxOn%% allow _ : as a letter
-\newcommand\UMNNParam[6]{ \fp_to_decimal:n {round(#1*(#2*#4 + #3*#4^2 + #4*30*#2+31*#6 + #5*#6^2 + #6), 0)}}
-\newcommand\BNAFParam[1]{ \fp_to_decimal:n {round(5*(80*#1^2 + 2*(40^2)*#1^2), 0)}}
-\newcommand\mean[3]{\fp_to_decimal:n {round((#1 + #2 + #3)/3, 2)}}
-\newcommand\std[3]{\fp_to_decimal:n {round(sqrt((#1^2 + #2^2 + #3^2)/3 - ((#1 + #2 + #3)/3)^2 ), 2)}}
-\ExplSyntaxOff
-\usepackage{arrayjobx}
-\newarray\UMNNData
-\readarray{UMNNData}{ \UMNNParam{5}{6}{2}{100}{4}{150} & \UMNNParam{10}{8}{2}{100}{3}{200}
-                    & \UMNNParam{5}{21}{2}{512}{4}{50} & \UMNNParam{5}{43}{1}{512}{3}{50}
-                    & \UMNNParam{5}{63}{2}{1024}{4}{150}}
-\newarray\TrueUMNNData
-\readarray{TrueUMNNData}{509465 & 814865 & 3621765 & 3455675 & 15627065}
-\newarray\BNAFData
-\readarray{BNAFData}{\BNAFParam{6} & \BNAFParam{8} & \BNAFParam{21} & \BNAFParam{43} & \BNAFParam{63}}
-\newarray\TrueBNAFData
-%\readarray{TrueBNAFData}{307264 & 544084 & 3721414 & 15566434 & 33390634}
-\readarray{TrueBNAFData}{307264 & 544084 & 3721414 & 4085434 & 8757634}
-\newarray\TrueNAFData
-\readarray{TrueNAFData}{414213 & 401741 & 9272743 & 7487321 & 36759591}
 
 \usepackage{siunitx}
 \sisetup{output-exponent-marker = e,round-mode = figures, round-precision = 3,
