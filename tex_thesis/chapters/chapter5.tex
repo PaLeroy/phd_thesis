@@ -225,15 +225,15 @@ In that case, the discretised damage bins should be defined conditionally based 
 Table \ref{Tab:discrExam} defines the specific discretisation implemented in our environments. 
 
 \begin{table}
-\begin{tabular}{llll}
+\begin{tabular}{lll}
 \toprule
-Environment & Variable & Interval boundaries & Bins\\
+Environment  & Interval boundaries & Bins\\
 \midrule
-struct & $d_t$ & $[0, \mathrm{exp}\{ \mathrm{ln}(10^{-4}):(\mathrm{ln}(d_{c})-\mathrm{ln}(10^{-4}))/28:\mathrm{ln}(d_{c})\},\infty ]$ & 30 \\
-owf & $d_t$ & $[0, d_0:(d_c-d_0)/(60-2):d_c,\infty]$ & 60 \\
+struct & $[0, \mathrm{exp}\{ \mathrm{ln}(10^{-4}):(\mathrm{ln}(d_{c})-\mathrm{ln}(10^{-4}))/28:\mathrm{ln}(d_{c})\},\infty ]$ & 30 \\
+owf & $[0, d_0:(d_c-d_0)/(60-2):d_c,\infty]$ & 60 \\
 \bottomrule
 \end{tabular}
-\caption{Description of the discretisation scheme implemented.}
+\caption{Description of the discretisation scheme implemented to discretise $d_t$.}
 \label{Tab:discrExam}
 \end{table}
 
@@ -421,27 +421,15 @@ Finally, hardware and experiment duration are provided in Appendix \ref{sec:ch5_
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/plot_explain_plot_gaussian.pdf}
+    \includegraphics[width=\textwidth]{tex_thesis/figures/ch5/plot_explain_plot_gaussian_2.pdf}
     \caption{Visual description of the iterative process followed to generate the boxplots showcased in Figure \ref{fig:results}.
 [Left] Learning curves corresponding to 10 QMIX training seeds in a k-out-of-n system with 50 agents. 
 The markers highlight the policies that result in the highest expected sum of discounted rewards during evaluation, i.e., one policy per seed.
-[Right] The ten selected policies are displayed at the top as a function of the expected sum of discounted rewards and the heuristic score obtained in this environment.
-In the middle plot, we calculate and represent the ten selected policies as a function of normalised relative rewards, i.e., (x - h) / h.
-Finally, a boxplot is constructed at the bottom based on the previously calculated ten normalised relative rewards, each representing a different seed.
+[Right] The ten policies and the heuristic are displayed at the top as a function of the expected sum of discounted rewards score obtained.
+The middle plot presents them as a function of normalised relative rewards with respect to the heuristic, i.e., (x - h) / h.
+Finally, a boxplot is constructed at the bottom based on the previously calculated ten normalised relative rewards.
 }
 \label{fig:explain_fig}
-\end{figure}
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=.87\textwidth]{tex_thesis/figures/ch5/boxplot_perc_limit.pdf}
-\caption{Performance reached by MARL methods in terms of normalised discounted rewards with respect to expert-based heuristic policies in all IMP environments, H referring to the heuristics result.
-Every boxplot gathers the best policies from each of 10 executed training realisations, indicating the 25th-75th percentile range, median, minimum, and maximum obtained results.
-The coloured boxplots are grouped per method, vertically arranging environments with increasing $n$ agents, as indicated in the top-left legend boxes.
-Note that the results are clipped at -100\%.
-}
-\label{fig:results}
 \end{figure}
 
 The benchmark campaign results are presented in a boxplot showcasing the relative performance of MARL methods with respect to expert-based heuristic policies in terms of their expected sum of discounted rewards.
@@ -456,6 +444,20 @@ Yet, the variance over identical MARL experiments is still sometimes significant
 In environments with no campaign cost, the performance achieved by MARL methods with respect to the baseline differs in configurations with a high number of agents, as shown at the top of Figure \ref{fig:results}.
 In contrast, MARL methods reach better relative results in environments with many agents when the campaign cost model is adopted, as illustrated at the bottom of Figure \ref{fig:results}.
 In general, the superiority of MARL methods with respect to expert-based heuristic policies is justified by the complexity of defining decision rules in high-dimensional multi-component engineering systems, where the sequence of optimal actions is challenging to predict based on engineering judgment~\citep{morato2022syst}.
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.87\textwidth]{tex_thesis/figures/ch5/boxplot_perc_limit.pdf}
+\caption{Performance reached by MARL methods in terms of normalised discounted rewards with respect to expert-based heuristic policies in all IMP environments, H referring to the heuristics result.
+Every boxplot gathers the best policies from each of 10 executed training realisations, indicating the 25th-75th percentile range, median, minimum, and maximum obtained results.
+The coloured boxplots are grouped per method, vertically arranging environments with increasing $n$ agents, as indicated in the top-left legend boxes.
+Note that the results are clipped at -100\%.
+}
+\label{fig:results}
+\end{figure}
+
 
 \textbf{IMP challenges.}
 In correlated k-out-of-n IMP environments, the variance over identical MARL experiments is higher than in the uncorrelated ones, emphasising a specific IMP challenge.
@@ -484,8 +486,8 @@ However, the performance may be improved by enhancing networks' representation c
 \textbf{Infrastructure management planning via CTDE methods.}
 Overall, CTDE methods generate more effective IMP policies than the other investigated methods, demonstrating their capabilities for supporting decisions in real-world engineering scenarios.
 While Figure \ref{fig:results} presents the variance of the best results across runs, the learning curves further confirm this finding in Appendix \ref{sec:ch5_appendix_add_results}.
-In particular, QMIX and QVMIX generally learn effective policies with low variability over runs. 
-Slightly more unstable, QPLEX also yields results similar to those of QMIX and QVMIX in terms of achieved results.
+In particular, QMIX and QVMIX generally learn effective policies with low variability over their runs. 
+Slightly more unstable, QPLEX also yields results similar to those of QMIX and QVMIX.
 While being able to outperform heuristic policies in almost every environment, FACMAC exhibits a high variance among runs.
 However, FACMAC effectively scales up with the number of agents and environment complexity (as reported by their authors \citep{peng2021facmac}), achieving some of the best results in IMP environments with over 50 agents as well as in correlated IMP environments.
 The results also suggest that COMA is our benchmark's least scalable MARL method.

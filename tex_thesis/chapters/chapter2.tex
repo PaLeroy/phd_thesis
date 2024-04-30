@@ -110,7 +110,7 @@ When agent 0 chooses the action $B$, it receives a reward equal to 0 when agent 
 \begin{tabular}{cc|c|c|}
   & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Agent 1}\\
   & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}  & \multicolumn{1}{c}{$B$} \\\cline{3-4}
-  \multirow{2}*{\rotatebox[origin=c]{90}{Agent 0}} & $A$ & $(-1, -1)$ & $(-5, 0)$ \\\cline{3-4}
+   \multirow{2}*{\rotatebox[origin=r]{0}{Agent 0}}  & $A$ & $(-1, -1)$ & $(-5, 0)$ \\\cline{3-4}
                             & $B$ & $(0, -5)$ & $(-2, -2)$ \\\cline{3-4}
 \end{tabular}
 \caption{Prisoner dilemma payoff matrix.}
@@ -143,7 +143,7 @@ An example of a normal-form cooperative game with a payoff matrix is provided in
 \begin{tabular}{cc|c|c|}
   & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Agent 1}\\
   & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}  & \multicolumn{1}{c}{$B$} \\\cline{3-4}
-  \multirow{2}*{\rotatebox[origin=c]{90}{Agent 0}} & $A$ & $(-1, -1)$ & $(1, 1)$ \\\cline{3-4}
+  \multirow{2}*{\rotatebox[origin=c]{0}{Agent 0}} & $A$ & $(-1, -1)$ & $(1, 1)$ \\\cline{3-4}
                             & $B$ & $(1, 1)$ & $(3, 3)$ \\\cline{3-4}
 \end{tabular}
 \caption{Payoff matrix of a cooperative normal-form game.}
@@ -175,7 +175,7 @@ Part~\ref{part:compet} of this manuscript is not only dedicated to competitive s
 \begin{tabular}{cc|c|c|}
   & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Agent 1}\\
   & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}  & \multicolumn{1}{c}{$B$} \\\cline{3-4}
-  \multirow{2}*{\rotatebox[origin=c]{90}{Agent 0}} & $A$ & $(0, 0)$ & $(-2, 2)$ \\\cline{3-4}
+  \multirow{2}*{\rotatebox[origin=c]{0}{Agent 0}} & $A$ & $(0, 0)$ & $(-2, 2)$ \\\cline{3-4}
                             & $B$ & $(1, -1)$ & $(2, -2)$ \\\cline{3-4}
 \end{tabular}
 \caption{Payoff matrix of a competitive normal-form game.}
@@ -328,7 +328,7 @@ This is a characteristic of the off-policy methods, as opposed to the on-policy 
 This manuscript considers only value-based methods that are off-policy, but on-policy methods are discussed further in Section~\ref{sec:ch2_policy_based_methods}.
 To cite one, SARSA is a well-known on-policy value-based method \citep{sutton2018reinforcement}.
 
-Despite being independent of the policy, this iterative process highlights the exploration-exploitation dilemma in RL.
+Despite being off-policy, this iterative process highlights the exploration-exploitation dilemma in RL.
 Either the agent only plays the action that maximises its currently learned value function, which it exploits, or it chooses a different action and explores the possible outcomes.
 Balancing between exploration and exploitation is a crucial parameter to train agents.
 
@@ -400,7 +400,7 @@ Usually, the baseline is  $V(s)$, independent of the action taken, and $Q(s, u;\
 \end{split}
 \end{align}
 
-To avoid approximating both $Q$ and $V$, it is possible to estimate the advantage with only one neural network is possible either by $A(s_t,u_t; \phi)=Q(s_t, u_t;\phi)-\sum_u \pi(u|s_t;\theta) Q(s_t,u; \phi)$ or by $A(s_t,u_t; \phi)=r_t +\gamma V(s_{t+1};\phi) - V(s_t;\phi)$.
+To avoid approximating both $Q$ and $V$, it is possible to estimate the advantage with only one neural network either by $A(s_t,u_t; \phi)=Q(s_t, u_t;\phi)-\sum_u \pi(u|s_t;\theta) Q(s_t,u; \phi)$ or by $A(s_t,u_t; \phi)=r_t +\gamma V(s_{t+1};\phi) - V(s_t;\phi)$.
 This critic is often trained with value-based methods, such as the ones defined in Section~\ref{sec:ch2_value_based_methods}.
 This is why actor-critic methods are sometimes described as a mix between value-based and policy-based methods.
 
