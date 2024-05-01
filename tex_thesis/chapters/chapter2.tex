@@ -200,7 +200,7 @@ We provide background in Chapter~\ref{ch:competition}, including necessary backg
 When a single agent learns in the environment, it is called single-agent reinforcement learning (SARL).
 The most significant part of the history of RL lies in this setting.
 Indeed, the foundation of MARL relies on many works proposed initially in the single-agent framework.
-In this section, we introduce the Markov decision process and discuss some fundamentals of RL, including model-based versus model-free, dynamic programming, and value-based methods alongside policy-based methods.
+In this section, we introduce the Markov decision process and discuss some fundamentals of RL, including model-based versus model-free, dynamic programming, value-based and policy-based methods.
 
 \subsection{Markov decision process}
 \label{sec:ch2_mdp}
@@ -251,8 +251,7 @@ Knowing the model or learning it is not considered in these definitions of plann
 
 This distinction between planning and RL does not always agree because, in some methods, a global value function is learned to compute a local representation of the solution, such as in AlphaZero \citep{silver2018general}, considered as model-based RL by some and planning by others.
 We finally refer to the work of \cite{moerland2023model} that provides many keys to bridge the gap between RL and planning, between model-based and model-free.
-Nevertheless, the following section introduces dynamic programming, a technique requiring a model to compute the optimal policy.
-Dynamic programming provides the foundation of model-free methods that are afterwards introduced.
+Nevertheless, the following section introduces dynamic programming, methods requiring a model to compute the optimal policy and providing foundations for the model-free methods.
 
 \subsection{Dynamic programming}
 Dynamic programming (DP) \citep{bellman1966dynamic} methods compute the optimal policies given a model of an MDP \citep{sutton2018reinforcement}.
@@ -289,24 +288,32 @@ The optimality equations given in Equation \ref{eq:ch2_bellmanV} represent a sys
 This can also be done with the system defined in Equation \ref{eq:ch2_bellmanQ}.
 The condition is, of course, to have reversible access to the MDP model.
 Solving either system is usually not considered for computational reasons.
-It is, therefore, methods computing an approximate solution to the Belman optimality equations that are favoured.
+Therefore, this manuscript presents methods for computing an approximate solution to the Belman optimality equations.
 
 DP is an approach that computes the solutions by iteratively updating approximations until they converge.
-DP can solve Equation \ref{eq:ch2_V_2} by updating estimates $v_k$ with $v_{k+1} = \sum_{u} \pi(u|s) \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$ where $v_0$ can have arbitrary values for non terminal states.
+DP can solve Equation \ref{eq:ch2_V_2} by updating estimates $v_k$ with $v_{k+1}(s) = \sum_{u} \pi(u|s) \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$, where $v_0(s)$ can have arbitrary values except for terminal states that are required to equal 0.
 This is called iterative policy evaluation and is proven to converge if $k\rightarrow\infty$.
 Policy evaluation allows the refinement of any given policy $\pi$ by exploiting Equation \ref{eq:ch2_Q_2} to evaluate other actions than $\pi(s)$ using $Q^\pi(s, u) =  \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$. 
 This is called policy improvement.
 Alternating policy evaluation and improvement allows the iterative computation of the optimal policy, called policy iteration.
 Policy iteration convergence time can be a significant drawback in policy iteration.
-However, the convergence guarantee can be kept while combining evaluation and improvement, leading to an approximation called value iteration $v_{k+1} = \max_u \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$.
+However, the convergence guarantee can be kept while combining evaluation and improvement, leading to an approximation called value iteration $v_{k+1}(s) = \max_u \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$.
 \cite{sutton2018reinforcement} provides many more details about these DP methods.
 
 In addition to requiring the model knowledge $P$ and $R$, the complexity of computing all these values increases with the size of the state and the action spaces, often referred to as the curse of dimensionality, which may limit their usage.
-However, \cite{sutton2018reinforcement} claim that this take is somehow incorrect, explaining that DP has a polynomial complexity with $|\mathcal{S}|$ and $|\mathcal{U}|$.
-Moreover, computing them is impossible for continuous spaces without discretising the spaces.
-Because of our direction towards model-free RL, without the model knowledge, we are interested in presenting these equations and methods that may ease the understanding of further concepts.
+\cite{sutton2018reinforcement} claim that this take is somehow mistaken, explaining that DP has a polynomial complexity with $|\mathcal{S}|$ and $|\mathcal{U}|$ and could scale to large spaces.
+Nevertheless, computing them is impossible for continuous spaces without discretising the spaces.
 
-
+We are interested in model-free methods because accessing the model knowledge can be challenging.
+One possibility is to estimate the state value function of a given policy with Monte-Carlo estimations.
+Such evaluation of a state relies on playing many episodes by plating actions provided by the policy to determine its average return.
+This method also converges according to the law of large numbers.
+Since the model is unknown, improving policies like in DP is impossible, but Monte-Carlo simulations can be adapted to estimate state-action value functions.
+Again, \citep{sutton2018reinforcement} provides many more details.
+One important drawback in Monte-Carlo methods is that the estimation requires waiting for the completion of episodes to update estimations.
+An alternative approach, model-free and using episode samples, is called temporal difference (TD) learning.
+It immedialy updates the estimation using $v_{k+1}(s_t) = v_k(s_t) + \alpha [R(s_{t+1}, s_t, u_t) + \gamma v_k(s_{t+1}) - v_k(s_t)]$ where $\alpha$ controls the update size.
+TD-Learning is the foundation of the value-based methods introduced in the following section.
 
 \subsection{Value-based methods} \label{sec:ch2_value_based_methods}
 Value-based methods are designed to learn value functions.
