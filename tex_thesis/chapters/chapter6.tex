@@ -92,7 +92,7 @@ GT with RL has a long history, ranging from normal-form games to repeated normal
 In the following, we present the premise of binding GT and RL and cover methods that have led to what exists now to try to solve POSG.
 We finish with planning methods dedicated to the extensive-form games that contributed to POSG's progress.
 This section presents some methods at the foundation of MARL to highlight foundations from dynamic programming.
-These methods are described in \citep{marl-book} and \citep{russel2010}, already exploited in this manuscript, in addition to the chapter "Game theory and Multi-agent RL" \citep{Nowe2012GTMARL} presenting others.
+These methods are described in \citep{marl-book} and \citep{russel2010}, already exploited in this manuscript, in addition to the chapter ``Game theory and Multi-agent RL'' \citep{Nowe2012GTMARL} presenting others.
 
 In non-repeated normal-form games, finding the minimax solution with linear programming \citep{marl-book} is possible.
 Game theory with RL also started in normal-form games.
@@ -176,7 +176,7 @@ In the previous section, we mentioned the model-based methods that have been gen
 However, self-play can also be exploited with model-free methods.
 One of the first methods combining model-free RL with neural network and self-play is TD-Gammon, which plays backgammon, starting from random network parameters to achieve a master level \citep{tesauro1994td}.
 Later, the success of modern RL methods allowed the achievement of human-level performance in other games, such as in Stratego \citep{stratego}.
-Self-play has also been used with more than two competing agents in mixed cooperative-competitive environments, like the framework introduced in Chapter \ref{ch:2teams}, such as Hide and Seek \citep{baker2019emergent} or open AI five.
+Self-play has also been used with more than two competing agents in mixed cooperative-competitive environments, like the framework introduced in Chapter \ref{ch:2teams}, such as Hide and Seek \citep{baker2019emergent} or open AI five \citep{openai2019dota}.
 In Hide and Seek, they trained agents in self-play with PPO and a centralised critic with access to the state, a CTDE method.
 They demonstrated that the auto-curriculum provided by self-play, in addition to learning successive strategies, allows agents to understand the environment better and perform better on new tasks than agents trained with the classical unsupervised RL method, where agents learn to explore the environment.
 Self-play also shown benefits for autonomous driving \citep{cornelisse2024humancompatible}.
@@ -194,7 +194,7 @@ In these two, self-play is still possible because agents are the same.
 Still, population-based training allows for solving complex games because, on the one hand, it updates all policies from the population instead of just one.
 On the other hand, there are many different strategies in such games.
 Indeed, the classical process of population-based training starts with several policies, which are evaluated and updated as they play games against each other.
-The population may be modified by increasing its size, duplicating some populations, or freezing others.
+The population may be modified by increasing its size, duplicating some of its individuals, or freezing others.
 Maybe the most successful method when training a population is to use policy space response oracles (PSRO) \citep{NIPS2017_3323fe11, Muller2020A}.
 In short, PSRO reframes population-based training as a normal-form metagame in which actions are policies.
 It computes the probabilities of selecting each policy in each population of agents to achieve an equilibrium.

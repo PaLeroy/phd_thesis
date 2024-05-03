@@ -6,23 +6,23 @@
 In the realm of machine learning, multi-agent reinforcement learning (MARL) is the setting where several agents learn to act by receiving rewards after deciding on actions based on their perception of their environment.
 It takes its foundation in game theory and reinforcement learning (RL), both fields developed for decades.
 The success of deep neural networks is leading to unprecedented progress in the variety of problems that can be solved by such methods.
-Indeed, many real-world applications, such as autonomous vehicles, swarms of drones, warehouse houses, cyber securities, traffic management, or smart grids, can be framed as MARL ones.
-In this thesis, we present contributions in this domain, particularly in training a team of agents to cooperate alone or against opposing teams.
-This manuscript starts with the fundamentals, defining the general MARL framework and how it is divided into the settings of cooperation, competition, and general sum.
+Indeed, many real-world applications, such as autonomous vehicles, swarms of drones, warehouse robots, cyber securities, traffic management, or smart grids, can be framed as MARL ones.
+In this thesis, we present contributions in this domain, particularly in training a team of agents to cooperate alone or against an opposing team.
+This manuscript starts with the fundamentals, defining the general MARL framework and how it is divided into the settings of cooperation, competition, and general-sum.
 It also provides the necessary background for the unfamiliar reader with RL.
 
 The second part of the thesis is dedicated to the cooperative setting, where agents share the same goal.
-Such a setting is commonly framed as a decentralised, partially observable Markov decision process (Dec-POMDP).
-This second part begins with a background chapter defining the Dec-POMDP and how it is solved in the literature.
-The following chapters present two contributions to the cooperative MARL field at the foundation of this thesis.
-One concerns methods extending the Deep-Quality-Value family of algorithms to the cooperative, demonstrating competitive performance with the state of the art of their time.
+Such a setting is commonly framed as a decentralised partially observable Markov decision process (Dec-POMDP).
+This part begins with a background chapter defining the Dec-POMDP and how it is solved in the literature.
+The following chapters present two contributions to the cooperative MARL field.
+One concerns methods extending the Deep-Quality-Value family of algorithms to the cooperative setting, demonstrating competitive performance with the state of the art.
 The other presents IMP-MARL, an open-source suite of MARL environments for large-scale infrastructure management planning (IMP).
-In IMP, inspections, repairs and/or retrofits should be decided to control the risk of potential system failures, such as bridge or wind turbine failures.
+In IMP, inspections, repairs and/or retrofits should be decided to control the risk of potential system failures while minimising costs, such as bridge or wind turbine failures.
 
 The third part of the thesis addresses the problem of training a team against an opposing one.
 This setting extends the competition setting, framed as agents having opposing goals, to teams of agents having opposing goals.
 It is composed of two chapters.
-The former present historical stories and solutions from game theory to the competition and general sum setting.
+The former present historical stories and solutions from game theory to the competition and general-sum settings.
 The latter presents the third contribution which is a study on how to pair cooperative and competitive methods to train a team in a two-team Markov game with the objective to be resilient to many strategies.
 
 Finally, the manuscript concludes with a retrospective of the scientific findings provided by the contributions at the foundation of this thesis and a discussion on the societal impact that MARL has the potential to provide in the upcoming years.

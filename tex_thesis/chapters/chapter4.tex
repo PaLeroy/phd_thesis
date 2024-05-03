@@ -55,7 +55,7 @@ DQV-Max learns the $Q$ function with the same loss defined in Equation \eqref{eq
         \mathcal{L}(\phi) = \mathbb{E}_{B} \bigg[\big(r_{t} + \gamma \: \underset{u\in \mathcal{U}}{\max}\: Q(s_{t+1}, u; \theta') - V(s_{t}; \phi)\big)^{2}\bigg].
         \label{eq:ch4_dqv_max_v}
 \end{equation}
-As in DQN, the replay buffer $B$ stores transitions $\langle s_{t},u_{t},r_{t},s_{t+1}\rangle$ from which batches of transitions are sampled to update the networks.
+As in DQN, the replay buffer $B$ stores transitions $(s_{t},u_{t},r_{t},s_{t+1})$ from which batches of transitions are sampled to update the networks.
 The target network $\theta'$ and $\phi'$ are a copies of $\theta$ and $\phi$ updated periodically.
 This manuscript does not compare these SARL algorithms with DQN or DDQN, but we refer the reader to the PhD thesis of \cite{thesis_matthia}.
 This thesis provides further analysis of the quality of the approximations, showcasing DQN's overestimation bias while highlighting that DQV and DQV-MAX do not suffer from it.

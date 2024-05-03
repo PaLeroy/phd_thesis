@@ -23,7 +23,7 @@
 \node (latentvar) [io, below=of param_net,yshift=-0.4cm, text width=2.5cm] {$z$};
 \node (latent_net) [netboxMaven, below=of latentvar, text width=2.5cm] {Hierarchical policy network};
 \node (intput_latent_1) [io,below=of latent_net, yshift=-0cm, xshift=-0.8cm] {$s_{t_0}$};
-\node (intput_latent_2) [io,below=of latent_net, yshift=-0cm, xshift=0.8cm] {$x \sim P(x)$};
+\node (intput_latent_2) [io,below=of latent_net, yshift=-0cm, xshift=0.8cm] {$x \sim \mathbb{P}(x)$};
 \draw [-Latex, thick] (param_net) -- (fctop);
 \draw [-Latex, thick] (latentvar) -- (param_net);
 \draw [-Latex, thick] (latent_net) -- (latentvar);

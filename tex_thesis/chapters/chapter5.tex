@@ -354,8 +354,8 @@ Component & Campaign cost & $R_{ins}$ & $R_{rep}$ &  $c_f$ & $R_{camp}$ \\
 \subsection{Tested methods}
 \label{sec:tested_method}
 In an extensive benchmark campaign, we test seven RL methods.
-The centralised controller, which has an action space that scales exponentially with the number of agents, is trained with the fully centralised method DQN and is the only method taking $s_t$ as input.
-Furthermore, the fully decentralised method tested is IQL, in which all agents are independently trained.
+The centralised controller, which has an action space that scales exponentially with the number of agents, is trained with the centralised method DQN and is the only method taking $s_t$ as input.
+Furthermore, for the decentralised method tested is IQL, in which all agents are independently trained.
 Regarding the five CTDE methods, we investigate three value-based methods, QMIX, QVMix, and QPLEX, as well as two actor-critic methods, COMA and FACMAC.
 We selected these methods for our benchmark study because they are well established, and their implementations are open-sourced and available within the PyMarl framework~\citep{samvelyan2019starcraft}.
 

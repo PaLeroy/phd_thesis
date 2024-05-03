@@ -41,7 +41,7 @@ From the research question highlighted in Chapter \ref{ch:introduction}, these d
 This Part~\ref{part:coop} focuses on methods that exploit the CTDE mode to solve cooperative tasks.
 This chapter presents Dec-POMDP environments and CTDE methods issued from the literature.
 The performance of these methods is not compared in this chapter but in both next ones.
-They present two specific contributions: another CTDE method in Chapter~\ref{ch:qvmix} and a real-world application of Dec-POMDP in Chapter~\ref{ch:impmarl}.
+They present two specific contributions: additional CTDE methods in Chapter~\ref{ch:qvmix} and a real-world application of Dec-POMDP in Chapter~\ref{ch:impmarl}.
 
 \section{Decentralised partially observable Markov decision process}
 \label{sec:ch3_decpomdp}
@@ -53,15 +53,15 @@ The interaction of the agents with the environment in a Dec-POMDP is presented i
 The state of the environment is $s_t \in \mathcal{S}$ where $\mathcal{S}$ is the set of states.
 The observation function $O:\mathcal{S} \times \mathcal{A} \rightarrow \Delta(\mathcal{Z})$ maps the state to the probability of agent $a$ to perceive the observation $o_t^{a} \in \mathcal{Z}$ at time $t$, where $\mathcal{Z}$ is the observation space.
 Each agent selects an action $u_t^{a} \in \mathcal{U}^{a}$ based on its policy $\pi^{a}(u_t^{a}|\tau_t^{a},o_t^{a}): (\mathcal{Z} \times \mathcal{U}^a)^t \times \mathcal{Z}\rightarrow \Delta(\mathcal{U}^a)$, which maps its history $\tau_t^{a} \in (\mathcal{Z} \times \mathcal{U}^a)^{t-1}$ and its observation $o_t^{a}$ to the probability of taking action $u_t^{a}$. 
-The joint action space is $\mathcal{U} \equiv \bigtimes_{i \in \mathcal{A}} \mathcal{U}^{a_i}$ and the joint or team policy is denoted by $\mathbf{\pi}=(\pi^{a_1},...,\pi^{a_1})$.
+The joint action space is $\mathcal{U} \equiv \bigtimes_{i \in \mathcal{A}} \mathcal{U}^{a_i}$ and the joint or team policy is denoted by $\mathbf{\pi}=(\pi^{a_1},...,\pi^{a_n})$.
 After the joint action $\mathbf{u_t} \in \mathcal{U}$ is executed, the transition function determines the new state with probability $P(s_{t+1}|s_t, \mathbf{u_t}): \mathcal{S} \times\mathcal{U} \rightarrow  \Delta(\mathcal{S}) $, and $r_t=R(s_{t+1}, s_t, \mathbf{u_t}): \mathcal{S} \times \mathcal{S} \times \mathcal{U} \rightarrow \mathbb{R}$ is the team reward obtained by all agents.
-The goal of agents is to find their optimal policy that maximises the expected return during the entire episode of T time step $\mathbb{E}[G_0|\mathbf{\pi}, p]$ where $G_0=\sum_{t=0}^{T-1} \gamma^{t} r_{t}$ and $p$ is the initial state distribution.
-The optimal joint policy is denoted by $\mathbf{\pi^{*}} =\argmax_{\mathbf{\pi}} \mathbb{E}[G_0|\mathbf{\pi}, p]$, achieved if all agents plays the optimal policy.
+The goal of agents is to find their optimal policy that maximises the expected return during the entire episode of T time step $\mathbb{E}[G_0|\mathbf{\pi}, p, P]$ where $G_0=\sum_{t=0}^{T-1} \gamma^{t} r_{t}$ and $p$ is the initial state distribution.
+The optimal joint policy is denoted by $\mathbf{\pi^{*}} =\argmax_{\mathbf{\pi}} \mathbb{E}[G_0|\mathbf{\pi}, p, P]$, achieved if all agents plays the optimal policy.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{tex_thesis/figures/ch3/decpomdp.pdf}
-    \caption{Interaction of three agents with the environment in a decentralised partially observable Markov decision process~\citep{DecPomdp}.}
+    \caption{Interaction of three agents with the environment in a decentralised partially observable Markov decision process~\citep{DecPomdp}. Agent do not have access to the state $s_t$ but to an observation $o^a_t$ defined by the observation function $O$. Based on $o^a_t$, each agent selects one action $u^a_t$. As a consequence, they all receive the same reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch3_decpomdp}
 \end{figure}
 
@@ -97,12 +97,12 @@ Finally,~\cite{DecPomdp} present methods that find optimal deterministic joint p
 These methods include dynamic programming, which solves the problem iteratively backwards, starting from the last time step of the finite horizon, pruning computed policies along the way to reduce the large number of unnecessary ones.
 They also include multi-agent A*, taking foundation in search methods~\citep{russel2010} described in Chapter \ref{ch:competition}.
 In short, it is a search in the space of joint policy that uses value functions as heuristics to explore the tree of possible joint policies.
-\cite{DecPomdp} also present methods that do not guarantee optimality but allow to scale to a larger time horizon for the finite horizon while presenting challenges and corresponding methods to the infinite one.
+\cite{DecPomdp} also present methods that do not guarantee optimality but allow to scale to larger time horizons for the finite horizon while presenting challenges and corresponding methods to the infinite one.
 Aside from the scalability issues, these methods rely on the model of the environment, motivating the use of model-free RL methods presented later in this chapter.
 
 \section{Environments}
 \label{sec:ch3_env}
-Before discussing CTDE methods in detail, we provide an overview of the existing suites\footnotemark of environments in the literature.
+Before discussing CTDE methods in detail, we provide an overview of the existing suites\footnotemark  of environments in the literature.
 We then describe the StarCraft multi-agent challenge (SMAC), perhaps one of the most studied environment suites in the community, but also used in our experiments in Chapter~\ref{ch:qvmix}.
 Moreover, Chapter~\ref{ch:impmarl} is dedicated to a specific suite of environments, and we leave its description there.
 Illustrations of the environments described hereafter are provided in Figure \ref{fig:ch3_envs}.
@@ -110,15 +110,33 @@ Illustrations of the environments described hereafter are provided in Figure \re
 \begin{figure}
     \centering
     \input{tex_thesis/figures/ch3/figure_envs}
-    \caption{Illustrations of several cooperative environment suites.}
+    \caption{Cooperative suites of environments defined as Dec-POMDP.}
     \label{fig:ch3_envs}
 \end{figure}
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.5\textwidth}
+         \centering
+         \includegraphics[height=2.3cm]{tex_thesis/figures/ch3/3m_screen.pdf}
+         \caption{3m}
+         \label{fig:ch3_3m}
+     \end{subfigure}%
+     \begin{subfigure}[b]{0.5\textwidth}
+         \centering
+         \includegraphics[height=2.3cm]{tex_thesis/figures/ch3/3s5z_screen.pdf}
+         \caption{3s5z}
+         \label{fig:ch3_3s5z}
+     \end{subfigure}
+    \caption{Two environments of the StarCraft multi-agent challenges.}
+    \label{fig:ch3_smac}
+\end{figure}
+
 
 \footnotetext{In this manuscript, an environment refers to an instance of a particular framework (here, of a Dec-POMDP). We commonly see it in the literature as either a collection of environments or an instance of one. We use "suite" to distinguish between these two.}
 
 The multi-agent particle environments (MPE)~\citep{lowe2017multi} is a popular suite in the MARL community with cooperative scenarios.
 In MPE, particles move in a 2D grid with continuous action and state spaces.
-This suite comes with all types of multi-agent settings: competition, cooperation, with and without competition.
+This suite comes with all types of multi-agent settings: competition, cooperation, with and without communication.
 A second environment with continual action space is MaMuJoCo~\citep{peng2021facmac}.
 MuJoCo~\citep{todorov2012mujoco} stands for multi-joint dynamics with contact.
 It is a famous physics-based simulator to learn to control, for example, a humanoid to run.
@@ -127,7 +145,7 @@ It is an example of a SARL environment extended to MARL.
 Other cooperative environments based on game simulators include the Hanabi Challenge~\citep{Bard_2020}, a "cooperative solitaire" between two and five players, and Google Research Football~\citep{kurach2020google}, a football game simulator.
 
 Cooperative MARL methods are primarily benchmarked on these games and simulators, but real-world applications also exist.
-City flow~\citep{zhang2019cityflow} are traffic control environments where agents control traffic lights in a city.
+CityFlow~\citep{zhang2019cityflow} are traffic control environments where agents control traffic lights in a city.
 In Flatland~\citep{mohanty2020flatland}, agents control trains to solve a scheduling problem, avoiding collisions by coordinating trains not to take the same routes.
 The multi-robot warehouse~\citep{papoudakis2021benchmarking, christianos2020shared} simulates warehouse agents needing to deliver requested goods.
 Multi-Agent Tracking Environment (MATE)~\citep{NEURIPS2022_b2a1c152} is a target coverage control problem where cameras are controlled to detect all targets.
@@ -146,24 +164,6 @@ Many scenarios exist in SMAC, also called "maps", and all involve training a tea
 It is to defeat an adversarial team controlled by the game's deterministic and stationary policy built-in AI.
 Figure~\ref{fig:ch3_smac} shows the initial configurations of two maps where two teams face each other.
 Also note that in Chapter~\ref{ch:2teams}, we present a contribution where SMAC has been modified to train both competing teams.
-
-\begin{figure}
-     \centering
-     \begin{subfigure}[b]{0.5\textwidth}
-         \centering
-         \includegraphics[height=2.3cm]{tex_thesis/figures/ch3/3m_screen.pdf}
-         \caption{3m}
-         \label{fig:ch3_3m}
-     \end{subfigure}%
-     \begin{subfigure}[b]{0.5\textwidth}
-         \centering
-         \includegraphics[height=2.3cm]{tex_thesis/figures/ch3/3s5z_screen.pdf}
-         \caption{3s5z}
-         \label{fig:ch3_3s5z}
-     \end{subfigure}
-    \caption{Two scenarios of the StarCraft multi-agent challenges.}
-    \label{fig:ch3_smac}
-\end{figure}
 
 Hereafter, we thoroughly define the elements of the Dec-POMDP implemented in SMAC.
 Agents have partial observability, characterised by a sight range, a circle inside which they can observe other agents.
@@ -216,7 +216,7 @@ The following sections cover the MARL methods to achieve this coordination.
 As detailed in Chapter \ref{ch:background}, value-based methods aim to learn the optimal state-action value function $Q^{\pi^*}(s, u)$, such that the optimal policy is $\pi^*(s)=\argmax_{u} Q^{\pi^*}(s, u)$.
 In SARL, one solution, called DQN, is to approximate $Q$ with a neural network $\theta$ and learn $Q(s, u;\theta)$
 by minimising the loss defined in Equation~\ref{eq:ch2_dqnloss}.
-We hereafter describe how to train agents with value-based methods and the different modes of training and execution.
+We hereafter describe how to train agents with value-based methods.
 
 As introduced in Section~\ref{sec:ch3_intro}, there exist different modes of training and execution.
 In the first mode, one possible centralised training and execution approach is to train a centralised learner with DQN in a Dec-POMDP.
@@ -238,7 +238,7 @@ One problem with IQL is that agents must select actions which maximise $Q(s_t, \
 This is where centralised training with decentralised execution (CTDE), the third mode, comes in handy.
 The objective is to ensure that actions $\mathbf{u_t}$ maximising the individual $Q_a(\tau_t^a, u_t^a))$ functions also maximise $Q(s_t, \mathbf{u_t})$.
 With CTDE methods, this is made possible by approximating this $Q(s_t, \mathbf{u_t})$ as a factorisation of individual $Q_a$ functions during training.
-To ensure this, individual $Q_a$ functions must satisfy the individual-global-max condition (IGM)~\citep{Son2019QTRAN:Learning}
+However, individual $Q_a$ functions must satisfy the individual-global-max condition (IGM)~\citep{Son2019QTRAN:Learning}
 \begin{equation}
     \argmax_{\mathbf{u_t}} Q(s_t, \mathbf{u_t}) =(\argmax_{u_t^{1}} Q_{1}(\tau_t^{1}, u_t^{1}),...,\argmax_{u_t^{n}} Q_{n}(\tau_t^{n}, u_t^{n})).
     \label{eq:ch3_igm}
@@ -305,18 +305,18 @@ Individual $Q_a$ networks and the mixer are all copied to produce target network
 \label{fig:ch3_indivQ}
 \end{figure}
 
-Since the Dec-POMDP induces partial observability, individual $Q_a$ networks are commonly RNNs made of GRU~\citep{Chung2014EmpiricalModeling} and the replay buffer stores sequences of contiguous transitions instead of isolated transitions $\langle s_{t},\mathbf{u_{t}},r_{t},s_{t+1}\rangle$.
+Since the Dec-POMDP induces partial observability, individual $Q_a$ networks are commonly RNNs made of GRU~\citep{Chung2014EmpiricalModeling} and the replay buffer stores sequences of contiguous transitions instead of isolated transitions $( s_{t},\mathbf{u_{t}},r_{t},s_{t+1})$.
 A typical architecture of such a network is presented in Figure \ref{fig:ch3_indivQ}.
 When evaluating CTDE methods, IQL is commonly tested by training the same architecture as the individual network, allowing for comparison with a fully decentralised training of such a network.
 
 \subsection{MAVEN}
 \citet{Mahajan2019MAVEN:Exploration} defined the class of state-joint-action value functions that QMIX cannot represent due to its exploration strategy and the monotonicity constraint.
 They demonstrated the existence of payoff matrices in an n-player normal-form game with more than three actions per agent, for which QMIX learns a suboptimal policy for any training duration, using both epsilon greedy and uniform exploration.
-To tackle this problem, they modified the individual $Q_a$ architecture, which is now a function of the latent space to influence agent behaviour.
+To tackle this problem, they modified the individual $Q_a$ architecture, which is now a function of a latent space to influence agent behaviour.
 The underlying objective is to train agents to learn an ensemble of policies to improve their exploration capabilities.
 
 Specifically, the latent variable is the input of a second and new hypernetwork that computes parameters of the fully connected layer linking recurrent cells to the outputs of the individual $Q_a$ networks.
-This latent variable $z$ is generated per episode by a hierarchical policy network, taking as input the initial state of the environment and a random variable (typically a discrete uniform).
+This latent variable $z$ is generated per episode by a hierarchical policy network, taking as input the initial state of the environment and a random variable, typically a discrete uniform.
 The idea is that the latent variable corresponds to different learnt strategies.
 The goal of the hierarchical policy network is to select the best strategy based on the initial state $s_0$, which is considered known at testing.
 The new architecture of the individual $Q_a$ network of MAVEN is represented in Figure~\ref{fig:maven}.
@@ -338,7 +338,7 @@ This second objective is computed by fixing both hypernetworks and individual ne
 
 The third part of the objective ensures that different values of $z$ imply different behaviours. 
 It is a mutual information loss between the latent variable and the trajectories performed by agents to favour different behaviours for different latent variable values.
-For further details on the MAVENoptimisationn procedure and especially on constructing the mutual information objective, we refer the reader to~\cite{Mahajan2019MAVEN:Exploration}.
+For further details on the MAVEN optimisation procedure and especially on constructing the mutual information objective, we refer the reader to~\cite{Mahajan2019MAVEN:Exploration}.
 
 \subsection{QPLEX}
 QPLEX~\citep{wang2021qplex} extends QMIX with the dueling structure $Q(s_t, u_t) = V(s_t) + A(s_t, u_t)$~\citep{wang2016dueling}, learning a factorisation of $V$ and $A$ with transformers~\citep{vaswani2017attention}.
@@ -346,7 +346,7 @@ The advantage function $A$ has been introduced in Section \ref{sec:ch2_policy_ba
 The duelling structure involves learning $V(s_t)$ and $A(s_t, u_t)$, typically with a single neural network with a common backbone and two different heads.
 By separating the computation of the value of a given state and the contributions of different actions in that given state,~\citet{wang2016dueling} demonstrated better results than DQN.
 
-Back to QPLEX,~\citet{wang2021qplex} demonstrated that if the advantage function $A$ respects the advantage-IGM, then the state action value function $Q = V + A$ respect IGM while removing constraints on the state value function $V$.
+Back to QPLEX,~\citet{wang2021qplex} demonstrated that if the advantage function $A$ respects the advantage-IGM, then the state action value function $Q = V + A$ respects IGM while removing constraints on the state value function $V$.
 The individual $Q_a$ satisfy the advantage-IGM if $Q_{tot}=V_{tot}+A_{tot}$ and $V_{tot}(s)=\max_{\mathbf{u}} Q_{tot}(s, \mathbf{u})$ and $Q_a=V_a+A_a$ and $V_a(s)=\max_{u} Q_a(s, u)$ such that 
 \begin{equation}
     \argmax_{\mathbf{u_t}} A_{tot}(s_t, \mathbf{u_t}) =(\argmax_{u_t^{1}} A_{1}(\tau_t^{1}, u_t^{1}),...,\argmax_{u_t^{n}} A_{n}(\tau_t^{n}, u_t^{n}))    
@@ -358,7 +358,7 @@ The constraint on the $Q_a$ is transferred to the advantage functions $A_i$, lea
 
 \subsection{Other value-based methods}
 In addition to QMIX~\citep{Rashid2018}, QVMix~\citep{leroy2020qvmix} and QPLEX~\citep{wang2021qplex}, Qatten \citep{yang2020qatten} is another example of $Q_{tot}$ factorisation with transformers.
-Other, such as QTRAN~\citep{Son2019QTRAN:Learning} and Weighted-QMIX~\citep{rashid2020weighted}factorisee $Q_{tot}$ differently from the QMIX and VDN approach to improve the representational capacity of the factorisationn.
+Other, such as QTRAN~\citep{Son2019QTRAN:Learning} and Weighted-QMIX~\citep{rashid2020weighted} factorise $Q_{tot}$ differently from the QMIX and VDN approach to improve the representational capacity of the factorisationn.
 However, they end up not always satisfying IGM.
 Other methods learn to cooperate without factorising $Q_{tot}$ to satisfy IGM.
 An example is local advantage network (LAN)~\citep{avalos2023local}, which learns a central state value function of the joint policy $V^{\mathbf{\pi}}$ and individual advantages $A^a$ to learn $Q_a$ during training, keeping only $A_a$ at execution.

@@ -2,7 +2,7 @@
 
 We make decisions every day.
 So, let us build some intuition about this decision-making process through the following example.
-Consider yourself driving a car and arriving at a crossroads.
+Consider yourself driving a car and arriving at a crossroad.
 In front of you, there is a traffic sign.
 You predict it is a stop sign based on your perception and knowledge.
 This prediction involves reasoning and has no impact on your environment.
@@ -14,24 +14,26 @@ These decisions are based on what you learned, even if some decisions can be mad
 Indeed, you probably studied the traffic signs to know it was a stop one.
 You practised your driving skills to obtain your driver's license by trial and error, but hopefully also with the help of a supervisor.
 You did acquire these skills by learning.
-You learn with supervision, having examples of decisions and feedback to highlight whether some decisions were right or wrong.
-However, you also learn by interacting with and testing your environment.
+You learned with supervision, having examples of decisions and feedback to highlight whether some decisions were right or wrong.
+However, you also learned by interacting with and testing your environment.
 Many may recall a child throwing objects off a table, discovering gravity in action, possibly motivating the quote from \cite{sutton2018reinforcement} ``The idea that we learn by interacting with our environment is probably the first to occur to us when we think about nature of learning''.
-In summary, you learn by yourself and with the help of others.
+In summary, you learned by yourself and with the help of others.
 Nevertheless, this manuscript is not about how humans learn to make decisions.
 It is about how computers can learn to make decisions.
 
 When a computer makes decisions, it is called artificial intelligence (AI).
 However, AI is not only about computers making decisions.
-Nowadays, AI has many definitions, and we will provide some before focusing on the one of interest.
+Nowadays, AI has many definitions.
+Choosing which one is better is beyond the scope of this manuscript.
+However, we will provide some before focusing on the one of interest.
 In ``Artificial Intelligence: A Modern Approach'', \cite{russel2010} rely on several definitions to propose a classification of AI into four categories.
 They classify the definitions of AI as making computers either think like humans or think rationally or act like humans or act rationally.
 Computers thinking like humans is the field of cognitive sciences where theories of the human mind are built, and computers thinking rationally is the field of logic, based on knowledge representation and inspired by the syllogisms invented by Aristotle.
 This manuscript does not address these two types of AI.
 It also does not address acting humanly, which we justify hereafter, but focuses on AI acting rationally.
-Rationality means that it maximises the measure of the performance of the decision.
+Rationality means that it maximises a measure of the performance of the decision.
 Therefore, these types of AI are built to make decisions to achieve a predefined goal.
-We commonly define anything making decisions as an agent.
+We commonly define an AI making decisions as an agent.
 
 When considering whether AI can act like humans, a well-known proposition coming up is the Turing test.
 An agent succeeds in the Turing test if, during a written conversation with it, the human cannot tell whether its interlocutor is an AI.
@@ -41,7 +43,7 @@ The following self-explanatory quote from \cite{russel2010} may convince many: `
 
 This manuscript concerns agents acting rationally but also concerns learning.
 We still delay the definition of learning, and hereafter, we present that acting rationally can be achieved without learning.
-Indeed, creating an agent to solve Sudoku games is possible by exploiting the game rules.
+Indeed, creating an agent to solve Sudoku puzzles is possible by exploiting the game rules.
 It will sequentially enumerate all cells' available numbers and assign a number to cells that end with only one possible number.
 Many problems can be solved without learning, but some may be challenging.
 For example, an agent can play chess by enumerating all the possibilities from a given board situation to choose the best move.
@@ -70,10 +72,11 @@ At the beginning of this introduction, we presented the decision-making process 
 Learning to predict something via supervised learning allows one to make decisions that impact the environment.
 Indeed, it is possible to train a model that predicts the strength to apply to your car pedals based on a camera in the car.
 We also considered chess.
-A collection of chess games would also allow an agent to learn to predict the best move based on the ones seen in the dataset.
+A collection of chess games would also allow an agent to learn to predict the best move based on the ones in the dataset.
 Aside from the complexity of acquiring such a dataset, these approaches do not allow AI to learn to make decisions but to learn to replicate the decisions, called imitation learning.
 Doesn't this remind you of the acting humanly approach of AI defined previously?
-Moreover, one crucial aspect left aside until now is the sequential aspect of this rational decision-making because decisions might impact the future.
+Moreover, one crucial aspect left aside until now is the sequential aspect of this rational decision-making.
+Indeed, decisions might impact the future.
 Most of the time, as in chess, a sequence of decisions is required to achieve a goal.
 We need a systematic approach to train an agent to make sequences of rational decisions.
 Such an approach exists and is called reinforcement learning (RL).
@@ -84,7 +87,7 @@ The reward is the action's outcome, a numerical feedback.
 The agent aims to perform actions that provide the maximum possible accumulated reward.
 It learns it by trial and error, typically updating its policy based on the received reward after each action.
 Back to our example, when not stopping at a stop sign at a crossroad, you can cause an accident, an excellent example of a situation that would provide a negative reward.
-But whether you decide to break or to do nothing, your environment is evolving.
+But whether you decide to break or not to do anything, your environment is evolving.
 Indeed, in addition to receiving rewards, the agent's environment can evolve due to its action.
 We then say that the state of the environment evolves based on the action.
 The agent is part of the environment and interacts with it, somehow defined inside and outside of it.
@@ -93,7 +96,7 @@ Note that it is possible to design an RL problem without any environment evoluti
 
 Sudoku puzzles can be solved and chess played without learning, but the agent needs to know the game's rules.
 In RL, this is not usually the case.
-The agent does not know how an action will affect its state nor the reward it will receive.
+The agent does not know how an action will affect its state neither the reward it will receive.
 It just receives the reward after taking an action and learns to maximise it.
 One of the challenges of RL is that agents face the exploration-exploitation dilemma.
 They must balance trying out new actions to discover potentially better policies (exploration) and sticking to actions that have yielded high rewards in the past (exploitation).
@@ -109,7 +112,7 @@ Designing chips is a complex sequential decision-making problem that can also be
 RL can be applied in healthcare, typically to decide treatment dosage through time \citep{miotto2018deep}.
 Finally, games have been a testbed for RL for a long time.
 Some significant breakthroughs in RL have been achieved thanks to games, such as attaining human performance in Atari games \citep{Mnih2015}.
-They offer the best environment for trials and errors because they are natural simulators.
+They offer the best environment for RL because they are natural simulators.
 Indeed, the trial-and-error nature of RL requires that an agent extensively interacts with its environment.
 
 We have presented above applications of RL where a single agent acts rationally to achieve a predefined goal.
@@ -130,15 +133,16 @@ Suppose only one agent is learning in an environment comprising several others.
 The other agents then have a stationary policy that does not change over time, and they can be considered part of the environment.
 However, when several agents learn, their policies change over time.
 From the point of view of each agent, the environment dynamic is constantly changing.
-This induces non-stationarity in the learning process, known as a moving target problem.
+This induces non-stationarity in the learning process.
 Typically, in a rock-paper-scissor game, if one always chooses rock, one may always choose paper.
 But if the first changes to scissors, the second may finally change to rock.
 This cycle can last forever, and one needs to decide when to stop.
 Finding an equilibrium where strategies stop evolving is indeed a challenging solution.
-This highlights a first challenge in multi-agent RL.
+This highlights a first challenge in MARL.
 
 A second challenge is determining the criterion required to assess the optimality of policies.
-In SARL, it is straightforward: the agent must achieve a high sum of rewards, and when it finds the optimal policy achieving the maximum sum of rewards, it stops.
+In SARL, it is straightforward.
+the agent must receive the highest sum of rewards, achieved when it finds the optimal policy achieving the maximum sum of rewards.
 But how can this be posed in a multi-agent environment when several agents want to maximise their reward?
 The solution to finding an equilibrium is achieved when agents do not benefit from a better reward by changing their policy.
 How to define this equilibrium and whether there are several of them is a dedicated research problem in MARL.
@@ -152,7 +156,7 @@ A fourth challenge is related to the credit assignment previously introduced.
 In addition to understanding that a reward may be caused by a series of actions, a challenge in MARL is determining the actions of which agents caused the current reward.
 Back to the example.
 If you stop because of a stop sign but your vehicle is damaged by the one following you which did not stop, the corresponding negative reward is not your fault, but the fault is that of the car's driver behind you.
-Other challenges exist, but these four highlight the additional challenges when extending to MARL \cite{marl-book}.
+Other challenges exist, but these four highlight the additional challenges when extending to MARL \citep{marl-book}.
 
 MARL has been divided into three settings.
 This division comes from game theory and allows for simplifying the general case to a particular one to reduce the complexity arising from the challenges previously mentioned.
@@ -169,14 +173,14 @@ We focus on two specific settings: training a team of agents to cooperate and tr
 In the cooperative setting, we present two contributions that provide methods designed to train agents to fulfil a cooperative task and how they can be applied in a specific real-world setting.
 When training a team in an adversarial scenario, we can use the same methods but, again, by considering that there are opponents.
 This highlights the two main parts of the manuscript, each starting with a background section that provides perspective on the novelties of the presented work.
-Before diving into the details of these two settings, we provide the necessary background and notations of reinforcement learning.
+Before diving into the details of these two settings, we provide the necessary background and notations of RL.
 In the following sections, we provide a more detailed outline of this manuscript, followed by a disclaimer on the publications that form its foundation and, finally, the industrial context in which some of the work presented has been conducted.
 
 \section{Outline}
 \label{sec:ch1_outline}
 This manuscript is divided into four parts.
-The necessary background is presented in Part~\ref{part:background}, providing an overview of reinforcement learning.
-In Part \ref{part:coop}, we present works related to cooperation, one of the multi-agent settings, while Part \ref{part:compet} extends these topics to a specific general-sum framework where two teams compete.
+The necessary background is presented in Part~\ref{part:background}, providing an overview of RL.
+In Part \ref{part:coop}, we present works related to cooperation, one of the MARL settings, while Part \ref{part:compet} extends these topics to a specific framework where two teams compete.
 Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively reviewing the contributions presented in this manuscript.
 
 \begin{description}
@@ -185,15 +189,14 @@ Finally, Part \ref{part:conclusion} concludes this manuscript, retrospectively r
     Chapter~\ref{ch:background} presents the general MARL framework and details its different settings and challenges.
     More importantly, this chapter presents the foundations of MARL issued from SARL.
     This chapter is a must-read for those unfamiliar with reinforcement learning. 
-    If more details are required, we refer the reader to numerous additional works.
     In contrast, these concepts should be well-known for the familiar ones, and Chapter~\ref{ch:background} serves as a notation introduction.
 
     \item [Part \ref{part:coop}] Learn to cooperate:
     
-    Chapter~\ref{ch:cooperation} provides the necessary material to understand the challenges of cooperation in multi-agent reinforcement learning.
+    Chapter~\ref{ch:cooperation} provides the necessary material to understand the challenges of cooperation in MARL.
     It is a mix of background introduction and literature review, as this chapter introduces many concepts and methods from the literature.
     
-    Chapter~\ref{ch:qvmix} presents four methods based on the Deep-Quality Value family of algorithms designed to train cooperating agents.
+    Chapter~\ref{ch:qvmix} presents four methods based on the Deep-Quality-Value family of algorithms designed to train cooperating agents.
     
     Chapter~\ref{ch:impmarl} introduces infrastructure management planning, a real-world application that can be tackled in this cooperative framework.
     In this application, inspections, repairs, and/or retrofits should be timely planned to control the risk of potential system failures.
@@ -229,7 +232,7 @@ Notably, three central chapters represent adaptations of specific peer-reviewed 
 \section{Context}
 \label{sec:ch1_context}
 To provide a backstory, part of the work presented in this manuscript has been developed during the IRIS project with an industrial consortium of Belgian companies.
-IRIS stands for Intelligent Recognition Information System, and the partners were John Cockerill D{\'{e}}fense, ACIC, Multitel, Belgian Royal Military Academy and the University of Li{\'{e}}ge.
+IRIS stands for Intelligent Recognition Information System, and the partners were John Cockerill D{\'{e}}fense, ACIC, Multitel, Belgian Royal Military Academy and the University of Li{\`{e}}ge.
 The IRIS project aims to enhance surveillance capabilities by integrating machine learning.
 Through detection, recognition, and behaviour analysis modules, IRIS seeks to empower operators with timely, actionable information to make optimal decisions in both military and civilian contexts, impacting the safety of individuals, sensitive sites, and equipment integrity.
 Specifically, we explored multi-agent reinforcement learning to provide decision-aid to operators in the context of military missions.

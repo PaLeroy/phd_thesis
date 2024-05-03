@@ -22,7 +22,7 @@ As introduced in Chapter \ref{ch:introduction}, reinforcement learning (RL) is a
 \end{itemize}
 
 We denote several keywords guiding most RL journeys: environment, interaction, sequence, goal and reward.
-But we intentionally rephrase the definition by leaving one missing: the agent.
+But we intentionally rephrase the definitions by leaving one missing: the agent.
 Commonly, an agent is anything capable of acting upon information it perceives from its environment~\citep{russel2010}.
 In RL, an agent learns to act by interacting with its environment. 
 Trying to summarise all definitions, we obtain that RL agents learn to act by interacting with their environment and sequentially taking actions that will modify the environment and provide them with a reward.
@@ -31,7 +31,7 @@ After defining an agent, we must also consider the number of agents in the envir
 Indeed, environments exist where several agents act.
 Single-agent reinforcement learning (SARL) becomes multi-agent reinforcement learning (MARL) when more than one agent \textbf{learns}.
 We insist on the fact that we consider the number of agents learning.
-This chapter defines the general MARL framework and follows it with the three standard settings: cooperation, competition, and general sum.
+This chapter defines the general MARL framework and follows it with the three standard settings: cooperation, competition, and general-sum.
 We then provide an in-depth overview of SARL methods, intending to give enough background to the reader unfamiliar with RL and the classical SARL algorithms.
 We finish with a discussion on partial observability, an essential topic in RL, because agents often have uncertainty about their perception of the environment, especially in MARL.
 
@@ -53,15 +53,15 @@ The $n$ actions selected by each agent form the joint action $\mathbf{u_t} \in \
 We also denote the joint policy by $\mathbf{\pi} = (\pi^{a_1},...,\pi^{a_n})$.
 As a consequence of agents taking $\mathbf{u_t}$, the state of the environment $s_t$ transits to a new state $s_{t+1}$ with a probability $P(s_{t+1}, s_t, \mathbf{u_t})$ defined by the stochastic transition function $P:\mathcal{S} \times \mathcal{U} \rightarrow \Delta(\mathcal{S})$.
 At the same time as the state transitions, each agent receives a reward denoted $r_t^{a_i} = R(s_{t+1}, s_t, \mathbf{u_t}, i)$ defined by the reward function $R: \mathcal{S} \times \mathcal{S} \times \mathcal{U} \times \mathcal{A} \rightarrow \mathbb{R}$.
-The goal of each agent $a_i$ is to maximise its expected return, which is the expected sum of discounted rewards $\mathbb{E}_{\mathbf{\pi}, p, P}\left[ G_0 \right] =\mathbb{E}_{\mathbf{\pi}, p, P}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, where $T$ is the time horizon, $p$ is the initial state distribution, $\gamma \in [0, 1]$ the discount factor and $G_t= \sum_{j=t}^{T-1} \gamma^{t-j} r_{j}$.
-In this thesis, the time horizon $T$ is considered finite, defining the length of an episode.
+The goal of each agent $a_i$ is to maximise its expected return, which is the expected sum of discounted rewards $\mathbb{E}_{\mathbf{\pi}, p, P}\left[ G_0^{a_i} \right] =\mathbb{E}_{\mathbf{\pi}, p, P}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, where $T$ is the time horizon, $p$ is the initial state distribution, $\gamma \in [0, 1]$ the discount factor and $G^a_t= \sum_{j=t}^{T-1} \gamma^{t-j} r^a_{j}$.
+The time horizon $T$ can be infinite but in this thesis, it is considered finite, defining the length of an episode.
 Intuitively, the discount factor $\gamma$ defines the importance of future reward.
 Finally, we insist that an agent's return depends on the joint action taken and not only on its own.
 
 \begin{figure}
     \centering
     \includegraphics[width=.8\textwidth]{tex_thesis/figures/ch2/SG.pdf}
-    \caption{Interaction of three agents with the environment in a stochastic game \citep{stochasticGames}. Agents $i \in \{1,..,n\}$ have access to the state $s_t$ to select actions $u_t^i$. As a consequence, they each receive a reward $r_t^i$ and the environment transitions in a new state $s_{t+1}$.}
+    \caption{Interaction of three agents with the environment in a stochastic game \citep{stochasticGames}. Agents $i \in \{1,..,3\}$ have access to the state $s_t$ to select actions $u_t^i$. As a consequence, they each receive a reward $r_t^i$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch2_sg}
 \end{figure}
 
@@ -69,7 +69,7 @@ Before discussing the challenges of learning in an SG, we hereafter provide some
 Since the transition function is defined as stochastic, the reward function is always based on the following state obtained.
 Still, we sometimes denote it  $R(s_t, \mathbf{u_t}, i)$ irrespective of this new state to enhance readability.
 Moreover, the expected return is often denoted $E_{\mathbf{\pi}} \left[ G_0 \right]$ leaving the initial state distribution $p$ and the transition function $P$ dependencies implicit.
-An essential characteristic of MARL is that agents do not always observe the state $s_t$ of the environment entirely to select an action.
+An essential characteristic of MARL is that agents do not always observe the state $s_t$ of the environment to select an action.
 This partial observability is further developed in Section~\ref{sec:ch2_partial_observability}.
 Finally, in the literature, an SG is sometimes called a Markov game (e.g. \citep{MarkovGames}).
 
@@ -79,21 +79,21 @@ Since all agents learn, they all update their strategy over time.
 One typical risk is that agents may adapt to the strategy of others in an infinite cycle, as in the rock-paper-scissor example of Chapter \ref{ch:introduction}.
 One example solution to this problem is to find a Nash equilibrium \citep{nash1950equilibrium}.
 Such equilibrium is obtained when no agents are interested in changing their policy, meaning that if one changes its policy, its sum of discounted rewards will decrease.
-There is at least one Nash equilibrium.
+There is always at least one Nash equilibrium.
 When there are several, one may provide a better sum of discounted rewards to all agents than another.
 Identifying the optimality of policies, which is connected to finding the best equilibria, is a significant challenge in MARL.
 This task is often split into two challenges: finding and evaluating equilibria.
 Both aspects remain pretty difficult.
-To reach such an equilibrium, agents' objectives may change from finding the maximum sum of discounted rewards to obtaining the equilibrium.
+To reach such an equilibrium, agents' objectives may change from finding the maximum sum of discounted rewards to obtaining an equilibrium.
 This manuscript details these alternative solutions and their optimality in Part \ref{part:compet}.
 Another challenge is called credit assignment.
 As highlighted in the SG definition, despite providing individual rewards, they provide feedback characterising all agent's actions.
 It is often challenging for an agent to credit its actions or the ones of others.
 Finally, the number of agents is critical in a MARL problem and represents the fourth challenge.
 Indeed, the size of the joint action space $|\mathcal{U}|$ scales exponentially with the number of agents.
-As highlighted in this manuscript, many components of the MARL problem are built as a function of the joint action space.
+As it will be highlighted in this manuscript, many components of the MARL problem are built as a function of the joint action space.
 A typical example is to decide if a joint policy is an equilibrium.
-These four challenges represent the main challenges in MARL identified \cite{marl-book}.
+These four challenges represent the main challenges in MARL identified by \cite{marl-book}.
 As mentioned in the introduction, specific settings exist in MARL, and addressing these challenges can be mitigated when considering additional hypotheses on the structure of the stochastic game, as detailed in the next section.
 
 \section{Multi-agent settings} 
@@ -117,12 +117,12 @@ When agent 0 chooses the action $B$, it receives a reward equal to 0 when agent 
 \label{table:ch2_prisonmatrix}
 \end{table}
 
-While MARL takes foundation in RL, it also takes foundation in game theory (GT) \citep{von1947theory} that provided this classification.
+While MARL takes foundation in RL, it also takes foundation in game theory (GT) \citep{von1947theory} that provided the following classification.
 The difference in these settings is the relation between the rewards of agents \citep{marl-book}.
 The first setting, cooperation, involves agents acting to achieve a common goal.
 In this setting, agents typically share the same reward.
 The second setting, competition, is the opposite, where agents pursue an opposing goal.
-In this case, agents typically receive rewards that sum to a constant since the gain of one is equal to the retrofit of others.
+In this case, agents typically receive rewards that sum to a constant since the gain of one is equal to the loss of others.
 The third setting is named general-sum and encompasses everything else.
 The stochastic game provides a typical framework for a general-sum problem, while its definition is adapted when it is cooperative or competitive.
 Not much detail will be provided here because these settings are the concern of further chapters.
@@ -153,21 +153,21 @@ An example of a normal-form cooperative game with a payoff matrix is provided in
 
 Part~\ref{part:coop} of this manuscript is dedicated to cooperative settings with a common reward.
 In Chapter~\ref{ch:cooperation}, we provide the adaptation of the stochastic game definition to a cooperative setting, followed by examples of environments and methods to solve them.
-In Chapter~\ref{ch:qvmix}, we present a method to solve such a setting, while in Chapter~\ref{ch:impmarl}, we present a suite of environments which frame a real-world application as a cooperative MARL problem.
+In Chapter~\ref{ch:qvmix}, we present methods from a specific contribution to solve such a setting, while in Chapter~\ref{ch:impmarl}, we present a suite of environments which frame a real-world application as a cooperative MARL problem.
 
 \subsection{Competition} 
 \label{sec:ch2_Competition}
 When agents have opposite goals, they compete.
-In competition, any action that benefits one agent incurs a retrofit to other ones.
+In competition, any action that benefits one agent incurs a loss to other ones.
 This setting is also called a zero-sum game \citep{marl-book} because it is often modelled such that the rewards of all agents sum to a constant at any time.
-In a two-agent zero-sum game, commonly known as a two-player zero-sum game in the game theory literature \citep{russel2010}, a classical implementation of the stochastic game is to have the reward function providing the same reward to all agents.
+In a two-agent zero-sum game, commonly known as a two-player zero-sum game in the GT literature \citep{russel2010}, a classical implementation of the stochastic game is to have the reward function providing the same reward to all agents.
 One agent aims to maximise it while the other tries to minimise it.
 We also refer to this setting as fully competitive.
 An example of a normal-form cooperative game with a payoff matrix is provided in Table \ref{table:ch2_competmatrix}.
 A concrete example is chess with a single reward at the end of the game: $1$ if player 1 won, $0$ if player 1 lost or $1/2$ if players drew.
 Player 2's goal would be to minimise this reward, while Player 1 wants to maximise it.
 Other examples include card games (e.g. Poker \citep{poker}), board games (e.g. chess, shogi, and Go \citep{silver2018general} or Stratego \citep{stratego}) and video games (e.g. StarCraft II \citep{vinyals2019grandmaster}).
-Part~\ref{part:compet} of this manuscript is not only dedicated to competitive settings but provides, in Chapter \ref{ch:competition}, many details on training agents in a competitive setting.
+Part~\ref{part:compet} of this manuscript is not only dedicated to competitive settings but provides, in Chapter \ref{ch:competition}, many details on training agents in such setting.
 
 \begin{table}
 \centering
@@ -193,7 +193,7 @@ In this manuscript, we are interested in the mixed cooperative-competitive setti
 Examples of this particular setting include games where two teams face each other (e.g., Dota 2 \citep{openai2019dota}).
 We model such a setting with a reward function providing only two rewards, one per team.
 Part~\ref{part:compet} is dedicated to this setting, and we study how methods designed for competition can work alongside cooperation ones.
-We provide background in Chapter~\ref{ch:competition}, including necessary background from the competitive literature, and then detail our contribution in Chapter~\ref{ch:2teams}.
+We provide background in Chapter~\ref{ch:competition}, including necessary background from the competitive literature, and then detail one specific contribution in Chapter~\ref{ch:2teams}.
 
 \section{Single-agent reinforcement learning} 
 \label{sec:ch2_single_agent_RL}
@@ -219,10 +219,11 @@ It is important because it implies that a policy based solely on the current sta
 Moreover, we defined the policy as the probability of taking action in a given state.
 A particular case is a deterministic policy, denoted $\pi(s):\mathcal{S}\rightarrow\mathcal{U}$, or standardly $\mu(s)$.
 
+
 \begin{figure}
     \centering
     \includegraphics[width=.8\linewidth]{tex_thesis/figures/ch2/MDP.pdf}
-    \caption{Interaction of agent with the environment in a Markov decision process \citep{sutton2018reinforcement}. The agent selects one action $u_t$ based on the state $s_t$. As a consequence, it receives a reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
+    \caption{Interaction of one agent with the environment in a Markov decision process \citep{sutton2018reinforcement}. The agent selects one action $u_t$ based on the state $s_t$. As a consequence, it receives a reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch2_mdp}
 \end{figure}
 
@@ -271,7 +272,7 @@ and,
 \end{split}
 \end{equation}
 
-From these equations, a policy $\pi'$ is better than another $\pi$ if $V^{\pi'}(s)>V^\pi(s)$.
+A policy $\pi'$ is better than another $\pi$ if $V^{\pi'}(s)>V^\pi(s)$.
 The optimal policy is the one that is better than all others.
 While there can be several optimal policies, all are denoted by $\pi^*$, and their state value function $V^{\pi^*}(s)$ is the same $\forall s$.
 Specifically, optimal policies are the unique solution of the Bellman optimality equations, $\forall s, u$,
@@ -297,7 +298,7 @@ Policy evaluation allows the refinement of any given policy $\pi$ by exploiting 
 This is called policy improvement.
 Alternating policy evaluation and improvement allows the iterative computation of the optimal policy, called policy iteration.
 The convergence time can be a significant drawback in policy iteration.
-However, the convergence guarantee can be kept while combining evaluation and improvement, leading to an approximation called value iteration $v_{k+1}(s) = \max_u \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$.
+However, the convergence guarantee can be kept while combining evaluation and improvement, leading to the update $v_{k+1}(s) = \max_u \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$, called the value iteration method.
 \cite{sutton2018reinforcement} provides many more details about these DP methods.
 
 In addition to requiring the model knowledge $P$ and $R$, the complexity of computing all these values increases with the size of the state and the action spaces, often referred to as the curse of dimensionality, which may limit their usage.
@@ -313,7 +314,7 @@ This method also converges according to the law of large numbers.
 Since the model is unknown, improving policies like in DP is impossible, but Monte Carlo simulations can be adapted to estimate state-action value functions similarly.
 Again, we refer the reader to \citep{sutton2018reinforcement} for many more details, such as how to update the value of a state visited several times during an episode.
 One important drawback of the Monte Carlo method is that it requires waiting for episodes to complete to update estimations.
-An alternative approach, also model-free and using played episodes, is called temporal difference (TD) learning.
+An alternative approach, also model-free, is called temporal difference (TD) learning.
 It immedialy updates the estimation using $v_{k+1}(s_t) = v_k(s_t) + \alpha [R(s_{t+1}, s_t, u_t) + \gamma v_k(s_{t+1}) - v_k(s_t)]$ where $\alpha$ controls the update size.
 TD-Learning is the foundation of the value-based methods introduced in this section.
 
@@ -329,7 +330,7 @@ it is possible to repeatedly update the estimation $Q(s, u)$ while observing new
 
 It is important to denote that this algorithm allows approximating $Q^{\pi^*}(s, u)$ independently of the policy used to sample transitions ($s_t, u_t, r_t, s_{t+1}$).
 These transition samples are typically generated with an $\epsilon$-greedy policy that takes a random action instead of the greedy one with a probability $\epsilon$, whereas the greedy policy selects the action maximising $Q$.
-This is a characteristic of the off-policy methods, as opposed to the on-policy method, which improves the current policy based on samples only from the current policy.
+This is a characteristic of the off-policy methods, as opposed to the on-policy methods, which improves the current policy based on samples only from the current policy.
 This manuscript considers only value-based methods that are off-policy, but on-policy methods are discussed further in Section~\ref{sec:ch2_policy_based_methods}.
 To cite one, SARSA is a well-known on-policy value-based method \citep{sutton2018reinforcement}.
 
@@ -360,18 +361,17 @@ This can be achieved by minimising the loss
     \mathcal{L}(\theta) = \mathbb{E}_B \big[\big(r_{t} + \gamma \max_u Q(s_{t+1}, u; \theta')- Q(s_{t}, u_{t}; \theta)\big)^{2}\big]
 \end{equation}
 where $B$ is the replay buffer and $\theta'$ is the target network.
-The replay buffer $B$ stores transitions $\langle s_{t},u_{t},r_{t},s_{t+1}\rangle$ from which batches of transitions are sampled to update $\theta$ \citep{lin1992self}.
+The replay buffer $B$ stores transitions $(s_{t},u_{t},r_{t},s_{t+1})$ from which batches of transitions are sampled to update $\theta$ \citep{lin1992self}.
 This replay buffer allows updating the neural network with past transitions.
 The target network $\theta'$ is a copy of $\theta$ updated periodically that reduces the moving target problem as $\theta$ is updated several times before updating $\theta'$, e.g., in \citep{Mnih2015}.
 
-for some environments, the $\max$ operator in Equations~\ref{eq:ch2_QLearning} and~\ref{eq:ch2_dqnloss} can introduce some positive bias, referred to as the overestimation bias.
+For some environments, the $\max$ operator in Equations~\ref{eq:ch2_QLearning} and~\ref{eq:ch2_dqnloss} can introduce some positive bias, referred to as the overestimation bias.
 To overcome this bias, a method called Double Q-learning \citep{hasselt2010double}, and adapted to Q-learning with neural networks \citep{van2016deep}, consists in selecting the action that maximises the updated $Q(., \theta)$ to compute the target state-action value.
 The corresponding loss is 
 \begin{equation}
     \label{eq:ch2_doubleQ}
     \mathcal{L}(\theta) = \mathbb{E}_{B} \big[\big(r_{t} + \gamma Q(s_{t+1}, \argmax_u Q(s_{t+1}, u;\theta) ; \theta')- Q(s_{t}, u_{t}; \theta)\big)^{2}\big].
 \end{equation}
-
 Double Q-learning, also called DDQN, is one of the possible improvements of DQN, and we refer to the Rainbow paper \citep{hessel2018rainbow} that addresses several others.
 To cite one, the extension to distributional RL, which approximates distributions instead of expected returns, can be of interest \citep{bellemare2017distributional, THEATE2023199}.
 Chapter \ref{ch:qvmix} presents the Deep Quality Value algorithms, also standing on the foundation provided by this section.
@@ -379,7 +379,7 @@ Chapter \ref{ch:qvmix} presents the Deep Quality Value algorithms, also standing
 \subsection{Policy-based methods} \label{sec:ch2_policy_based_methods}
 Policy-based methods are designed to learn the policy.
 In this manuscript, we restrict to the subclass of policy gradient methods where a neural network parametrised by $\theta$ approximates a differentiable policy $\pi_\theta=\pi(u|s;\theta)$.
-Policy gradient methods hence update $\theta$ to find the optimal policy that maximises the expected return denoted as  $J(\pi_\theta) = \mathbb{E}_{\pi_\theta, p}[G_0]$.
+Policy gradient methods hence update $\theta$ to find the optimal policy that maximises the expected return denoted as  $J(\pi_\theta) = \mathbb{E}_{\pi_\theta, p, P}[G_0]$.
 Maybe one of the first methods is REINFORCE \citep{williams1992simple}, which updates $\theta = \theta + \alpha \nabla_\theta J(\pi_\theta)$ by estimating the gradient with Monte Carlo given the policy gradient theorem \citep{sutton1999policy} 
 \begin{equation}
 \label{eq:ch2_reinforce_grad}
@@ -432,7 +432,7 @@ The corresponding interaction diagram of a POMDP is presented in Figure \ref{fig
 \begin{figure}
     \centering
     \includegraphics[width=.8\linewidth]{tex_thesis/figures/ch2/POMDP.pdf}
-    \caption{Interaction of agent with the environment in a partially observable Markov decision process \citep{KAELBLING199899}. The agent does not have access to the state $s_t$ but to an observation $o_t$ defined by the observation function $O$. Based on $o_t$, it selects one action $u_t$. As a consequence, it receives a reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
+    \caption{Interaction of one agent with the environment in a partially observable Markov decision process \citep{KAELBLING199899}. The agent does not have access to the state $s_t$ but to an observation $o_t$ defined by the observation function $O$. Based on $o_t$, it selects one action $u_t$. As a consequence, it receives a reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch2_pomdp}
 \end{figure}
 
