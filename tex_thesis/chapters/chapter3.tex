@@ -90,7 +90,7 @@ In the following, we consider CTDE algorithms that tackle the general case of De
 Highlighted in Section \ref{sec:ch2_partial_observability}, it is not possible to compute a belief of the state as a function of the agent's history in a Dec-POMDP because agents only access their observations and actions.
 Not being able to compute a Markovian statistic induces the complexity of solving Dec-POMDP to become challenging, even more than POMDP~\citep{DecPomdp}.
 For example, this forces planning methods to consider policies that map histories to action, unlike belief to action in POMDP and RL approaches defined later based on RNN, like in POMDP.
-This leads the method of enumerating and evaluating all possible deterministic joint policies to select the best to be only possible for small problems.
+Thus, finding the best by enumerating and evaluating all possible deterministic joint policies is only possible for small problems.
 This is because the number of possible histories grows with the length of episodes, so the number of policies to learn grows doubly exponentially with this length.
 
 Finally,~\cite{DecPomdp} present methods that find optimal deterministic joint policy since at least one exists in finite time horizon Dec-POMDP~\citep{oliehoek2008optimal}.
@@ -105,6 +105,14 @@ Aside from the scalability issues, these methods rely on the model of the enviro
 Before discussing CTDE methods in detail, we provide an overview of the existing suites\footnotemark of environments in the literature.
 We then describe the StarCraft multi-agent challenge (SMAC), perhaps one of the most studied environment suites in the community, but also used in our experiments in Chapter~\ref{ch:qvmix}.
 Moreover, Chapter~\ref{ch:impmarl} is dedicated to a specific suite of environments, and we leave its description there.
+Illustrations of the environments described hereafter are provided in Figure \ref{fig:ch3_envs}.
+
+\begin{figure}
+    \centering
+    \input{tex_thesis/figures/ch3/figure_envs}
+    \caption{Illustrations of several cooperative environment suites.}
+    \label{fig:ch3_envs}
+\end{figure}
 
 \footnotetext{In this manuscript, an environment refers to an instance of a particular framework (here, of a Dec-POMDP). We commonly see it in the literature as either a collection of environments or an instance of one. We use "suite" to distinguish between these two.}
 
@@ -414,7 +422,7 @@ To alleviate this, the critic can take as input $\mathbf{u^{-a}}$ and only outpu
 To use the same critic for all agents implies that all action spaces are the same size.
 
 A significant limitation is that this method is only possible for discrete action spaces, especially considering the sum over all actions in the advantage.
-\cite{foerster2017coma} argue that it would be possible to apply COMA with continuous action spaces easily by evaluating $\sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))$ with Monte-Carlo estimations or by using policy construction that allows to compute it anatically.
+\cite{foerster2017coma} argue that it would be possible to apply COMA with continuous action spaces easily by evaluating $\sum_{u'^{a}} \pi^a(u'^{a}|\tau^a) Q(s,(\mathbf{u^{-a}},u'^{a}))$ with Monte Carlo estimations or by using policy construction that allows to compute it anatically.
 A final observation is that the critic is considered central because using the state $s_t$, but it should be called $n$ times to update the $n$ actor networks.
 
 In COMA, policy networks $\theta$ usually follow the same architecture of IQL presented in Figure \ref{fig:ch3_indivQ}, where the outputs are not $Q$ values for each action but the probability of taking each action, usually obtained by applying a softmax to the last layer.

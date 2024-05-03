@@ -17,14 +17,15 @@ This chapter is an adapted version of the publication \citep{leroy2020qvmix} \te
 This chapter introduces four methods to learn to cooperate in a Dec-POMDP, defined in Section~\ref{sec:ch3_decpomdp}.
 They are adapted from the Deep Quality-Value (DQV) family of algorithm \citep{sabatelli2020deep}.
 DQV methods jointly learn an approximation of the state-value function $V$ alongside an approximation of the state-action value function $Q$.
-They have proven to significantly outperform popular algorithms in SARL, such as DQN and DDQN defined in Section~\ref{sec:ch2_value_based_methods}.
+They have proven to
+outperform popular algorithms in SARL, such as DQN and DDQN defined in Section~\ref{sec:ch2_value_based_methods}.
 The four methods follow two modes of training and execution in a Dec-POMDP, introduced in Section~\ref{sec:ch3_intro}.
 The methods designed for the decentralised mode are called IQV and IQV-Max.
 The other two dedicated to the CTDE mode are called QVMix and QVMix-Max.
 They are tested with the StarCraft Multi-Agent Challenge (SMAC) suite of environments, introduced in Section~\ref{fig:ch3_smac}.
 They are compared with IQL, QMIX and MAVEN, three value-based methods defined in Section~\ref{sec:ch3_value}.
 
-Finally, the contributions of \citep{leroy2020qvmix} presented in this chapter can be divided into three parts.
+The contributions of \citep{leroy2020qvmix} presented in this chapter can be divided into three parts.
 The first is the generalisation of the DQV family of algorithms to cooperative MARL problems, their performance in the decentralised mode and their fundamental limitations.
 The second is the introduction of two methods, QVMix and QVMix-Max.
 Both combine the original benefits of the DQV algorithms with CTDE, resulting in a better performance than state-of-the-art techniques of their time.
@@ -34,7 +35,8 @@ The third is to link their better performance to the overestimation bias of the 
 
 As introduced, the work presented in this chapter revolves around the Deep Quality-Value (DQV) family of DRL algorithms \citep{sabatelli2018deepQV, sabatelli2020deep}.
 These SARL techniques learn an approximation of the state value function $V$ alongside an approximation of the state-action value function $Q$.
-The DQV algorithms extend the tabular RL algorithms called QV($\lambda$) learning \citep{wiering2005qv, wiering2009qv} with neural networks as function approximations.
+The DQV algorithms extend the tabular RL algorithms called QV($\lambda$)-Learning \citep{wiering2005qv, wiering2009qv} with neural networks as function approximations.
+One motivation of \cite{wiering2005qv} is that learning the state value function may converge faster than the state-action one.
 There are two possible ways of learning a joint approximation of the $V$ function, $V(s;\phi)\approx V^{\pi^*}(s)$, and of the $Q$ function, $Q(s, u;\theta)\approx Q^{\pi^*}(s, u)$.
 
 DQV learns an approximation of the $V$ function by minimising
@@ -55,9 +57,11 @@ DQV-Max learns the $Q$ function with the same loss defined in Equation \eqref{eq
 \end{equation}
 As in DQN, the replay buffer $B$ stores transitions $\langle s_{t},u_{t},r_{t},s_{t+1}\rangle$ from which batches of transitions are sampled to update the networks.
 The target network $\theta'$ and $\phi'$ are a copies of $\theta$ and $\phi$ updated periodically.
+This manuscript does not compare these SARL algorithms with DQN or DDQN, but we refer the reader to the PhD thesis of \cite{thesis_matthia}.
+This thesis provides further analysis of the quality of the approximations, showcasing DQN's overestimation bias while highlighting that DQV and DQV-MAX do not suffer from it.
 
-The extension to the decentralised MARL methods is straightforward, like IQL from DQN.
-This leads to IQV and IQV-Max using, respectively, the DQV and DQV-Max update rules to learn $Q_a(\tau^a, u^a;\theta)$ and $V_a(\tau^a;\phi)$ independently.
+The extension to the decentralised MARL methods is straightforward.
+Like IQL is the decentralised DQN, we define IQV and IQV-Max as the decentralised DQV and DQV-Max, using, respectively, the DQV and DQV-Max update rules to learn $Q_a(\tau^a, u^a;\theta)$ and $V_a(\tau^a;\phi)$ independently.
 For the CTDE mode, the methods are QVMix and QVMix-Max, and they follow the DQV and DQV-Max update rules to learn $Q^{mix}_{tot}(s, \mathbf{u})$.
 The architecture of the $Q_a$ and the mixer network is the same as in QMIX, using the same monotonic decomposition.
 In both QVMix and QVMix-Max, the $V$ network computes a central state value function $V^{mix}_{tot}(s)$ as a function of individual $V_a(\tau^a;\theta)$.
@@ -65,6 +69,7 @@ It has the same architecture as the $Q$ ones of QMIX, except they have a single 
 The architecture is presented in Figure~\ref{fig:ch4_qvmix}.
 In QVMix, $V^{mix}_{tot}$ is updated following the loss defined in Equation~\ref{eq:ch4_dqv_v_update} and with the loss defined in Equation~\ref{eq:ch4_dqv_max_v} for QVMix-Max.
 Individual networks are GRU, and $B$ stores sequences of contiguous transitions instead of single transitions to train recurrent neural networks.
+The following section described how these methods are evaluated in the SMAC suite of environments. 
 
 \begin{figure}
 \centering
@@ -96,14 +101,6 @@ This means a single individual $Q_a$ network is used for all agents.
 A one-hot encoding of the agent id ($\{1,..,n\}$) is added to the observation space to allow individual networks to produce different policies per agent.
 
 \section{Results} \label{sec:ch4_results}
-We report the results of experiments in two different ways.
-We start by analysing each tested method's win rate before investigating the quality of the value functions learned by all algorithms.
-
-The means of win rate for each map and algorithm are reported in Table~\ref{tab:main_results}. 
-Suppose the algorithms perform equally in terms of overall performance, meaning the average win rate is the same. 
-In that case, we consider the one which significantly converges the fastest to be the best-performing algorithm.
-Please note that reporting an episode's win rate is a good indicator of the quality of an agent's learned policy since, as introduced in the previous section, a win directly corresponds to the best achievable sum of rewards an agent can receive.
-
 \begin{table*}
     \centering
     \input{tex_thesis/figures/ch4/table_mean}
@@ -114,6 +111,14 @@ Please note that reporting an episode's win rate is a good indicator of the qual
     We report the best and second-best means by \textbf{bolding} and \underline{underlining} them. When results are equivalent, the cells report the fastest and second-fastest method that reaches a win rate of $100\%$ as shown in Figure~\ref{fig:all_win_curves}.}
     \label{tab:main_results}
 \end{table*}
+
+We report the results of experiments in two different ways.
+We start by analysing each tested method's win rate before investigating the quality of the value functions learned by all algorithms.
+
+The means of win rate for each map and algorithm are reported in Table~\ref{tab:main_results}. 
+Suppose the algorithms perform equally in terms of overall performance, meaning the average win rate is the same. 
+In that case, we consider the one which significantly converges the fastest to be the best-performing algorithm.
+Please note that reporting an episode's win rate is a good indicator of the quality of an agent's learned policy since, as introduced in the previous section, a win directly corresponds to the best achievable sum of rewards an agent can receive.
 
 We start by observing the differences in performance between the decentralised mode methods IQL, IQV, and IQV-Max and their respective CTDE extensions QMIX, QVMix, QVMix-Max, and MAVEN.
 As one might expect, we can see from the results reported in Figure~\ref{fig:ch4_2m1zwin} that methods for the decentralised mode converge slowly when compared to their CTDE counterparts on the considered \texttt{2\_vs\_1z} map.
@@ -126,7 +131,7 @@ However, it is difficult to conclude which one suffers the most.
 
 \begin{figure}
 \centering
-\includegraphics[width=.8\linewidth]{tex_thesis/figures/ch4/2m1zall.pdf}
+\includegraphics[width=.7\linewidth]{tex_thesis/figures/ch4/2m1zall.pdf}
 \caption{Mean of win rates achieved in the \texttt{2m\_vs\_1z} map by QVMix, QVMix-Max, QMIX, MAVEN, IQV, IQVMax and IQL. The error band is proportional to the variance of the measure. We observe that all CTDE methods result in faster training than decentralised ones. All four novel algorithms based on the DQV algorithms can be successfully used in cooperative MARL.}
 \label{fig:ch4_2m1zwin}
 \end{figure}

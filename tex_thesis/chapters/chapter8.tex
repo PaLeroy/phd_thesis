@@ -1,10 +1,10 @@
 \chapter{Conclusion}\label{ch:conclusion}
 
 This thesis showcases the usefulness of considering other learning agents when training one with reinforcement learning in a multi-agent environment through three specific contributions.
-The first contribution extends the DQV single-agent family of algorithms to the cooperative multi-agent setting, outperforming the methods compared against.
+The first contribution extends the DQV single-agent family of algorithms to the cooperative multi-agent setting.
 The second contribution demonstrates the interest of these cooperative methods in the context of a real-world application: the infrastructure management planning problem.
 The third contribution analyses how to train a team in a mixed cooperative-competitive setting where two teams compete.
-We hereafter summarise the manuscript's content, divided into three parts, and discuss the scientific findings before finally discussing the potential societal impact of multi-agent reinforcement learning.
+We hereafter summarise the manuscript's content, divided into three parts, and discuss the scientific findings before finally discussing the potential societal impact of MARL.
 
 Part \ref{part:background} provides the required background.
 Specifically, Chapter \ref{ch:background} presents the stochastic game, a general framework for multi-agent reinforcement learning. 
@@ -19,14 +19,14 @@ When agents cooperate, it can be framed as a decentralised partially observable 
 This part comprises three chapters.
 One is a background chapter, and the others address two contributions.
 
-Chapter \ref{ch:cooperation} defines the cooperative framework and details some applications.
+Chapter \ref{ch:cooperation} defines the cooperative framework and details certain applications.
 Several cooperative MARL methods to solve Dec-POMDP are defined following its definition, emphasising how algorithms have been designed to allow centralised training with decentralised execution.
 While the performance of these methods is compared in later chapters, this third chapter concludes with a literature discussion, highlighting approaches not considered in this manuscript but still of interest.
 
 Chapter \ref{ch:qvmix} presents QVMix and other value-based methods for Dec-POMDP.
 It highlights that learning the state value function to update the state-action value function as done in SARL by the DQV algorithms can be extended to cooperative CTDE methods in MARL.
 Some of the introduced methods outperform the ones compared against, previously defined in Chapter \ref{ch:cooperation}.
-Moreover, they allow to not overestimate the state-action value function, unlike these compared value-based methods relying on the classical Q-learning update.
+Moreover, they allow one to not overestimate the state-action value function, unlike these compared value-based methods relying on the classical Q-Learning update.
 
 Chapter \ref{ch:impmarl} presents infrastructure management planning, a real-world application that can be framed as a Dec-POMDP.
 Managing infrastructure by timely inspecting or repairing system components to minimise failure risk and maintenance cost becomes challenging as the system grows.
@@ -49,19 +49,19 @@ The setting is a symmetric two-team Markov game where two teams of the same agen
 We compared three learning scenarios in this setting.
 We trained teams against a stationary policy, in self-play or within a population of learning teams.
 The performance of these learning scenarios is evaluated with the Elo score computed within different subsets of trained teams.
-This allows to evaluate the level of resilience against a variety of policies.
+This allows one to evaluate the resilience level against various policies.
 This leads to the conclusion that the population-based scenario is the best in this setting.
 
-Multi-agent reinforcement learning is still a young field, although it resides on strong and long-established foundations based on game theory and reinforcement learning.
+MARL is still a novel field, although it resides on strong and long-established foundations based on game theory and reinforcement learning.
 The precise moment when advances in neural networks significantly influenced MARL's progress is debatable, given that groundbreaking work in this area has only emerged recently.
-For the cooperative setting, it is difficult to keep one, but VDN \citep{sunehag2018vdn}, MADDPG \cite{lowe2017multi} and COMA \citep{foerster2017coma} can be considered as such works, along with SMAC \citep{samvelyan2019starcraft} which is the starting point of many experiments.
+For the cooperative setting, it is difficult to provide one, but VDN \citep{sunehag2018vdn}, MADDPG \cite{lowe2017multi} and COMA \citep{foerster2017coma} can be considered as such works, along with SMAC \citep{samvelyan2019starcraft} which is the starting point of many experiments.
 We can also cite AlphaGo Zero \citep{silver2017mastering}, one of the popular breakthroughs in the competitive setting, despite being considered as planning more than RL by some.
 
 However, despite these advancements, many challenges remain, particularly regarding the application of MARL in real-world scenarios.
 The community is bridging the gap with environments closer to reality.
 One notable example of bridging this gap is IMP-MARL.
 However, convincing applications of MARL that entirely replace classical planning approaches have yet to emerge.
-While the classical problems of deploying RL in real life, such as safety, robustness, or explainability of the trained agents, explain this, some efforts are still required to bring MARL into real life by demonstrating their potential.
+While the classical problems of deploying RL in real life, such as safety, robustness, or explainability of the trained agents, explain this, some effort is still required to bring MARL into real life by demonstrating their potential.
 
 The number of agents studied in the literature is often very limited, and increasing this number should be considered in the future, in addition to getting closer to real-world applications.
 Mean-field games, which aim to study systems with an infinite number of agents, may be such candidates.
@@ -69,7 +69,7 @@ Moreover, it is worth noting that the general-sum setting is underrepresented in
 Despite existing work in this area, presented in Chapter \ref{ch:competition}, real-life general-sum settings, such as autonomous driving, remain particularly challenging due to the complex interactions between agents.
 We believe the reader can now understand why.
 
-Finally, MARL has the potential to impact significantly society in various ways.
+Finally, MARL has the potential to significantly impact society in various ways.
 Decision-making is a fundamental aspect of human cognition, and throughout history, scientific advancements have played a crucial role in aiding humans in making decisions.
 In this manuscript, we discuss numerous impactful applications of MARL.
 Consider, for instance, the profound impact of improving our infrastructure management planning strategies.

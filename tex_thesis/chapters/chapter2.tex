@@ -53,7 +53,7 @@ The $n$ actions selected by each agent form the joint action $\mathbf{u_t} \in \
 We also denote the joint policy by $\mathbf{\pi} = (\pi^{a_1},...,\pi^{a_n})$.
 As a consequence of agents taking $\mathbf{u_t}$, the state of the environment $s_t$ transits to a new state $s_{t+1}$ with a probability $P(s_{t+1}, s_t, \mathbf{u_t})$ defined by the stochastic transition function $P:\mathcal{S} \times \mathcal{U} \rightarrow \Delta(\mathcal{S})$.
 At the same time as the state transitions, each agent receives a reward denoted $r_t^{a_i} = R(s_{t+1}, s_t, \mathbf{u_t}, i)$ defined by the reward function $R: \mathcal{S} \times \mathcal{S} \times \mathcal{U} \times \mathcal{A} \rightarrow \mathbb{R}$.
-The goal of each agent $a_i$ is to maximise its expected return, which is the expected sum of discounted rewards $\mathbb{E}_{\mathbf{\pi}, p, P}\left[ G_0 \right] =\mathbb{E}_{\mathbf{\pi}, p, P}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, where $T$ is the time horizon, $p$ is the initial state distribution, $\gamma \in ]0, 1]$ the discount factor and $G_t= \sum_{j=t}^{T-1} \gamma^{t-j} r_{j}$.
+The goal of each agent $a_i$ is to maximise its expected return, which is the expected sum of discounted rewards $\mathbb{E}_{\mathbf{\pi}, p, P}\left[ G_0 \right] =\mathbb{E}_{\mathbf{\pi}, p, P}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, where $T$ is the time horizon, $p$ is the initial state distribution, $\gamma \in [0, 1]$ the discount factor and $G_t= \sum_{j=t}^{T-1} \gamma^{t-j} r_{j}$.
 In this thesis, the time horizon $T$ is considered finite, defining the length of an episode.
 Intuitively, the discount factor $\gamma$ defines the importance of future reward.
 Finally, we insist that an agent's return depends on the joint action taken and not only on its own.
@@ -94,7 +94,7 @@ Indeed, the size of the joint action space $|\mathcal{U}|$ scales exponentially 
 As highlighted in this manuscript, many components of the MARL problem are built as a function of the joint action space.
 A typical example is to decide if a joint policy is an equilibrium.
 These four challenges represent the main challenges in MARL identified \cite{marl-book}.
-As mentioned in the introduction, specific settings exist in MARL, and addressing these challenges can be eased when considering additional hypotheses on the structure of the stochastic game, as detailed in the next section.
+As mentioned in the introduction, specific settings exist in MARL, and addressing these challenges can be mitigated when considering additional hypotheses on the structure of the stochastic game, as detailed in the next section.
 
 \section{Multi-agent settings} 
 \label{sec:ch2_multi_agent_settings}
@@ -255,12 +255,12 @@ Nevertheless, the following section introduces dynamic programming, methods requ
 
 \subsection{Dynamic programming}
 Dynamic programming (DP) \citep{bellman1966dynamic} methods compute the optimal policies given a model of an MDP \citep{sutton2018reinforcement}.
-First, we present the Bellman equation to provide some intuitions to help understand later methods and discuss dynamic programming methods.
-They are obtained by developing value functions, highlighting their recursive relationships, for any policy $\pi$ and $\forall s, u$,
+We present the Bellman equations to provide some intuitions to help understand later methods and discuss dynamic programming ones.
+These equations are obtained by developing value functions, highlighting their recursive relationships, for any policy $\pi$ and $\forall s, u$,
 \begin{equation}
 \label{eq:ch2_V_2}
 \begin{split}
-    V^\pi(s)= \mathbb{E}_{\pi}\left[G_t|s_t=s\right] & = \mathbb{E}_{\pi}\left[r_t + \gamma V^\pi(s_{t+1})|s_t=s\right],
+    V^\pi(s)= \mathbb{E}_{\pi}\left[G_t|s_t=s\right] & = \mathbb{E}_{\pi}\left[r_t + \gamma V^\pi(s_{t+1})|s_t=s\right] \\  &= \sum_{u} \pi(u|s) \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma V^\pi(s')),
 \end{split}
 \end{equation}
 and,
@@ -272,9 +272,9 @@ and,
 \end{equation}
 
 From these equations, a policy $\pi'$ is better than another $\pi$ if $V^{\pi'}(s)>V^\pi(s)$.
-The policy that is better than all others is the optimal policy.
+The optimal policy is the one that is better than all others.
 While there can be several optimal policies, all are denoted by $\pi^*$, and their state value function $V^{\pi^*}(s)$ is the same $\forall s$.
-The optimal policies are the unique solution of the Bellman optimality equations, $\forall s, u$,
+Specifically, optimal policies are the unique solution of the Bellman optimality equations, $\forall s, u$,
 \begin{equation}
 \label{eq:ch2_bellmanV}
     V^{\pi^*}(s) = \max_{\pi}V^\pi(s) = \max_u \mathbb{E}_{\pi^*}[r_t + \gamma V^{\pi^*}(s_{t+1})| s_t=s, u_t=u],
@@ -285,43 +285,41 @@ and,
     Q^{\pi^*}(s, u) =  \max_{\pi}Q^\pi(s, u) = \mathbb{E}_{\pi^*}[r_t + \gamma \max_{u'} Q^{\pi^*}(s_{t+1}, u') |s_t=s, u_t=u].
 \end{equation}
 The optimality equations given in Equation \ref{eq:ch2_bellmanV} represent a system of $|\mathcal{S}|$ equations with $|\mathcal{S}|$ unknown, and solving this system would allow one to compute the optimal policy.
-This can also be done with the system defined in Equation \ref{eq:ch2_bellmanQ}.
-The condition is, of course, to have reversible access to the MDP model.
+This is also the case with the system defined in Equation \ref{eq:ch2_bellmanQ}.
+The condition is to have reversible access to the MDP model.
 Solving either system is usually not considered for computational reasons.
-Therefore, this manuscript presents methods for computing an approximate solution to the Belman optimality equations.
+This is why, in the following, we consider methods for computing an approximate solution to the Belman optimality equations.
 
-DP is an approach that computes the solutions by iteratively updating approximations until they converge.
-DP can solve Equation \ref{eq:ch2_V_2} by updating estimates $v_k$ with $v_{k+1}(s) = \sum_{u} \pi(u|s) \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$, where $v_0(s)$ can have arbitrary values except for terminal states that are required to equal 0.
+DP is an approach that computes the solutions by iteratively updating approximations until they converge to the real ones.
+DP can solve Equation \ref{eq:ch2_V_2} by updating estimates $v_k(s) \forall s$ with $v_{k+1}(s) = \sum_{u} \pi(u|s) \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$, where $v_0(s)$ can have arbitrary values except for terminal states that are required to equal 0.
 This is called iterative policy evaluation and is proven to converge if $k\rightarrow\infty$.
 Policy evaluation allows the refinement of any given policy $\pi$ by exploiting Equation \ref{eq:ch2_Q_2} to evaluate other actions than $\pi(s)$ using $Q^\pi(s, u) =  \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$. 
 This is called policy improvement.
 Alternating policy evaluation and improvement allows the iterative computation of the optimal policy, called policy iteration.
-Policy iteration convergence time can be a significant drawback in policy iteration.
+The convergence time can be a significant drawback in policy iteration.
 However, the convergence guarantee can be kept while combining evaluation and improvement, leading to an approximation called value iteration $v_{k+1}(s) = \max_u \sum_{s'} P(s', s, u) (R(s', s, u) + \gamma v_k(s'))$.
 \cite{sutton2018reinforcement} provides many more details about these DP methods.
 
 In addition to requiring the model knowledge $P$ and $R$, the complexity of computing all these values increases with the size of the state and the action spaces, often referred to as the curse of dimensionality, which may limit their usage.
-\cite{sutton2018reinforcement} claim that this take is somehow mistaken, explaining that DP has a polynomial complexity with $|\mathcal{S}|$ and $|\mathcal{U}|$ and could scale to large spaces.
-Nevertheless, computing them is impossible for continuous spaces without discretising the spaces.
-
-We are interested in model-free methods because accessing the model knowledge can be challenging.
-One possibility is to estimate the state value function of a given policy with Monte-Carlo estimations.
-Such evaluation of a state relies on playing many episodes by plating actions provided by the policy to determine its average return.
-This method also converges according to the law of large numbers.
-Since the model is unknown, improving policies like in DP is impossible, but Monte-Carlo simulations can be adapted to estimate state-action value functions.
-Again, \citep{sutton2018reinforcement} provides many more details.
-One important drawback in Monte-Carlo methods is that the estimation requires waiting for the completion of episodes to update estimations.
-An alternative approach, model-free and using episode samples, is called temporal difference (TD) learning.
-It immedialy updates the estimation using $v_{k+1}(s_t) = v_k(s_t) + \alpha [R(s_{t+1}, s_t, u_t) + \gamma v_k(s_{t+1}) - v_k(s_t)]$ where $\alpha$ controls the update size.
-TD-Learning is the foundation of the value-based methods introduced in the following section.
+\cite{sutton2018reinforcement} claim that this take is somehow overrated, explaining that with some assumptions, DP can have a polynomial complexity with $|\mathcal{S}|$ and $|\mathcal{U}|$ and could scale to large spaces.
+Nevertheless, computing them is impossible for continuous spaces without discretising the spaces, and we are interested in model-free methods because accessing the model knowledge can be challenging.
+The following section details methods to approximate these value functions without knowing the transition and reward functions.
 
 \subsection{Value-based methods} \label{sec:ch2_value_based_methods}
-Value-based methods are designed to learn value functions.
-Maybe one of the most common methods in model-free RL is Q-learning \citep{watkins1992q}, where the state-action value function learned is the optimal one defined as $Q^{\pi^*}(s, u)=\max_{\pi}Q^\pi(s, u)$.
-This enables the agent to greedily select the action following the deterministic policy $\pi^*(s)=\argmax_u Q^{\pi^*}(s, u)$.
+As introduced, value-based methods are designed to approximate value functions.
+In a model-free setting, one possibility is to estimate the state value function of a given policy with Monte Carlo estimations.
+Such evaluation relies on playing many episodes following the policy to determine the average return of a state.
+This method also converges according to the law of large numbers.
+Since the model is unknown, improving policies like in DP is impossible, but Monte Carlo simulations can be adapted to estimate state-action value functions similarly.
+Again, we refer the reader to \citep{sutton2018reinforcement} for many more details, such as how to update the value of a state visited several times during an episode.
+One important drawback of the Monte Carlo method is that it requires waiting for episodes to complete to update estimations.
+An alternative approach, also model-free and using played episodes, is called temporal difference (TD) learning.
+It immedialy updates the estimation using $v_{k+1}(s_t) = v_k(s_t) + \alpha [R(s_{t+1}, s_t, u_t) + \gamma v_k(s_{t+1}) - v_k(s_t)]$ where $\alpha$ controls the update size.
+TD-Learning is the foundation of the value-based methods introduced in this section.
 
+Maybe one of the most popular methods in model-free RL is Q-learning \citep{watkins1992q}, where the state-action value function learned is the optimal one defined as $Q^{\pi^*}(s, u)=\max_{\pi}Q^\pi(s, u)$, allowing the agent to select actions with the greedy deterministic policy $\pi^*(s)=\argmax_u Q^{\pi^*}(s, u)$.
 Q-learning is a tabular method because it maintains $Q(s, u)$ estimations in a table, one value for each state-action pair.
-It updates these estimations based on themselves, called bootstrapping, and is based on temporal difference (TD) learning \citep{sutton2018reinforcement}.
+It updates these estimations based on themselves, called bootstrapping, like TD-Learning \citep{sutton2018reinforcement}.
 Following the update 
 \begin{equation}
 \label{eq:ch2_QLearning}
@@ -366,8 +364,8 @@ The replay buffer $B$ stores transitions $\langle s_{t},u_{t},r_{t},s_{t+1}\rang
 This replay buffer allows updating the neural network with past transitions.
 The target network $\theta'$ is a copy of $\theta$ updated periodically that reduces the moving target problem as $\theta$ is updated several times before updating $\theta'$, e.g., in \citep{Mnih2015}.
 
-In both Equations~\ref{eq:ch2_QLearning} and~\ref{eq:ch2_dqnloss}, the $\max$ operator can introduce some positive bias. 
-To overcome this bias, a method called Double Q-learning \citep{hasselt2010double}, and adapted to Q-learning with approximations \citep{van2016deep}, consists in selecting the action that maximises the updated $Q(., \theta)$ to compute the target state-action value.
+for some environments, the $\max$ operator in Equations~\ref{eq:ch2_QLearning} and~\ref{eq:ch2_dqnloss} can introduce some positive bias, referred to as the overestimation bias.
+To overcome this bias, a method called Double Q-learning \citep{hasselt2010double}, and adapted to Q-learning with neural networks \citep{van2016deep}, consists in selecting the action that maximises the updated $Q(., \theta)$ to compute the target state-action value.
 The corresponding loss is 
 \begin{equation}
     \label{eq:ch2_doubleQ}
@@ -375,13 +373,14 @@ The corresponding loss is
 \end{equation}
 
 Double Q-learning, also called DDQN, is one of the possible improvements of DQN, and we refer to the Rainbow paper \citep{hessel2018rainbow} that addresses several others.
-To cite one, the extension to distributional RL, which approximates distributions instead of expected returns, can be of interest \citep{bellemare2017distributional, THEATE2023199}. 
+To cite one, the extension to distributional RL, which approximates distributions instead of expected returns, can be of interest \citep{bellemare2017distributional, THEATE2023199}.
+Chapter \ref{ch:qvmix} presents the Deep Quality Value algorithms, also standing on the foundation provided by this section.
 
 \subsection{Policy-based methods} \label{sec:ch2_policy_based_methods}
 Policy-based methods are designed to learn the policy.
 In this manuscript, we restrict to the subclass of policy gradient methods where a neural network parametrised by $\theta$ approximates a differentiable policy $\pi_\theta=\pi(u|s;\theta)$.
 Policy gradient methods hence update $\theta$ to find the optimal policy that maximises the expected return denoted as  $J(\pi_\theta) = \mathbb{E}_{\pi_\theta, p}[G_0]$.
-Maybe one of the first methods is REINFORCE \citep{williams1992simple}, which updates $\theta = \theta + \alpha \nabla_\theta J(\pi_\theta)$ by estimating the gradient with Monte-Carlo given the policy gradient theorem \citep{sutton1999policy} 
+Maybe one of the first methods is REINFORCE \citep{williams1992simple}, which updates $\theta = \theta + \alpha \nabla_\theta J(\pi_\theta)$ by estimating the gradient with Monte Carlo given the policy gradient theorem \citep{sutton1999policy} 
 \begin{equation}
 \label{eq:ch2_reinforce_grad}
     \nabla_\theta J(\pi_\theta) = \nabla_\theta \mathbb{E}_{\pi_\theta}[G_0] = \mathbb{E}\left[\sum_{t=0}^{T-1} Q^{\pi_\theta}(s_t, u_t) \nabla_\theta \log \pi(u_t|s_t;\theta)\right].
