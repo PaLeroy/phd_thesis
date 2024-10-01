@@ -37,13 +37,13 @@ We finish with a discussion on partial observability, an essential topic in RL, 
 
 Since this chapter aims to provide a broader overview of RL and its central concepts, we intentionally skip some details, such as mathematical developments, demonstrations, or definitions.
 However, we always try to refer the reader to references that go beyond our introductions.
-We acknowledge that the background chapters of this manuscript take a lot of inspiration from the cited works, especially from two of them: ``Reinforcement learning: An introduction'' \citep{sutton2018reinforcement}, well established in the community and ``Multi-Agent Reinforcement Learning: Foundations and Modern Approaches'' \citep{marl-book}, a recent book on the foundations of multi-agent reinforcement learning.
+We acknowledge that the background chapters of this manuscript take a lot of inspiration from the cited works, especially from two of them: ``Reinforcement learning: An introduction'' \citep{sutton2018reinforcement}, well established in the community, and ``Multi-Agent Reinforcement Learning: Foundations and Modern Approaches'' \citep{marl-book}, a recent book on the foundations of multi-agent reinforcement learning.
 
 \section{Stochastic game}
 \label{sec:ch2_stochastic_Game}
 
 The stochastic game (SG) \citep{stochasticGames} is at the foundation of MARL.
-In an SG, a set of agents interact with the environment by observing its state, choosing actions, and receiving rewards over a sequence of time steps.
+In an SG, a set of agents interacts with the environment by observing its state, choosing actions, and receiving rewards over a sequence of time steps.
 We define a stochastic game by a tuple $[n, \mathcal{S}, \mathcal{U}, R, P, \gamma, p, T]$.
 The interaction of agents in an SG is presented in Figure \ref{fig:ch2_sg}.
 The set of agents is $\mathcal{A} \equiv \{1,..,n\}$ so that a specific agent is denoted by $a_i$,  or directly by $i$, with $i \in \mathcal{A}$.
@@ -56,7 +56,7 @@ At the same time as the state transitions, each agent receives a reward denoted 
 The goal of each agent $a_i$ is to maximise its expected return, which is the expected sum of discounted rewards $\mathbb{E}_{\mathbf{\pi}, p, P}\left[ G_0^{a_i} \right] =\mathbb{E}_{\mathbf{\pi}, p, P}\left[ \sum_{t=0}^{T-1} \gamma^t r^{a_i}_t \right]$, where $T$ is the time horizon, $p$ is the initial state distribution, $\gamma \in [0, 1]$ the discount factor and $G^a_t= \sum_{j=t}^{T-1} \gamma^{t-j} r^a_{j}$.
 The time horizon $T$ can be infinite but in this thesis, it is considered finite, defining the length of an episode.
 Intuitively, the discount factor $\gamma$ defines the importance of future reward.
-Finally, we insist that an agent's return depends on the joint action taken and not only on its own.
+Finally, we insist that an agent's return depends on the joint actions taken and not only on its own actions.
 
 \begin{figure}
     \centering
@@ -79,7 +79,7 @@ Since all agents learn, they all update their strategy over time.
 One typical risk is that agents may adapt to the strategy of others in an infinite cycle, as in the rock-paper-scissor example of Chapter \ref{ch:introduction}.
 One example solution to this problem is to find a Nash equilibrium \citep{nash1950equilibrium}.
 Such equilibrium is obtained when no agents are interested in changing their policy, meaning that if one changes its policy, its sum of discounted rewards will decrease.
-There is always at least one Nash equilibrium.
+There is always at least one Nash equilibrium \citep{nash1950equilibrium}.
 When there are several, one may provide a better sum of discounted rewards to all agents than another.
 Identifying the optimality of policies, which is connected to finding the best equilibria, is a significant challenge in MARL.
 This task is often split into two challenges: finding and evaluating equilibria.
@@ -211,7 +211,7 @@ Despite being alone, the agent's goal is the same as in an SG, to maximise the e
 To maximise its discounted return, the agent needs to learn an optimal policy $\pi^* = \argmax_\pi \mathbb{E}_{\pi}\left[ G_0 \right]$.
 To evaluate a policy, we define the state value function $V^\pi(s) = \mathbb{E}_{\pi}\left[G_t|s_t=s\right]$ and the state-action value function $Q^\pi(s, u) = \mathbb{E}_{\pi}\left[G_t|s_t=s, u_t=u\right]$.
 While it may appear meaningless for a single-agent environment, it is interesting to observe that the optimal policy is a Nash equilibrium.
-Indeed, the agent can not profit from changing its policy.
+Indeed, the agent cannot profit from changing its policy.
 
 An important property in MDP and SG that is not mentioned in the SG definition is that the next state depends only on the current state and action.
 This is called the Markovian property.
@@ -341,7 +341,7 @@ Balancing between exploration and exploitation is a crucial parameter to train a
 Back to Q-learning, the table size increases as the state-action space size increases.
 Therefore, it can become impractical to compute an estimate of $Q(s, u)$ for each state-action pair, requiring function approximations.
 Aside from the generalisation problem, storing a table for continuous spaces is also impossible.
-Various function approximators exist, but we restrict ourselves to neural networks in this manuscript.
+Various function approximators exist, but in this manuscript, we restrict ourselves to neural networks because of their performance in complex environments.
 
 A neural network is a function $f_\theta: \mathcal{X} \rightarrow \mathcal{Y}$ that maps an input ($\in\mathcal{X}$) to an output ($\in\mathcal{Y}$) based on its parameters $\theta$: $y = f(x;\theta)$.
 These parameters define a composition of differentiable functions, linear or not, allowing optimising the parameters by following the gradient of an objective, commonly called a loss function $\mathcal{L}(\theta)$.

@@ -40,7 +40,7 @@ Typically, this mode benefits from the state of the environment or exploits the 
 From the research question highlighted in Chapter \ref{ch:introduction}, these different modes showcase several ways to consider, or not, the other learning agents when training one.
 This Part~\ref{part:coop} focuses on methods that exploit the CTDE mode to solve cooperative tasks.
 This chapter presents Dec-POMDP environments and CTDE methods issued from the literature.
-The performance of these methods is not compared in this chapter but in both next ones.
+We restrict ourselves to the definitions of methods compared in later chapters and defer comparing their performance in these later chapters.
 They present two specific contributions: additional CTDE methods in Chapter~\ref{ch:qvmix} and a real-world application of Dec-POMDP in Chapter~\ref{ch:impmarl}.
 
 \section{Decentralised partially observable Markov decision process}
@@ -76,9 +76,9 @@ The introduction may already provide some insights about this claim, and the fol
 
 Like MDP is the fully observable POMDP, there exist several particular cases of Dec-POMDP based on the observability of the agents.
 This allows us to define the required assumptions to train a single agent to decide the joint action to make the centralised execution mode possible.
-When the joint observation can identify the state while the observation of one agent can not, this is a jointly observable Dec-POMDP, also referred to as a decentralised MDP by~\cite{DecPomdp}.
+When the joint observation can identify the state while the observation of one agent cannot, this is a jointly observable Dec-POMDP, also referred to as a decentralised MDP by~\cite{DecPomdp}.
 However, to allow centralised execution, it should be considered that agents can share their observations to make the decision centrally by identifying the state with the joint observation.
-Note that such an assumption allows centralised execution but does not make the problem of decentralised execution simpler because each agent still does not observe the state~\citep{bernstein2002complexity}.
+Note that such an assumption allows centralised execution but does not make the problem of decentralised execution simpler because each agent still does not observe the entire state~\citep{bernstein2002complexity}.
 The direct extreme case is the fully observable Dec-POMDP, where all agents observe the state directly.
 These assumptions can lead to the specific framework called a multi-agent Markov decision process~\citep{boutilier1996planning}.
 
@@ -158,9 +158,9 @@ Many can be found in the books of~\cite{DecPomdp} and~\cite{marl-book}, in the r
 The StarCraft multi-agent challenge (SMAC)~\citep{samvelyan2019starcraft} and its improved version SMACv2~\citep{ellis2023smacv2} are probably the most studied suite of environments with CTDE methods.
 SMAC is based on the StarCraft II Learning Environment~\citep{vinyals2017starcraft}, an RL environment to play StarCraft II (SC2).
 StarCraft is a strategy video game in which players compete by managing units, gathering resources, building an army, and defeating opponents.
-In such games, micro-management refers to unit management, unlike macro-management, which involves resource management.
+In such games, micro-management refers to unit management, unlike macro-management, which involves only resource management.
 Unlike playing the real game of StraCraft like in AlphaStar~\citep{vinyals2019grandmaster}, SMAC is a suite of micro-management challenges where an independent agent controls each game unit.
-Many scenarios exist in SMAC, also called "maps", and all involve training a team to achieve a common goal.
+Many scenarios, also called "maps," exist in SMAC, and all involve training a team to achieve a common goal.
 It is to defeat an adversarial team controlled by the game's deterministic and stationary policy built-in AI.
 Figure~\ref{fig:ch3_smac} shows the initial configurations of two maps where two teams face each other.
 Also note that in Chapter~\ref{ch:2teams}, we present a contribution where SMAC has been modified to train both competing teams.
@@ -182,7 +182,7 @@ Some actions are forbidden in SMAC, such as an attack if the opponent is not wit
 Therefore, agents must consider which ones are available before choosing an action.
 
 At each time step, agents receive the same zero or positive reward. 
-This reward is a sum of three factors: a zero or positive reward for the damage dealt, a positive reward if an enemy unit's hit points reach zero, and a positive reward if all enemy units are defeated. Maximisingg the reward forces the team toneutralisee every unit of the opposing team. Neutralising every opponent unit is commonly called a win in SMAC experiments.
+This reward is a sum of three factors: a zero or positive reward for the damage dealt, a positive reward if an enemy unit's hit points reach zero, and a positive reward if all enemy units are defeated. Maximising the reward forces the team to neutralise every unit of the opposing team. Neutralising every opponent unit is commonly called a win in SMAC experiments.
 
 We hereafter describe both scenarios of Figure~\ref{fig:ch3_smac}.
 There are other types of units in different scenarios, and we refer the reader to~\citep{samvelyan2019starcraft}.
@@ -357,8 +357,8 @@ This defines the duplex dueling structure of QPLEX.
 The constraint on the $Q_a$ is transferred to the advantage functions $A_i$, leading to an unconstrained approximation of the state value function $V$.
 
 \subsection{Other value-based methods}
-In addition to QMIX~\citep{Rashid2018}, QVMix~\citep{leroy2020qvmix} and QPLEX~\citep{wang2021qplex}, Qatten \citep{yang2020qatten} is another example of $Q_{tot}$ factorisation with transformers.
-Other, such as QTRAN~\citep{Son2019QTRAN:Learning} and Weighted-QMIX~\citep{rashid2020weighted} factorise $Q_{tot}$ differently from the QMIX and VDN approach to improve the representational capacity of the factorisationn.
+In addition to QMIX~\citep{Rashid2018} and QPLEX~\citep{wang2021qplex}, Qatten \citep{yang2020qatten} is another example of $Q_{tot}$ factorisation with transformers.
+Other, such as QTRAN~\citep{Son2019QTRAN:Learning} and Weighted-QMIX~\citep{rashid2020weighted} factorise $Q_{tot}$ differently from the QMIX and VDN approach to improve the representational capacity of the factorisation.
 However, they end up not always satisfying IGM.
 Other methods learn to cooperate without factorising $Q_{tot}$ to satisfy IGM.
 An example is local advantage network (LAN)~\citep{avalos2023local}, which learns a central state value function of the joint policy $V^{\mathbf{\pi}}$ and individual advantages $A^a$ to learn $Q_a$ during training, keeping only $A_a$ at execution.
@@ -473,7 +473,6 @@ They confront the work by \cite{lyu2021contrasting}, who showcase the suboptimal
 
 \subsection{Other policy-based methods}
 
-Multi-agent deep deterministic policy gradient (MADDPG)~\citep{lowe2017multi} is a well-established method which does not learn a single centralised critic but one per agent.
 It is designed for continuous action spaces, has been exploited in stochastic games, and can easily be adapted to Dec-POMDP.
 Another method, LIIR~\citep{Du2019LIIRLearning}, aims to provide credit assignment by computing individual intrinsic rewards.
 Following the success of TRPO~\citep{schulman2015trust} and PPO~\citep{schulman2017ppo} in SARL, IPPO \citep{de2020independent}, MAPPO \citep{yu2022surprising} alongside HATPRO and HAPPO~\citep{kuba2021trust} demonstrate that the popular actor-critic methods from SARL can be extended to cooperative MARL tasks.
@@ -490,7 +489,7 @@ This approach significantly reduces the computational complexity compared to tra
 It is an exciting approach to replace the CTDE methods considered in this manuscript that have difficulty scaling up with the number of agents, as shown later in Chapter\ref{ch:impmarl}.
 
 Another approach for dealing with cooperative multi-agent settings is to link the recent success of sequence models in language and RL by using a multi-agent transformer (MAT) that learns to transform a sequence of observations into a sequence of actions, one per agent~\citep{wen2022multiagent}.
-Such approaches have become increasingly popular with the rise of foundation and large language models.
+Such approaches have become increasingly popular with the rise of foundation models and large language models.
 
 Finally, we do not address communication in the environment.
 Communication is also an additional topic mentioned by~\citep{DecPomdp}.
@@ -499,5 +498,5 @@ Allowing agents to send messages can be modelled in different ways.
 An agent decides on a message and an action based on observations and messages sent by other agents.
 Messages have no impact on the state transition or the reward.
 This may be one of the first works addressing communication in MARL, specifically in the cooperative setting.
-In its master thesis,~\cite{fombellida2020master} studied how communication can affect performance in SMAC and also presented a survey of communication methods.
+In his master thesis,~\cite{fombellida2020master} studied how communication can affect performance in SMAC and also presented a survey of communication methods.
 The challenges include adapting to various numbers of agents, targeted communication, and limiting the number of messages.

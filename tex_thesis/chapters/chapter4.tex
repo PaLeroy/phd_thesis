@@ -86,7 +86,7 @@ Our experiments evaluate seven methods in total.
 The four defined in this chapter, QVMix, QVMix-Max, IQV and IQV-Max and the three forming the state of the art at that time, QMIX, MAVEN and IQL, defined in Chapter~\ref{ch:cooperation}.
 As a test-bed, we use SMAC and evaluate the methods on eight different maps: \texttt{3m}, \texttt{8m}, \texttt{so\_many\_baneling}, \texttt{2m\_vs\_1z}, \texttt{MMM}, \texttt{2s3z}, \texttt{3s5z} and \texttt{3s\_vs\_3z}. 
 We refer the reader to Section~\ref{sec:ch3_smac} for the details on SMAC.
-It is worth noting that the maps chosen for our experiments differ in complexity. 
+It is worth noting that the maps chosen for our experiments differ in complexity, e.g., due to different numbers of agents with varying capabilities.
 In SMAC, the goal is to maximise the sum of discounted rewards achieved by reducing each opponent team unit's health to zero, which is called a win.
 
 Each method is executed on every map ten times, and neural networks are trained from scratch each time.
@@ -161,7 +161,7 @@ These results are unsurprising since a similar performance was observed when DQV
 
 To understand the reasons behind why QVMix is the best performing algorithm overall, we analyse how well each method estimates the state-joint-action value function $Q_{mix}^{tot}(s_t, \mathbf{u_t})$. 
 Since, in most maps, decentralised methods do not perform as well as CTDE methods, we restrict our analysis to CTDE algorithms only where their respective mixer networks give the estimated $Q(s_t, \mathbf{u_t})$.
-Since the state space of the maps provided by the SMAC environment is not finite, it is not impossible to compute the exact $Q_{tot}(s_t, \mathbf{u_t})$ for all states to compare them with the estimations.
+Since the state space of the maps provided by the SMAC environment is not finite, it is impossible to compute the exact $Q_{tot}(s_t, \mathbf{u_t})$ for all states to compare them with the estimations.
 To overcome this problem, we compute the discounted sum of rewards obtained with the current policy in each visited state during an episode and compare the results with the value function inferred from the $Q_{tot}$ values estimated by the mixer network for these states.
 The closer the estimates are to the actual $Q(s_t, \argmax_{\mathbf{u}}(Q(s_t,\mathbf{u})))$, the more accurate the learned value function is.
 

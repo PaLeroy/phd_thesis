@@ -3,7 +3,7 @@
 \tikzstyle{netbox} = [rectangle, rounded corners, minimum width=2cm, minimum height=0.5cm,text centered, draw=black]
 \tikzstyle{io} = [minimum width=0.2cm,minimum height=0.5cm, text centered]
 
-\node (output_node) [io] {$\{Q_a(o_t^a, u^a_{j})$ $\forall u^a_j \in \mathcal{U}_a \}$};
+\node (output_node) [io] {$\{Q(o_t^a, u^a_{j})$ $\forall u^a_j \in \mathcal{U}_a \}$};
 \node (fctop) [netbox, below=of output_node, yshift=-0.3cm] {FC layer};
 \node (rec_net) [netbox, below=of fctop, text width=2cm] {Recurrent layer};
 \node (fcbot) [netbox, below=of rec_net] {FC layer};
