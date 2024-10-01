@@ -73,7 +73,7 @@ The following section described how these methods are evaluated in the SMAC suit
 
 \begin{figure}
 \centering
-\input{tex_thesis/tikz/ch4/qvmix}
+\input{tikz/ch4/qvmix}
 \caption{Architecture of the $V_{mix}$ network.}
 \label{fig:ch4_qvmix}
 \end{figure}
@@ -103,7 +103,7 @@ A one-hot encoding of the agent id ($\{1,..,n\}$) is added to the observation sp
 \section{Results} \label{sec:ch4_results}
 \begin{table*}
     \centering
-    \input{tex_thesis/figures/ch4/table_mean}
+    \input{figures/ch4/table_mean}
     \caption{
     Means of win rates achieved in eight scenarios at the end of training by QMIX, MAVEN, QVMix, QVMix-Max, IQL, IQV, and IQVMax. 
     In the first four scenarios, \texttt{3m}, \texttt{8m}, \texttt{so\_many\_baneling} and \texttt{2m\_vs\_1z}, it is measured after $5$ millions training time steps.
@@ -131,14 +131,14 @@ However, it is difficult to conclude which one suffers the most.
 
 \begin{figure}
 \centering
-\includegraphics[width=.7\linewidth]{tex_thesis/figures/ch4/2m1zall.pdf}
+\includegraphics[width=.7\linewidth]{figures/ch4/2m1zall.pdf}
 \caption{Mean of win rates achieved in the \texttt{2m\_vs\_1z} map by QVMix, QVMix-Max, QMIX, MAVEN, IQV, IQVMax and IQL. The error band is proportional to the variance of the measure. We observe that all CTDE methods result in faster training than decentralised ones. All four novel algorithms based on the DQV algorithms can be successfully used in cooperative MARL.}
 \label{fig:ch4_2m1zwin}
 \end{figure}
 
 \begin{figure*}
 \centering
-\includegraphics[width=.95\linewidth]{tex_thesis/figures/ch4/all_win.pdf}
+\includegraphics[width=.95\linewidth]{figures/ch4/all_win.pdf}
 \caption{Means of win rates achieved by QVMix, QVMix-Max, QMIX, MAVEN, IQV, IQVMax and IQL in eight scenarios. Top to bottom, left to right, the scenarios are \texttt{3m}, \texttt{8m}, \texttt{so\_many\_baneling}, \texttt{2m\_vs\_1z}, \texttt{MMM}, \texttt{2s3z}, \texttt{3s5z} and \texttt{3s\_vs\_3z}. The error band is proportional to the variance of win rates.}
 \label{fig:all_win_curves}
 \end{figure*}
@@ -154,7 +154,7 @@ These results are unsurprising since a similar performance was observed when DQV
 
 \begin{figure*}
 \centering
-\includegraphics[width=.95\linewidth]{tex_thesis/figures/ch4/2m1z3s5zQ.pdf}
+\includegraphics[width=.95\linewidth]{figures/ch4/2m1z3s5zQ.pdf}
 \caption{$Q$ values obtained and estimated when training QVMix, QVMix-Max, MAVEN and QMIX. Dash-dotted lines represent the obtained $Q$ values, while solid lines represent the estimated ones.}
 \label{fig:exp_plots_overestim:q_best_worse}
 \end{figure*}

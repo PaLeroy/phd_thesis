@@ -60,7 +60,7 @@ The optimal joint policy is denoted by $\mathbf{\pi^{*}} =\argmax_{\mathbf{\pi}}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\linewidth]{tex_thesis/figures/ch3/decpomdp.pdf}
+    \includegraphics[width=0.8\linewidth]{figures/ch3/decpomdp.pdf}
     \caption{Interaction of three agents with the environment in a decentralised partially observable Markov decision process~\citep{DecPomdp}. Agent do not have access to the state $s_t$ but to an observation $o^a_t$ defined by the observation function $O$. Based on $o^a_t$, each agent selects one action $u^a_t$. As a consequence, they all receive the same reward $r_t$ and the environment transitions in a new state $s_{t+1}$.}
     \label{fig:ch3_decpomdp}
 \end{figure}
@@ -109,7 +109,7 @@ Illustrations of the environments described hereafter are provided in Figure \re
 
 \begin{figure}
     \centering
-    \input{tex_thesis/figures/ch3/figure_envs}
+    \input{figures/ch3/figure_envs}
     \caption{Cooperative suites of environments defined as Dec-POMDP.}
     \label{fig:ch3_envs}
 \end{figure}
@@ -117,13 +117,13 @@ Illustrations of the environments described hereafter are provided in Figure \re
      \centering
      \begin{subfigure}[b]{0.5\textwidth}
          \centering
-         \includegraphics[height=2.3cm]{tex_thesis/figures/ch3/3m_screen.pdf}
+         \includegraphics[height=2.3cm]{figures/ch3/3m_screen.pdf}
          \caption{3m}
          \label{fig:ch3_3m}
      \end{subfigure}%
      \begin{subfigure}[b]{0.5\textwidth}
          \centering
-         \includegraphics[height=2.3cm]{tex_thesis/figures/ch3/3s5z_screen.pdf}
+         \includegraphics[height=2.3cm]{figures/ch3/3s5z_screen.pdf}
          \caption{3s5z}
          \label{fig:ch3_3s5z}
      \end{subfigure}
@@ -280,7 +280,7 @@ The entire QMIX architecture is presented in Figure~\ref{fig:qmix}.
 
 \begin{figure}
 \centering
-\input{tex_thesis/tikz/ch3/qmix}
+\input{tikz/ch3/qmix}
 \caption{QMIX architecture.}
 \label{fig:qmix}
 \end{figure}
@@ -300,7 +300,7 @@ Individual $Q_a$ networks and the mixer are all copied to produce target network
 
 \begin{figure}
     \centering
-\input{tex_thesis/tikz/ch3/indivQ}
+\input{tikz/ch3/indivQ}
 \caption{Common $Q_a$ network implementation. The hidden state $h$ embeds the history, and the action space size defines the number of outputs of the network.}
 \label{fig:ch3_indivQ}
 \end{figure}
@@ -323,7 +323,7 @@ The new architecture of the individual $Q_a$ network of MAVEN is represented in 
 
 \begin{figure}
 \centering
-\input{tex_thesis/tikz/ch3/maven}
+\input{tikz/ch3/maven}
 \caption{MAVEN modification of the individual $Q_a$ network.}
 \label{fig:maven}
 \end{figure}
