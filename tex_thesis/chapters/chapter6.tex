@@ -97,9 +97,9 @@ These methods are described in \citep{marl-book} and \citep{russel2010}, already
 In non-repeated normal-form games, finding the minimax solution with linear programming \citep{marl-book} is possible.
 Game theory with RL also started in normal-form games.
 For another example, we can cite the study on independent Q-Learning in cooperative normal-form games by \cite{claus1998dynamics}.
-Many methods also have been proposed for SG.
+Many methods have also been proposed for SG.
 Learning the optimal value function for all states in an SG is possible using dynamic programming.
-Value iteration \citep{stochasticGames} is an example of such a method, the same name as its homologue in MDP \citep{sutton2018reinforcement} despite being slightly different in the concept.
+Value iteration \citep{stochasticGames} is an example of such a method, with the same name as its homologue in MDP \citep{sutton2018reinforcement}, despite being slightly different in concept.
 As in SARL, this method requires knowledge of the environment model and has the same limitations.
 
 A class of methods involves modelling other agents to predict their policy.
@@ -108,7 +108,7 @@ Once other agents' policies are modelled, the best response against their approx
 This is done in fictitious play \citep{brown1951iterative} for the normal-form game or more recently in Poker \citep{pmlr-v37-heinrich15} 
 Extensions consider additionally learning how the opponent will update its strategy \citep{he2016opponent, foerster2017lola}.
 
-There is also a different class of method called joint action learning.
+There is also a distinct class of method called joint action learning.
 These methods directly learn $n$ state-joint-action value functions $Q_i(s, \mathbf{u})$ to learn equilibrium Q value iteratively with a temporal difference.
 However, these methods require assumptions on the type of equilibrium agent aim.
 This leads to different algorithms, such as Minimax Q-learning \citep{MarkovGames}, Nash Q-learning \citep{hu2003nash} and Correlated Q-learning \citep{greenwald2003correlated}.
@@ -118,11 +118,11 @@ The joint action learning class of the method forces all agents to follow the sa
 Many more details and methods can be found in \citep{marl-book}, \citep{Nowe2012GTMARL} and \citep{russel2010}.
 We presented an overview of existing methods to provide a bit of history.
 In the next section, we focus on self-play and population-based methods that motivated the work presented in Chapter \ref{ch:2teams}.
-However, we finish this section with planning methods in multi-agent systems.
+However, we conclude this section with an overview of planning methods in multi-agent systems.
 
 Section \ref{sec:ch2_model_based_vs_model_free} defines planning as computing a local solution using the environment model.
 Planning has a long history in multi-agent systems, especially in fully observable two-player zero-sum games with turn-taking actions.
-These games are called extensive-form games, different from the repeated normal-form ones because agents do not act simultaneously \citep{Nowe2012GTMARL}.
+These games are called extensive-form games, which differ from repeated normal-form games because agents do not act simultaneously \citep{Nowe2012GTMARL}.
 Famous examples include Chess and Go.
 In such board games, agents take action, modifying the state of the board that is observable by both.
 Both obtain zero rewards except at the end of the game.
